@@ -13,7 +13,7 @@ import {
     TriangleAlert,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { CellDot, ElementChip, PerkChip, StatChip, TypeChip } from "@/components/chips";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -44,9 +44,7 @@ import {
 import { buildBuildView, tryDeserialize } from "@/game/build-view";
 import type { CellType, Part, WeaponType } from "@/game/types";
 import {
-    cellTypeColor,
     cellTypeLabel,
-    elementColor,
     extractBuildId,
     GAME_EDITION,
     GAME_VERSION,
@@ -263,20 +261,6 @@ const randomOf = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.l
 /* ------------------------------------------------------------------ */
 /* Small presentational bits                                           */
 /* ------------------------------------------------------------------ */
-
-const PerkBadge = ({ name, value }: { name: string; value: number }) => (
-    <Badge variant="outline" className="border-primary/40 bg-primary/5 text-primary">
-        {name} {value > 0 ? `+${value}` : value}
-    </Badge>
-);
-
-const CellDot = ({ slot }: { slot: CellType | null }) => (
-    <span
-        className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-        style={{ backgroundColor: cellTypeColor(slot) }}
-        aria-hidden
-    />
-);
 
 const CellSlotRow = ({
     index,
@@ -658,28 +642,20 @@ const BuildEditor = () => {
 
                             {weaponData ? (
                                 <>
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <Badge variant="secondary">{weaponData.type}</Badge>
-                                        {weaponData.elemental ? (
-                                            <Badge
-                                                style={{
-                                                    backgroundColor: elementColor(weaponData.elemental),
-                                                    color: "#14161a",
-                                                }}
-                                            >
-                                                {weaponData.elemental}
-                                            </Badge>
-                                        ) : null}
-                                        <Badge variant="outline">
-                                            Power {draft.weaponSurged
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                        <TypeChip label={weaponData.type} />
+                                        <ElementChip element={weaponData.elemental} />
+                                        <StatChip
+                                            label="Power"
+                                            value={draft.weaponSurged
                                                 ? weaponData.power.powerSurged ?? weaponData.power.base
                                                 : weaponData.power.base}
-                                        </Badge>
-                                        <Badge variant="outline">{weaponData.damage} damage</Badge>
+                                        />
+                                        <StatChip label={weaponData.damage} value="damage" />
                                         {weaponData.perks
                                             ?.filter(perk => (perk.powerSurged ?? false) === draft.weaponSurged)
                                             .map((perk, index) => (
-                                                <PerkBadge key={index} name={perk.name} value={perk.value} />
+                                                <PerkChip key={index} name={perk.name} value={perk.value} />
                                             ))}
                                     </div>
 
@@ -756,7 +732,7 @@ const BuildEditor = () => {
                                 ).map(([id, label, nameKey, surgedKey, cellKey]) => {
                                     const piece = draft[nameKey] ? findArmourByName(draft[nameKey]!) : null;
                                     return (
-                                        <div key={id} className="flex flex-col gap-2 rounded-lg border bg-muted/20 p-3">
+                                        <div key={id} className="flex flex-col gap-2 rounded-md border border-border/70 bg-muted/20 p-3">
                                             <div className="flex items-center justify-between gap-2">
                                                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                                     {label}
@@ -784,14 +760,15 @@ const BuildEditor = () => {
                                                                     draft[surgedKey],
                                                             )
                                                             .map((perk, index) => (
-                                                                <PerkBadge key={index} name={perk.name} value={perk.value} />
+                                                                <PerkChip key={index} name={perk.name} value={perk.value} />
                                                             ))}
-                                                        <Badge variant="outline" className="text-muted-foreground">
-                                                            Res {draft[surgedKey]
+                                                        <StatChip
+                                                            label="Res"
+                                                            value={draft[surgedKey]
                                                                 ? piece.resistance.powerSurged ??
                                                                   piece.resistance.base
                                                                 : piece.resistance.base}
-                                                        </Badge>
+                                                        />
                                                     </div>
                                                     <CellSlotRow
                                                         index={1}

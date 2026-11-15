@@ -30,18 +30,19 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-    themeColor: "#1b1d24",
+    themeColor: "#10151f",
     colorScheme: "dark",
 };
 
 const Header = () => (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+        <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
             <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[0_0_14px_oklch(0.8_0.145_78/0.45)]">
+                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/50 bg-primary/15 text-primary shadow-[0_0_14px_oklch(0.82_0.135_85/0.35)]">
                     <Hammer className="h-4 w-4" aria-hidden />
                 </span>
-                {SITE_NAME}
+                <span className="text-primary">{SITE_NAME}</span>
             </Link>
             <nav className="flex items-center gap-4 text-sm text-muted-foreground" aria-label="Main navigation">
                 <Link href="/" className="transition-colors hover:text-foreground">

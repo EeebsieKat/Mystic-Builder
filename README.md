@@ -1,61 +1,52 @@
 # Mystic Builder
 
-A dark-mode **Dauntless build planner** for the **1.14.7 Mystic Paradox** revival - a
-standalone rebuild of the Dauntless Builder experience, plus rich Discord link
-previews for every build you share.
+A dark-mode Dauntless build planner for the 1.14.7 "Mystic Paradox" revival.
+Plan builds (weapon, armour, lantern, omnicell, cells), share them as links,
+and get rich Discord link previews via Open Graph meta tags. The full item
+database (231 weapons, 139 armour pieces, 81 cells, 81 perks, lanterns and
+omnicells) is included.
 
-## What it does
+## Stack
 
-- **Full build editor** - pick a weapon (with specials/mods, or chamber/grip/mod for
-  repeaters), bonded weapons, head/torso/arms/legs armour with Power Surge toggles,
-  lantern, omnicell, and every cell slot. Cells that don't fit a slot are filtered out
-  automatically, exactly like the original builder.
-- **Live perk totals & build stats** - aggregated perks from gear + cells, weapon
-  power, armour resistance, cells filled.
-- **Shareable links** - the entire build is encoded in the URL
-  (`/b/<build-id>`), the same encoding as the original Dauntless Builder (v8, with
-  automatic upgrade of legacy v2-v7 links).
-- **Rich Discord embeds** - `/b/<build-id>` pages emit Open Graph tags and render a
-  dark preview card image, so Discord shows the whole build before anyone clicks.
-- **Item database** - searchable browser for all weapons, armour, perks, cells,
-  lanterns and omnicells.
-- **Randomize** - roll a fully valid random build with one click.
+- Next.js (App Router) + TypeScript + Tailwind CSS 4 + shadcn/ui
+- Prisma + SQLite (build view counters)
+- Netlify Functions for dynamic Open Graph meta rendering
+- Game data: [dauntless-builder-reforged](https://github.com/atomicptr/dauntless-builder-reforged) (AGPL-3.0, data public domain)
 
-Build links from the **original** Dauntless Builder paste straight into the import
-box and load into the editor, and vice versa - the build format is identical.
-
-## Tech
-
-- Next.js (App Router) + TypeScript + Tailwind CSS 4 (dark theme)
-- shadcn/ui components, cmdk comboboxes
-- Game data: `src/game/data.json` from the
-  [dauntless-builder-reforged](https://github.com/atomicptr/dauntless-builder-reforged)
-  project (AGPL-3.0 for ported encoding code, data public domain)
-- View counters: Netlify Blobs (no database server needed; in-memory fallback locally)
-
-## Run locally
+## Local development
 
 ```bash
-npm install
-npm run dev
-# http://localhost:3000
+bun install        # or npm install
+npx prisma generate
+cp .env.example .env   # DATABASE_URL="file:./db/custom.db"
+npx prisma db push
+npm run dev        # http://localhost:3000
 ```
 
-## Deploy to Netlify
+## Deploy to Netlify via GitHub
 
-See [DEPLOY.md](./DEPLOY.md) for the full step-by-step guide (GitHub connection,
-environment variables, Blobs "database" setup, custom domain, troubleshooting).
+1. Push this repo to GitHub (do not commit `.env`; `.env.example` is included).
+2. In Netlify: **Add new site > Import an existing project** and pick the repo.
+3. Build settings are read from `netlify.toml` (build command `npm run build`,
+   publish `.next`, Next.js runtime plugin enabled).
+4. Environment variables to set in Netlify (Site configuration > Environment variables):
+   - `DATABASE_URL` - e.g. your hosted Postgres/SQLite-compatible URL. For the
+     default SQLite setup on Netlify, use a hosted provider (e.g. Turso or
+     Neon) or Netlify DB, because the file system is ephemeral.
+   - `NEXT_PUBLIC_SITE_URL` - the final site URL (used to build canonical links
+     and Discord preview URLs).
+5. Deploy. Discord link previews work out of the box: `/b/<buildId>` renders
+   dynamic `og:` tags, and `/api/builds/<buildId>/preview` serves the OG image.
 
 ## Project layout
 
-```
-src/app/            pages (editor on /, shared build view on /b/[buildId])
-src/app/api/        preview JSON + view counter endpoints
-src/components/     UI (build display, database browser, editor components)
-src/game/           build id codec + game dataset (data.json, names.json)
-src/lib/            site config, OG icon loader, view counter store
-netlify.toml        Netlify build config
-```
+- `src/app` - pages (home with builder + database tabs, `/b/[buildId]` shared
+  build page, OG image route)
+- `src/components` - UI: builder editor, database browser, shared build
+  display, shared chip components (`src/components/chips.tsx`)
+- `src/game` - game data (`data.json`) and build encode/decode logic
+- `prisma/schema.prisma` - database schema (build views)
+- `netlify.toml` - Netlify build configuration
 
-Dauntless and all related assets are property of Phoenix Labs. This is an unofficial
-fan project.
+Dauntless and all related assets are property of Phoenix Labs. This is a
+fan-made tool and is not affiliated with Phoenix Labs.

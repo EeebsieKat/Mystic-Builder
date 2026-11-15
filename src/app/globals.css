@@ -44,43 +44,44 @@
 }
 
 /*
- * Mystic Builder ships dark-only. The palette below IS the theme:
- * a deep charcoal slate with a lantern-amber primary accent.
+ * Mystic Builder ships dark-only.
+ * Palette: Dauntless 2023 UI - deep navy-slate panels, steel-blue
+ * borders and a lantern-gold accent, matching the game's old-school look.
  */
 :root,
 .dark {
-  --radius: 0.625rem;
-  --background: oklch(0.17 0.014 260);
-  --foreground: oklch(0.93 0.008 95);
-  --card: oklch(0.215 0.016 260);
-  --card-foreground: oklch(0.93 0.008 95);
-  --popover: oklch(0.225 0.016 260);
-  --popover-foreground: oklch(0.93 0.008 95);
-  --primary: oklch(0.8 0.145 78);
-  --primary-foreground: oklch(0.18 0.03 70);
-  --secondary: oklch(0.28 0.018 260);
-  --secondary-foreground: oklch(0.93 0.008 95);
-  --muted: oklch(0.27 0.016 260);
-  --muted-foreground: oklch(0.68 0.012 260);
-  --accent: oklch(0.29 0.02 260);
-  --accent-foreground: oklch(0.93 0.008 95);
-  --destructive: oklch(0.65 0.19 25);
-  --border: oklch(0.32 0.018 260);
-  --input: oklch(0.32 0.018 260);
-  --ring: oklch(0.8 0.145 78 / 60%);
-  --chart-1: oklch(0.8 0.145 78);
-  --chart-2: oklch(0.68 0.13 200);
+  --radius: 0.5rem;
+  --background: oklch(0.15 0.028 262);
+  --foreground: oklch(0.93 0.012 95);
+  --card: oklch(0.19 0.032 260);
+  --card-foreground: oklch(0.93 0.012 95);
+  --popover: oklch(0.21 0.034 260);
+  --popover-foreground: oklch(0.93 0.012 95);
+  --primary: oklch(0.82 0.135 85);
+  --primary-foreground: oklch(0.16 0.03 80);
+  --secondary: oklch(0.28 0.045 258);
+  --secondary-foreground: oklch(0.88 0.03 250);
+  --muted: oklch(0.25 0.038 258);
+  --muted-foreground: oklch(0.7 0.02 255);
+  --accent: oklch(0.3 0.05 255);
+  --accent-foreground: oklch(0.93 0.012 95);
+  --destructive: oklch(0.62 0.19 25);
+  --border: oklch(0.31 0.04 258);
+  --input: oklch(0.31 0.04 258);
+  --ring: oklch(0.82 0.135 85 / 60%);
+  --chart-1: oklch(0.82 0.135 85);
+  --chart-2: oklch(0.68 0.11 250);
   --chart-3: oklch(0.66 0.15 145);
   --chart-4: oklch(0.62 0.22 305);
   --chart-5: oklch(0.65 0.2 25);
-  --sidebar: oklch(0.215 0.016 260);
-  --sidebar-foreground: oklch(0.93 0.008 95);
-  --sidebar-primary: oklch(0.8 0.145 78);
-  --sidebar-primary-foreground: oklch(0.18 0.03 70);
-  --sidebar-accent: oklch(0.29 0.02 260);
-  --sidebar-accent-foreground: oklch(0.93 0.008 95);
-  --sidebar-border: oklch(0.32 0.018 260);
-  --sidebar-ring: oklch(0.8 0.145 78 / 60%);
+  --sidebar: oklch(0.19 0.032 260);
+  --sidebar-foreground: oklch(0.93 0.012 95);
+  --sidebar-primary: oklch(0.82 0.135 85);
+  --sidebar-primary-foreground: oklch(0.16 0.03 80);
+  --sidebar-accent: oklch(0.3 0.05 255);
+  --sidebar-accent-foreground: oklch(0.93 0.012 95);
+  --sidebar-border: oklch(0.31 0.04 258);
+  --sidebar-ring: oklch(0.82 0.135 85 / 60%);
 }
 
 @layer base {
@@ -95,9 +96,26 @@
   }
 }
 
-/* Subtle radial glow used behind the page hero / editor header. */
+/* Radial glow behind the hero / editor header: gold over a blue aether haze. */
 .mystic-glow {
   background-image:
-    radial-gradient(60% 45% at 50% 0%, oklch(0.8 0.145 78 / 9%) 0%, transparent 70%),
-    radial-gradient(40% 35% at 85% 10%, oklch(0.62 0.22 305 / 7%) 0%, transparent 70%);
+    radial-gradient(60% 45% at 50% 0%, oklch(0.82 0.135 85 / 8%) 0%, transparent 70%),
+    radial-gradient(45% 40% at 15% 5%, oklch(0.6 0.1 250 / 10%) 0%, transparent 70%);
+}
+
+/* Gold gradient rule used under the site header and section titles. */
+.gold-rule {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    oklch(0.82 0.135 85 / 55%) 20%,
+    oklch(0.82 0.135 85 / 55%) 80%,
+    transparent
+  );
+  height: 1px;
+}
+
+/* Small-caps gold section label, like Dauntless menu headings. */
+.panel-label {
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-primary;
 }

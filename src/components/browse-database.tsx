@@ -4,14 +4,22 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import {
+    CellChip,
+    ElementChip,
+    NoSlotsChip,
+    PerkChip,
+    StatChip,
+    TypeChip,
+    WeaknessChip,
+} from "@/components/chips";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { gameData } from "@/game/data";
 import type { Armour, Cell, Lantern, Omnicell, PerkValue, Weapon } from "@/game/types";
-import { cellTypeColor, cellTypeLabel, elementColor } from "@/lib/site";
+import { cellTypeColor, cellTypeLabel } from "@/lib/site";
 
 const interpolate = (
     text: string,
@@ -27,6 +35,8 @@ const itemTemplateValues = (item: object): Record<string, string | null> => {
     const element = (record.elemental ?? record.strength) as string | undefined;
     return {
         type: typeof record.type === "string" ? record.type.toLowerCase() : null,
+        // armour descriptions use {{typeAlt}} ("Head protection forged from…")
+        typeAlt: typeof record.type === "string" ? record.type : null,
         behemoth: typeof record.behemoth === "string" ? record.behemoth : null,
         element: element ?? null,
         elemental: element ?? null,
@@ -35,189 +45,193 @@ const itemTemplateValues = (item: object): Record<string, string | null> => {
 
 const normalize = (value: string): string => value.toLowerCase().trim();
 
-const ElementBadge = ({ element }: { element: string | null }) =>
-    element ? (
-        <Badge style={{ backgroundColor: elementColor(element), color: "#14161a" }}>{element}</Badge>
-    ) : null;
+/* ------------------------------------------------------------------ */
+/* Shared item card skeleton                                           */
+/* Every database row uses the exact same structure:                   */
+/*   [ 64px icon box ] title / meta chips / description /              */
+/*                     cell chips / perk chips / effects               */
+/* ------------------------------------------------------------------ */
 
-const PerkChips = ({ perks }: { perks: PerkValue[] | undefined }) => (
-    <>
-        {(perks ?? []).map((perk, index) => (
-            <Badge key={index} variant="outline" className="border-primary/40 text-primary">
-                {perk.name} {perk.value > 0 ? `+${perk.value}` : perk.value}
-                {perk.powerSurged ? " (surged)" : ""}
-            </Badge>
-        ))}
-    </>
+const IconBox = ({ src, name }: { src: string; name: string }) => (
+    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1.5">
+        <Image src={src} alt={name} width={48} height={48} className="h-auto w-auto max-h-full max-w-full object-contain" />
+    </div>
 );
 
-const CellSlotChips = ({ cells }: { cells: Weapon["cells"] }) => {
-    if (!cells) {
-        return <Badge variant="outline" className="text-muted-foreground">No cell slots</Badge>;
+const ItemTitle = ({ name, subtitle }: { name: string; subtitle?: string | null }) => (
+    <div className="min-w-0">
+        <p className="truncate font-semibold leading-tight text-foreground">{name}</p>
+        {subtitle ? <p className="text-[11px] leading-tight text-muted-foreground">{subtitle}</p> : null}
+    </div>
+);
+
+const ItemDescription = ({ text }: { text: string | null | undefined }) =>
+    text ? <p className="text-xs leading-relaxed text-muted-foreground">{text}</p> : null;
+
+const EffectList = ({ effects }: { effects: { description: string; values?: Record<string, string | number> }[] }) => {
+    if (effects.length === 0) {
+        return null;
     }
-    const slots = Array.isArray(cells) ? cells : [cells];
     return (
-        <>
-            {slots.map((slot, index) => (
-                <Badge key={index} variant="outline" style={{ borderColor: cellTypeColor(slot) }}>
-                    <span
-                        className="mr-1.5 inline-block h-2 w-2 rounded-full"
-                        style={{ backgroundColor: cellTypeColor(slot) }}
-                        aria-hidden
-                    />
-                    {slot} cell
-                </Badge>
+        <ul className="list-disc space-y-1 pl-4 text-xs leading-relaxed text-muted-foreground">
+            {effects.map((effect, index) => (
+                <li key={index}>
+                    {effect.description.replace(/\{\{(\w+)\}\}/g, (_m, key: string) =>
+                        effect.values && key in effect.values ? String(effect.values[key]) : "?",
+                    )}
+                </li>
             ))}
-        </>
+        </ul>
     );
 };
 
-const WeaponRow = ({ weapon }: { weapon: Weapon }) => (
-    <Card>
-        <CardContent className="flex gap-3 p-4">
-            <Image src={weapon.icon} alt={weapon.name} width={44} height={44} className="h-auto w-auto shrink-0 object-contain" />
-            <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-semibold">{weapon.name}</p>
-                    <Badge variant="secondary">{weapon.type}</Badge>
-                    <ElementBadge element={weapon.elemental} />
-                    <Badge variant="outline">
-                        Power {weapon.power.powerSurged ?? weapon.power.base}
-                        {weapon.power.powerSurged ? ` (${weapon.power.base} base)` : ""}
-                    </Badge>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">{interpolate(weapon.description, itemTemplateValues(weapon))}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                    <CellSlotChips cells={weapon.cells} />
-                    <PerkChips perks={weapon.perks} />
-                </div>
-                {(weapon.unique_effects ?? []).length > 0 ? (
-                    <ul className="mt-2 list-disc space-y-0.5 pl-4 text-xs text-muted-foreground">
-                        {weapon.unique_effects!.map((effect, index) => (
-                            <li key={index}>
-                                {effect.description.replace(/\{\{(\w+)\}\}/g, (_m, key: string) =>
-                                    effect.values && key in effect.values ? String(effect.values[key]) : "?",
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                ) : null}
+const ChipRow = ({ children }: { children: React.ReactNode }) => {
+    const items = Array.isArray(children) ? children : [children];
+    if (items.filter(Boolean).length === 0) {
+        return null;
+    }
+    return <div className="flex flex-wrap items-center gap-1.5">{children}</div>;
+};
+
+const MetaRow = ({ children }: { children: React.ReactNode }) => (
+    <div className="flex flex-wrap items-center gap-1.5">{children}</div>
+);
+
+const ItemCard = ({ icon, name, subtitle, children }: {
+    icon?: string | null;
+    name: string;
+    subtitle?: string | null;
+    children: React.ReactNode;
+}) => (
+    <Card className="h-full">
+        <CardContent className="relative flex h-full gap-3 p-4">
+            {icon ? <IconBox src={icon} name={name} /> : null}
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <ItemTitle name={name} subtitle={subtitle} />
+                {children}
             </div>
         </CardContent>
     </Card>
+);
+
+/* ------------------------------------------------------------------ */
+/* Row renderers                                                       */
+/* ------------------------------------------------------------------ */
+
+const WeaponRow = ({ weapon }: { weapon: Weapon }) => (
+    <ItemCard icon={weapon.icon} name={weapon.name} subtitle={null}>
+        <MetaRow>
+            <TypeChip label={weapon.type} />
+            <ElementChip element={weapon.elemental} />
+            <StatChip
+                label="Power"
+                value={`${weapon.power.powerSurged ?? weapon.power.base}${weapon.power.powerSurged ? ` (${weapon.power.base} base)` : ""}`}
+            />
+        </MetaRow>
+        <ItemDescription text={interpolate(weapon.description, itemTemplateValues(weapon))} />
+        <ChipRow>
+            {weapon.cells === null ? (
+                <NoSlotsChip />
+            ) : (
+                (Array.isArray(weapon.cells) ? weapon.cells : [weapon.cells]).map((slot, index) => (
+                    <CellChip key={`c${index}`} slot={slot} />
+                ))
+            )}
+            {(weapon.perks ?? []).map((perk: PerkValue, index: number) => (
+                <PerkChip key={`p${index}`} name={perk.name} value={perk.value} surged={perk.powerSurged} />
+            ))}
+        </ChipRow>
+        <EffectList effects={weapon.unique_effects ?? []} />
+    </ItemCard>
 );
 
 const ArmourRow = ({ armour }: { armour: Armour }) => (
-    <Card>
-        <CardContent className="flex gap-3 p-4">
-            <Image src={armour.icon} alt={armour.name} width={44} height={44} className="h-auto w-auto shrink-0 object-contain" />
-            <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-semibold">{armour.name}</p>
-                    <Badge variant="secondary">{armour.type}</Badge>
-                    <ElementBadge element={armour.strength} />
-                    {armour.weakness ? (
-                        <Badge variant="outline" className="text-muted-foreground">
-                            weak to {armour.weakness}
-                        </Badge>
-                    ) : null}
-                    <Badge variant="outline">
-                        Res {armour.resistance.powerSurged ?? armour.resistance.base}
-                        {armour.resistance.powerSurged ? ` (${armour.resistance.base} base)` : ""}
-                    </Badge>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">{interpolate(armour.description, itemTemplateValues(armour))}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                    <CellSlotChips cells={armour.cells} />
-                    <PerkChips perks={armour.perks} />
-                </div>
-            </div>
-        </CardContent>
-    </Card>
+    <ItemCard icon={armour.icon} name={armour.name} subtitle={null}>
+        <MetaRow>
+            <TypeChip label={armour.type} />
+            <ElementChip element={armour.strength} />
+            {armour.weakness ? <WeaknessChip element={armour.weakness} /> : null}
+            <StatChip
+                label="Res"
+                value={`${armour.resistance.powerSurged ?? armour.resistance.base}${armour.resistance.powerSurged ? ` (${armour.resistance.base} base)` : ""}`}
+            />
+        </MetaRow>
+        <ItemDescription text={interpolate(armour.description, itemTemplateValues(armour))} />
+        <ChipRow>
+            {armour.cells === null ? (
+                <NoSlotsChip />
+            ) : (
+                (Array.isArray(armour.cells) ? armour.cells : [armour.cells]).map((slot, index) => (
+                    <CellChip key={`c${index}`} slot={slot} />
+                ))
+            )}
+            {(armour.perks ?? []).map((perk: PerkValue, index: number) => (
+                <PerkChip key={`p${index}`} name={perk.name} value={perk.value} surged={perk.powerSurged} />
+            ))}
+        </ChipRow>
+    </ItemCard>
 );
 
 const PerkRow = ({ perk }: { perk: { name: string; description: string; type: string } }) => (
-    <Card>
-        <CardContent className="flex items-start gap-3 p-4">
-            <span
-                className="mt-1.5 inline-block h-3 w-3 shrink-0 rounded-full"
-                style={{ backgroundColor: cellTypeColor(perk.type) }}
-                aria-hidden
-            />
-            <div>
-                <p className="font-semibold">
-                    {perk.name} <span className="text-xs font-normal text-muted-foreground">({cellTypeLabel(perk.type)})</span>
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">{perk.description}</p>
-            </div>
-        </CardContent>
-    </Card>
+    <ItemCard name={perk.name} subtitle={cellTypeLabel(perk.type)}>
+        <span
+            className="absolute right-4 top-4 inline-block h-3 w-3 rounded-full ring-2 ring-card"
+            style={{ backgroundColor: cellTypeColor(perk.type) }}
+            aria-hidden
+        />
+        <ItemDescription text={perk.description} />
+    </ItemCard>
 );
 
 const CellRow = ({ cell }: { cell: Cell }) => (
-    <Card>
-        <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-                <span
-                    className="inline-block h-3 w-3 rounded-full"
-                    style={{ backgroundColor: cellTypeColor(cell.slot) }}
-                    aria-hidden
+    <ItemCard name={cell.name} subtitle={cellTypeLabel(cell.slot)}>
+        <span
+            className="absolute right-4 top-4 inline-block h-3 w-3 rounded-full ring-2 ring-card"
+            style={{ backgroundColor: cellTypeColor(cell.slot) }}
+            aria-hidden
+        />
+        <ChipRow>
+            {Object.entries(cell.variants).map(([variantName, variant]) => (
+                <StatChip
+                    key={variantName}
+                    label={variantName}
+                    value={Object.entries(variant.perks)
+                        .map(([perk, value]) => `${perk} ${value > 0 ? `+${value}` : value}`)
+                        .join(", ")}
                 />
-                <p className="font-semibold">{cell.name}</p>
-                <Badge variant="outline">{cellTypeLabel(cell.slot)}</Badge>
-            </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-                {Object.entries(cell.variants).map(([variantName, variant]) => (
-                    <Badge key={variantName} variant="outline" className="text-muted-foreground">
-                        {variantName} ({variant.rarity}) -{" "}
-                        {Object.entries(variant.perks)
-                            .map(([perk, value]) => `${perk} ${value}`)
-                            .join(", ")}
-                    </Badge>
-                ))}
-            </div>
-        </CardContent>
-    </Card>
+            ))}
+        </ChipRow>
+    </ItemCard>
 );
 
 const LanternRow = ({ lantern }: { lantern: Lantern }) => (
-    <Card>
-        <CardContent className="flex gap-3 p-4">
-            <Image src={lantern.icon} alt={lantern.name} width={44} height={44} className="h-auto w-auto shrink-0 object-contain" />
-            <div className="min-w-0 flex-1">
-                <p className="font-semibold">{lantern.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{interpolate(lantern.description, itemTemplateValues(lantern))}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                    <CellSlotChips cells={lantern.cells} />
-                    <PerkChips perks={lantern.perks} />
-                </div>
-            </div>
-        </CardContent>
-    </Card>
+    <ItemCard icon={lantern.icon} name={lantern.name} subtitle="Lantern">
+        <ItemDescription text={interpolate(lantern.description, itemTemplateValues(lantern))} />
+        <ChipRow>
+            {lantern.cells ? (
+                (Array.isArray(lantern.cells) ? lantern.cells : [lantern.cells]).map((slot, index) => (
+                    <CellChip key={`c${index}`} slot={slot} />
+                ))
+            ) : (
+                <NoSlotsChip />
+            )}
+            {(lantern.perks ?? []).map((perk: PerkValue, index: number) => (
+                <PerkChip key={`p${index}`} name={perk.name} value={perk.value} surged={perk.powerSurged} />
+            ))}
+        </ChipRow>
+    </ItemCard>
 );
 
 const OmnicellRow = ({ omnicell }: { omnicell: Omnicell }) => (
-    <Card>
-        <CardContent className="flex gap-3 p-4">
-            <Image src={omnicell.icon} alt={omnicell.name} width={44} height={44} className="h-auto w-auto shrink-0 object-contain" />
-            <div className="min-w-0 flex-1">
-                <p className="font-semibold">{omnicell.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{interpolate(omnicell.description, itemTemplateValues(omnicell))}</p>
-                {(omnicell.unique_effects ?? []).length > 0 ? (
-                    <ul className="mt-2 list-disc space-y-0.5 pl-4 text-xs text-muted-foreground">
-                        {omnicell.unique_effects!.map((effect, index) => (
-                            <li key={index}>
-                                {effect.description.replace(/\{\{(\w+)\}\}/g, (_m, key: string) =>
-                                    effect.values && key in effect.values ? String(effect.values[key]) : "?",
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                ) : null}
-            </div>
-        </CardContent>
-    </Card>
+    <ItemCard icon={omnicell.icon} name={omnicell.name} subtitle="Omnicell">
+        <ItemDescription text={interpolate(omnicell.description, itemTemplateValues(omnicell))} />
+        <EffectList effects={omnicell.unique_effects ?? []} />
+    </ItemCard>
 );
+
+/* ------------------------------------------------------------------ */
+/* Browser                                                             */
+/* ------------------------------------------------------------------ */
 
 const SearchInput = ({
     value,
@@ -241,7 +255,9 @@ const SearchInput = ({
 );
 
 const Grid = ({ children }: { children: React.ReactNode }) => (
-    <div className="grid max-h-[70vh] gap-3 overflow-y-auto pr-1 md:grid-cols-2">{children}</div>
+    <div className="mt-3 grid max-h-[70vh] items-start gap-3 overflow-y-auto pr-1 md:grid-cols-2">
+        {children}
+    </div>
 );
 
 const DatabaseBrowser = () => {

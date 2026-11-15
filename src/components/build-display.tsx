@@ -1,29 +1,22 @@
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CellChip, CellDot, ElementChip, PerkChip } from "@/components/chips";
 import { Separator } from "@/components/ui/separator";
 import type { BuildView, CellSlotView, ArmourPieceView } from "@/game/build-view";
-import { cellTypeColor, cellTypeLabel, elementColor } from "@/lib/site";
+import { cellTypeLabel, elementColor } from "@/lib/site";
 
 const CellChips = ({ cells }: { cells: CellSlotView[] }) => (
     <div className="flex flex-wrap gap-1.5">
         {cells
             .filter(cell => cell.cellName !== null)
             .map((cell, index) => (
-                <span
+                <CellChip
                     key={index}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs"
-                >
-                    <span
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: cellTypeColor(cell.slot) }}
-                        aria-hidden
-                    />
-                    <span className="font-medium">
-                        {cell.perks.map(perk => `${perk.name} ${perk.value}`).join(" / ") || cell.cellName}
-                    </span>
-                    <span className="text-muted-foreground">({cellTypeLabel(cell.slot)})</span>
-                </span>
+                    slot={cell.slot}
+                    cellName={
+                        cell.perks.map(perk => `${perk.name} ${perk.value}`).join(" / ") || cell.cellName
+                    }
+                />
             ))}
     </div>
 );
@@ -55,10 +48,7 @@ const PieceCard = ({
         <Card>
             <CardContent className="flex flex-col gap-2 p-4">
                 <div className="flex items-center gap-3">
-                    <div
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border bg-muted/40"
-                        style={{ borderColor: piece.surged ? elementColor(null) : undefined }}
-                    >
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1">
                         <Image src={piece.icon} alt={piece.name} width={40} height={40} className="h-auto w-auto object-contain" />
                     </div>
                     <div className="min-w-0">
@@ -72,9 +62,7 @@ const PieceCard = ({
                 {piece.perks.length > 0 ? (
                     <div className="flex flex-wrap gap-1.5">
                         {piece.perks.map((perk, index) => (
-                            <Badge key={index} variant="outline" className="border-amber-500/50 text-amber-600 dark:text-amber-400">
-                                {perk.name} {perk.value}
-                            </Badge>
+                            <PerkChip key={index} name={perk.name} value={perk.value} />
                         ))}
                     </div>
                 ) : null}
@@ -110,14 +98,7 @@ export const BuildDisplay = ({ view }: { view: BuildView }) => {
                                         </p>
                                     </div>
                                 </div>
-                                <Badge
-                                    style={{
-                                        backgroundColor: elementColor(view.weapon.elemental),
-                                        color: "#14161a",
-                                    }}
-                                >
-                                    {view.weapon.elemental ?? "Neutral"}
-                                </Badge>
+                                <ElementChip element={view.weapon.elemental ?? "Neutral"} />
                             </div>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-3">
@@ -236,17 +217,13 @@ export const BuildDisplay = ({ view }: { view: BuildView }) => {
                             view.perkTotals.map(perk => (
                                 <div key={perk.name} className="flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-2">
-                                        <span
-                                            className="h-2.5 w-2.5 rounded-full"
-                                            style={{ backgroundColor: cellTypeColor(perk.type) }}
-                                            aria-hidden
-                                        />
+                                        <CellDot slot={perk.type} />
                                         <span className="text-sm">{perk.name}</span>
                                         <span className="text-[11px] text-muted-foreground">
                                             {cellTypeLabel(perk.type)}
                                         </span>
                                     </div>
-                                    <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
+                                    <span className="text-sm font-bold text-primary">
                                         {perk.value > 0 ? "+" : ""}
                                         {perk.value}
                                     </span>

@@ -1,9 +1,0 @@
-Mystic Builder - fan-made Dauntless build planner
-
-The build id encoding/decoding code in src/game/build-id.ts, src/game/build-model.ts
-and src/game/upgrade-build.ts is ported from dauntless-builder-reforged
-(https://github.com/atomicptr/dauntless-builder-reforged) and therefore licensed
-under AGPL-3.0. The rest of the project is provided as-is for the community.
-
-Dauntless and all related assets are property of Phoenix Labs.
-This is an unofficial fan project not affiliated with or endorsed by Phoenix Labs.

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Database, Hammer } from "lucide-react";
+import { Database } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BuildEditor from "@/components/builder/build-editor";
@@ -24,12 +24,9 @@ const Home = async ({ searchParams }: HomeProps) => {
     return (
         <main className="mystic-glow mx-auto w-full max-w-6xl flex-1 px-4 py-8">
             <section className="flex flex-col items-center gap-3 text-center">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Hammer className="h-4 w-4 text-primary" aria-hidden />
-                    <span>
-                        Dauntless {GAME_VERSION} - Mystic Paradox revival
-                    </span>
-                </div>
+                <p className="panel-label">
+                    Dauntless {GAME_VERSION} - Mystic Paradox revival
+                </p>
                 <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
                     Plan builds in the dark.{" "}
                     <span className="text-primary">Share them with the light.</span>
@@ -48,6 +45,7 @@ const Home = async ({ searchParams }: HomeProps) => {
             </section>
 
             <section className="mt-8" aria-label="Build planner and database">
+                <div className="gold-rule mb-6" aria-hidden />
                 <Tabs defaultValue={defaultTab}>
                     <TabsList className="grid w-full grid-cols-2 sm:inline-grid sm:w-auto">
                         <TabsTrigger value="builder">Builder</TabsTrigger>
