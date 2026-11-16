@@ -12,7 +12,8 @@ import { cellTypeColor, cellTypeLabel, elementColor } from "@/lib/site";
  *   4. perk chips (gold outline)  5. cell chips (colored dot outline)
  */
 
-const CHIP_BASE = "h-6 px-2 py-0 text-[11px] font-medium gap-1.5";
+const CHIP_BASE =
+    "h-6 rounded-full px-2.5 py-0 text-[11px] font-medium gap-1.5 shadow-[0_1px_2px_oklch(0_0_0/0.3)]";
 
 export const TypeChip = ({ label }: { label: string }) => (
     <Badge variant="secondary" className={CHIP_BASE}>
@@ -45,7 +46,10 @@ export const PerkChip = ({
     value: number;
     surged?: boolean;
 }) => (
-    <Badge variant="outline" className={`${CHIP_BASE} border-primary/45 bg-primary/10 text-primary`}>
+    <Badge
+        variant="outline"
+        className={`${CHIP_BASE} border-primary/45 bg-primary/10 text-primary ${surged ? "shadow-[0_1px_2px_oklch(0_0_0/0.3),0_0_8px_oklch(0.82_0.135_85/0.25)]" : ""}`}
+    >
         {name} {value > 0 ? `+${value}` : value}
         {surged ? " (surged)" : ""}
     </Badge>

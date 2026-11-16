@@ -1,0 +1,878 @@
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 1a82f8e..cf834f8 100755
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -50,8 +50,8 @@
+  */
+ :root,
+ .dark {
+-  --radius: 0.5rem;
+-  --background: oklch(0.15 0.028 262);
++  --radius: 0.625rem;
++  --background: oklch(0.14 0.026 262);
+   --foreground: oklch(0.93 0.012 95);
+   --card: oklch(0.19 0.032 260);
+   --card-foreground: oklch(0.93 0.012 95);
+@@ -82,6 +82,10 @@
+   --sidebar-accent-foreground: oklch(0.93 0.012 95);
+   --sidebar-border: oklch(0.31 0.04 258);
+   --sidebar-ring: oklch(0.82 0.135 85 / 60%);
++
++  /* Extra Mystic Builder tokens (not part of shadcn). */
++  --gold-bright: oklch(0.88 0.13 92);
++  --gold-deep: oklch(0.72 0.14 78);
+ }
+ 
+ @layer base {
+@@ -96,6 +100,28 @@
+   }
+ }
+ 
++/* ------------------------------------------------------------------ */
++/* Ambient atmosphere                                                  */
++/* ------------------------------------------------------------------ */
++
++/*
++ * Layered aether haze behind the whole site: lantern gold falling from the
++ * top, steel-blue and umbral-purple washes in the corners, plus a soft
++ * vignette so panels read clearly against the glow.
++ */
++body::before {
++  content: "";
++  position: fixed;
++  inset: 0;
++  z-index: -1;
++  pointer-events: none;
++  background-image:
++    radial-gradient(75% 40% at 50% -5%, oklch(0.82 0.135 85 / 9%) 0%, transparent 68%),
++    radial-gradient(45% 35% at 8% 12%, oklch(0.6 0.1 250 / 12%) 0%, transparent 70%),
++    radial-gradient(45% 35% at 95% 25%, oklch(0.55 0.12 300 / 8%) 0%, transparent 70%),
++    radial-gradient(120% 90% at 50% 110%, oklch(0.1 0.02 262 / 80%) 0%, transparent 55%);
++}
++
+ /* Radial glow behind the hero / editor header: gold over a blue aether haze. */
+ .mystic-glow {
+   background-image:
+@@ -103,12 +129,17 @@
+     radial-gradient(45% 40% at 15% 5%, oklch(0.6 0.1 250 / 10%) 0%, transparent 70%);
+ }
+ 
++/* ------------------------------------------------------------------ */
++/* Signature utilities                                                 */
++/* ------------------------------------------------------------------ */
++
+ /* Gold gradient rule used under the site header and section titles. */
+ .gold-rule {
+   background-image: linear-gradient(
+     to right,
+     transparent,
+     oklch(0.82 0.135 85 / 55%) 20%,
++    oklch(0.88 0.13 92 / 70%) 50%,
+     oklch(0.82 0.135 85 / 55%) 80%,
+     transparent
+   );
+@@ -119,3 +150,82 @@
+ .panel-label {
+   @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-primary;
+ }
++
++/* Lantern-gold gradient headline text. */
++@utility text-gold-gradient {
++  background-image: linear-gradient(
++    100deg,
++    oklch(0.82 0.135 85) 0%,
++    oklch(0.9 0.12 95) 35%,
++    oklch(0.78 0.14 75) 70%,
++    oklch(0.88 0.12 90) 100%
++  );
++  background-clip: text;
++  -webkit-background-clip: text;
++  color: transparent;
++}
++
++/* Glowing number, used by the big stat figures. */
++@utility stat-glow {
++  text-shadow: 0 0 18px oklch(0.82 0.135 85 / 45%), 0 0 42px oklch(0.82 0.135 85 / 18%);
++}
++
++/* Soft lantern glow around icon badges and selected item icons. */
++@utility icon-glow {
++  filter: drop-shadow(0 0 6px oklch(0.82 0.135 85 / 35%));
++}
++
++/* ------------------------------------------------------------------ */
++/* Motion                                                              */
++/* ------------------------------------------------------------------ */
++
++/* Slow breathing glow behind the hero lantern mark. */
++@keyframes mystic-pulse {
++  0%,
++  100% {
++    box-shadow: 0 0 18px 2px oklch(0.82 0.135 85 / 30%), 0 0 46px 8px oklch(0.82 0.135 85 / 12%);
++  }
++  50% {
++    box-shadow: 0 0 26px 6px oklch(0.82 0.135 85 / 45%), 0 0 60px 14px oklch(0.82 0.135 85 / 20%);
++  }
++}
++
++.mystic-pulse {
++  animation: mystic-pulse 5s ease-in-out infinite;
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .mystic-pulse {
++    animation: none;
++  }
++}
++
++/* ------------------------------------------------------------------ */
++/* Scrollbars                                                          */
++/* ------------------------------------------------------------------ */
++
++* {
++  scrollbar-width: thin;
++  scrollbar-color: oklch(0.45 0.05 258) transparent;
++}
++
++*::-webkit-scrollbar {
++  width: 8px;
++  height: 8px;
++}
++
++*::-webkit-scrollbar-track {
++  background: transparent;
++}
++
++*::-webkit-scrollbar-thumb {
++  background: oklch(0.42 0.05 258);
++  border-radius: 999px;
++  border: 2px solid transparent;
++  background-clip: padding-box;
++}
++
++*::-webkit-scrollbar-thumb:hover {
++  background: oklch(0.55 0.07 80);
++  background-clip: padding-box;
++}
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index cf8830d..1c8ac2d 100755
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -1,9 +1,11 @@
+ import type { Metadata, Viewport } from "next";
+ import Link from "next/link";
+-import { Hammer, Github } from "lucide-react";
++import { Suspense } from "react";
++import { Github, Hammer } from "lucide-react";
+ import "./globals.css";
+ 
+ import { Toaster } from "@/components/ui/toaster";
++import NavLinks from "@/components/site-nav-links";
+ import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
+ 
+ const siteUrl = getSiteUrl();
+@@ -35,27 +37,33 @@ export const viewport: Viewport = {
+ };
+ 
+ const Header = () => (
+-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
++    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+         <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
+         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
+-            <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+-                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/50 bg-primary/15 text-primary shadow-[0_0_14px_oklch(0.82_0.135_85/0.35)]">
+-                    <Hammer className="h-4 w-4" aria-hidden />
++            <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
++                <span
++                    className="mystic-pulse flex h-8 w-8 rotate-45 items-center justify-center rounded-md border border-primary/60 bg-primary/15 text-primary transition-transform duration-300 group-hover:rotate-[50deg]"
++                    aria-hidden
++                >
++                    <Hammer className="h-4 w-4 -rotate-45" />
++                </span>
++                <span className="whitespace-nowrap text-base sm:text-lg">
++                    <span className="text-gold-gradient">Mystic</span>{" "}
++                    <span className="text-foreground">Builder</span>
+                 </span>
+-                <span className="text-primary">{SITE_NAME}</span>
+             </Link>
+-            <nav className="flex items-center gap-4 text-sm text-muted-foreground" aria-label="Main navigation">
+-                <Link href="/" className="transition-colors hover:text-foreground">
+-                    Builder
+-                </Link>
+-                <Link href="/?tab=database" className="transition-colors hover:text-foreground">
+-                    Database
+-                </Link>
++            <nav
++                className="flex items-center gap-1 text-sm"
++                aria-label="Main navigation"
++            >
++                <Suspense fallback={null}>
++                    <NavLinks />
++                </Suspense>
+                 <a
+                     href="https://github.com/atomicptr/dauntless-builder-reforged"
+                     target="_blank"
+                     rel="noopener noreferrer"
+-                    className="flex items-center gap-1.5 transition-colors hover:text-foreground"
++                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:bg-accent/60 hover:text-foreground"
+                 >
+                     <Github className="h-4 w-4" aria-hidden />
+                     <span className="hidden sm:inline">Source data</span>
+@@ -66,7 +74,8 @@ const Header = () => (
+ );
+ 
+ const Footer = () => (
+-    <footer className="mt-auto border-t py-6">
++    <footer className="relative mt-auto border-t py-6">
++        <div className="gold-rule absolute inset-x-0 top-0 opacity-60" aria-hidden />
+         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-4 text-xs text-muted-foreground sm:flex-row">
+             <p>
+                 {SITE_NAME} - a fan-made Dauntless build planner for the 1.14.7 Mystic Paradox revival. Dauntless and
+@@ -78,7 +87,7 @@ const Footer = () => (
+                     href="https://github.com/atomicptr/dauntless-builder-reforged"
+                     target="_blank"
+                     rel="noopener noreferrer"
+-                    className="underline underline-offset-4 hover:text-foreground"
++                    className="underline underline-offset-4 transition-colors hover:text-primary"
+                 >
+                     dauntless-builder-reforged
+                 </a>{" "}
+diff --git a/src/app/page.tsx b/src/app/page.tsx
+index ae87008..2860fef 100755
+--- a/src/app/page.tsx
++++ b/src/app/page.tsx
+@@ -1,6 +1,6 @@
+ import type { Metadata } from "next";
+ import { Suspense } from "react";
+-import { Database } from "lucide-react";
++import { Database, Hammer, Swords, Shield, Sparkles, Puzzle } from "lucide-react";
+ 
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+ import BuildEditor from "@/components/builder/build-editor";
+@@ -22,36 +22,64 @@ const Home = async ({ searchParams }: HomeProps) => {
+     const defaultTab = tab === "database" ? "database" : "builder";
+ 
+     return (
+-        <main className="mystic-glow mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+-            <section className="flex flex-col items-center gap-3 text-center">
++        <main className="mystic-glow mx-auto w-full max-w-6xl flex-1 px-4 py-10">
++            <section className="flex flex-col items-center gap-4 text-center">
++                <span
++                    className="mystic-pulse flex h-12 w-12 rotate-45 items-center justify-center rounded-lg border border-primary/60 bg-primary/15 text-primary"
++                    aria-hidden
++                >
++                    <Hammer className="h-5 w-5 -rotate-45" />
++                </span>
+                 <p className="panel-label">
+                     Dauntless {GAME_VERSION} - Mystic Paradox revival
+                 </p>
+-                <h1 className="max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl">
++                <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+                     Plan builds in the dark.{" "}
+-                    <span className="text-primary">Share them with the light.</span>
++                    <span className="text-gold-gradient">Share them with the light.</span>
+                 </h1>
+-                <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
++                <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                     {SITE_NAME} is a full Dauntless build planner: pick your weapon, armour, lantern, omnicell and
+                     cells, then share a link that renders as a rich embed card in Discord.
+                 </p>
+-                <p className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
+-                    <span className="inline-flex items-center gap-1.5">
+-                        <Database className="h-3.5 w-3.5" aria-hidden />
+-                        {Object.keys(gameData.weapons).length} weapons, {Object.keys(gameData.armours).length} armour
+-                        pieces, {Object.keys(gameData.cells).length} cells, {Object.keys(gameData.perks).length} perks
+-                    </span>
+-                </p>
++                <ul className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
++                    {(
++                        [
++                            [Swords, `${Object.keys(gameData.weapons).length} weapons`],
++                            [Shield, `${Object.keys(gameData.armours).length} armour pieces`],
++                            [Puzzle, `${Object.keys(gameData.cells).length} cells`],
++                            [Sparkles, `${Object.keys(gameData.perks).length} perks`],
++                        ] as const
++                    ).map(([Icon, label]) => (
++                        <li
++                            key={label}
++                            className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/50 px-3 py-1 backdrop-blur-sm transition-colors hover:border-primary/40 hover:text-foreground"
++                        >
++                            <Icon className="h-3.5 w-3.5 text-primary/80" aria-hidden />
++                            {label}
++                        </li>
++                    ))}
++                    <li className="sr-only">
++                        <Database aria-hidden />
++                    </li>
++                </ul>
+             </section>
+ 
+             <section className="mt-8" aria-label="Build planner and database">
+-                <div className="gold-rule mb-6" aria-hidden />
++                <div className="gold-rule mb-8" aria-hidden />
+                 <Tabs defaultValue={defaultTab}>
+-                    <TabsList className="grid w-full grid-cols-2 sm:inline-grid sm:w-auto">
+-                        <TabsTrigger value="builder">Builder</TabsTrigger>
+-                        <TabsTrigger value="database">Item database</TabsTrigger>
+-                    </TabsList>
+-                    <TabsContent value="builder" className="mt-4">
++                    <div className="flex justify-center">
++                        <TabsList className="grid w-full grid-cols-2 sm:inline-grid sm:w-auto">
++                            <TabsTrigger value="builder">
++                                <Hammer className="h-4 w-4" aria-hidden />
++                                Builder
++                            </TabsTrigger>
++                            <TabsTrigger value="database">
++                                <Database className="h-4 w-4" aria-hidden />
++                                Item database
++                            </TabsTrigger>
++                        </TabsList>
++                    </div>
++                    <TabsContent value="builder" className="mt-6">
+                         <Suspense
+                             fallback={
+                                 <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">
+@@ -62,7 +90,7 @@ const Home = async ({ searchParams }: HomeProps) => {
+                             <BuildEditor />
+                         </Suspense>
+                     </TabsContent>
+-                    <TabsContent value="database" className="mt-4">
++                    <TabsContent value="database" className="mt-6">
+                         <DatabaseBrowser />
+                     </TabsContent>
+                 </Tabs>
+diff --git a/src/components/browse-database.tsx b/src/components/browse-database.tsx
+index 869b668..a59baa1 100755
+--- a/src/components/browse-database.tsx
++++ b/src/components/browse-database.tsx
+@@ -53,8 +53,14 @@ const normalize = (value: string): string => value.toLowerCase().trim();
+ /* ------------------------------------------------------------------ */
+ 
+ const IconBox = ({ src, name }: { src: string; name: string }) => (
+-    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1.5">
+-        <Image src={src} alt={name} width={48} height={48} className="h-auto w-auto max-h-full max-w-full object-contain" />
++    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1.5 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
++        <Image
++            src={src}
++            alt={name}
++            width={48}
++            height={48}
++            className="h-auto w-auto max-h-full max-w-full object-contain transition-[filter] duration-300 group-hover:icon-glow"
++        />
+     </div>
+ );
+ 
+@@ -103,7 +109,7 @@ const ItemCard = ({ icon, name, subtitle, children }: {
+     subtitle?: string | null;
+     children: React.ReactNode;
+ }) => (
+-    <Card className="h-full">
++    <Card className="group h-full">
+         <CardContent className="relative flex h-full gap-3 p-4">
+             {icon ? <IconBox src={icon} name={name} /> : null}
+             <div className="flex min-w-0 flex-1 flex-col gap-2">
+diff --git a/src/components/build-display.tsx b/src/components/build-display.tsx
+index caccd00..8a8af86 100755
+--- a/src/components/build-display.tsx
++++ b/src/components/build-display.tsx
+@@ -45,11 +45,17 @@ const PieceCard = ({
+     }
+ 
+     return (
+-        <Card>
++        <Card className="group">
+             <CardContent className="flex flex-col gap-2 p-4">
+                 <div className="flex items-center gap-3">
+-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1">
+-                        <Image src={piece.icon} alt={piece.name} width={40} height={40} className="h-auto w-auto object-contain" />
++                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
++                        <Image
++                            src={piece.icon}
++                            alt={piece.name}
++                            width={40}
++                            height={40}
++                            className="h-auto w-auto object-contain transition-[filter] duration-300 group-hover:icon-glow"
++                        />
+                     </div>
+                     <div className="min-w-0">
+                         <p className="text-xs text-muted-foreground">
+@@ -110,7 +116,7 @@ export const BuildDisplay = ({ view }: { view: BuildView }) => {
+                                         .map(part => (
+                                             <div
+                                                 key={part.label}
+-                                                className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2.5"
++                                                className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2.5 transition-colors duration-300 hover:border-primary/35"
+                                             >
+                                                 <Image
+                                                     src={part.part!.icon}
+diff --git a/src/components/builder/build-editor.tsx b/src/components/builder/build-editor.tsx
+index 94038a6..679325e 100755
+--- a/src/components/builder/build-editor.tsx
++++ b/src/components/builder/build-editor.tsx
+@@ -8,8 +8,14 @@ import {
+     Copy,
+     Dices,
+     Eraser,
++    Gauge,
++    Lamp,
+     Link2,
+     MessageSquare,
++    Puzzle,
++    Shirt,
++    Sparkles,
++    Sword,
+     TriangleAlert,
+ } from "lucide-react";
+ 
+@@ -44,6 +50,7 @@ import {
+ import { buildBuildView, tryDeserialize } from "@/game/build-view";
+ import type { CellType, Part, WeaponType } from "@/game/types";
+ import {
++    cellTypeColor,
+     cellTypeLabel,
+     extractBuildId,
+     GAME_EDITION,
+@@ -316,6 +323,32 @@ const SurgedToggle = ({
+     </label>
+ );
+ 
++/** Gold-framed section icon used in every card title for a cohesive look. */
++const SectionIcon = ({ icon: Icon }: { icon: typeof Sword }) => (
++    <span
++        className="flex h-6 w-6 shrink-0 rotate-45 items-center justify-center rounded-[5px] border border-primary/40 bg-primary/12 text-primary shadow-[0_0_10px_oklch(0.82_0.135_85/0.2)]"
++        aria-hidden
++    >
++        <Icon className="h-3.5 w-3.5 -rotate-45" />
++    </span>
++);
++
++/** Seven little lantern slots showing how many cells are filled. */
++const CellFillDots = ({ filled }: { filled: number }) => (
++    <div className="mt-2 flex items-center justify-center gap-1" aria-hidden>
++        {Array.from({ length: 7 }, (_, index) => (
++            <span
++                key={index}
++                className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
++                    index < filled
++                        ? "bg-primary shadow-[0_0_6px_oklch(0.82_0.135_85/0.6)]"
++                        : "bg-muted-foreground/25"
++                }`}
++            />
++        ))}
++    </div>
++);
++
+ /* ------------------------------------------------------------------ */
+ /* The editor                                                          */
+ /* ------------------------------------------------------------------ */
+@@ -621,7 +654,10 @@ const BuildEditor = () => {
+                     <Card>
+                         <CardHeader className="pb-3">
+                             <div className="flex flex-wrap items-center justify-between gap-2">
+-                                <CardTitle className="text-base">Weapon</CardTitle>
++                                <CardTitle className="text-base">
++                                    <SectionIcon icon={Sword} />
++                                    Weapon
++                                </CardTitle>
+                                 {weaponData ? (
+                                     <SurgedToggle
+                                         label="Weapon"
+@@ -718,7 +754,10 @@ const BuildEditor = () => {
+                     {/* Armour */}
+                     <Card>
+                         <CardHeader className="pb-3">
+-                            <CardTitle className="text-base">Armour</CardTitle>
++                            <CardTitle className="text-base">
++                                <SectionIcon icon={Shirt} />
++                                Armour
++                            </CardTitle>
+                         </CardHeader>
+                         <CardContent>
+                             <div className="grid gap-4 sm:grid-cols-2">
+@@ -732,7 +771,10 @@ const BuildEditor = () => {
+                                 ).map(([id, label, nameKey, surgedKey, cellKey]) => {
+                                     const piece = draft[nameKey] ? findArmourByName(draft[nameKey]!) : null;
+                                     return (
+-                                        <div key={id} className="flex flex-col gap-2 rounded-md border border-border/70 bg-muted/20 p-3">
++                                        <div
++                                            key={id}
++                                            className="flex flex-col gap-2 rounded-lg border border-border/60 bg-muted/20 p-3 transition-colors duration-300 hover:border-primary/35 hover:bg-muted/35"
++                                        >
+                                             <div className="flex items-center justify-between gap-2">
+                                                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                                                     {label}
+@@ -789,7 +831,10 @@ const BuildEditor = () => {
+                     <div className="grid gap-4 sm:grid-cols-2">
+                         <Card>
+                             <CardHeader className="pb-3">
+-                                <CardTitle className="text-base">Lantern</CardTitle>
++                                <CardTitle className="text-base">
++                                    <SectionIcon icon={Lamp} />
++                                    Lantern
++                                </CardTitle>
+                             </CardHeader>
+                             <CardContent className="flex flex-col gap-3">
+                                 <ItemSelect
+@@ -811,7 +856,10 @@ const BuildEditor = () => {
+                         </Card>
+                         <Card>
+                             <CardHeader className="pb-3">
+-                                <CardTitle className="text-base">Omnicell</CardTitle>
++                                <CardTitle className="text-base">
++                                    <SectionIcon icon={Sparkles} />
++                                    Omnicell
++                                </CardTitle>
+                             </CardHeader>
+                             <CardContent className="flex flex-col gap-3">
+                                 <ItemSelect
+@@ -834,24 +882,38 @@ const BuildEditor = () => {
+                 {/* ------------------------- right column ------------------------- */}
+                 <div className="flex flex-col gap-4 lg:col-span-2">
+                     {/* Stats */}
+-                    <Card>
++                    <Card className="overflow-hidden">
+                         <CardHeader className="pb-3">
+-                            <CardTitle className="text-base">Build stats</CardTitle>
++                            <CardTitle className="text-base">
++                                <SectionIcon icon={Gauge} />
++                                Build stats
++                            </CardTitle>
+                         </CardHeader>
+                         <CardContent className="grid grid-cols-3 gap-3 text-center">
+-                            <div>
+-                                <p className="text-2xl font-bold text-primary">{totalPower}</p>
+-                                <p className="text-xs text-muted-foreground">Weapon power</p>
++                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
++                                <span
++                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
++                                    aria-hidden
++                                />
++                                <p className="stat-glow text-2xl font-bold text-primary">{totalPower}</p>
++                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Weapon power</p>
+                             </div>
+-                            <div>
+-                                <p className="text-2xl font-bold text-primary">{totalResistance}</p>
+-                                <p className="text-xs text-muted-foreground">Armour resistance</p>
++                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
++                                <span
++                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
++                                    aria-hidden
++                                />
++                                <p className="stat-glow text-2xl font-bold text-primary">{totalResistance}</p>
++                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Armour resistance</p>
+                             </div>
+-                            <div>
+-                                <p className="text-2xl font-bold text-primary">
+-                                    {filledCells}/7
+-                                </p>
+-                                <p className="text-xs text-muted-foreground">Cells filled</p>
++                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
++                                <span
++                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
++                                    aria-hidden
++                                />
++                                <p className="stat-glow text-2xl font-bold text-primary">{filledCells}/7</p>
++                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Cells filled</p>
++                                <CellFillDots filled={filledCells} />
+                             </div>
+                         </CardContent>
+                     </Card>
+@@ -859,35 +921,56 @@ const BuildEditor = () => {
+                     {/* Perk totals */}
+                     <Card className="flex min-h-0 flex-col">
+                         <CardHeader className="pb-3">
+-                            <CardTitle className="text-base">Perk totals</CardTitle>
++                            <CardTitle className="text-base">
++                                <SectionIcon icon={Puzzle} />
++                                Perk totals
++                            </CardTitle>
+                             <CardDescription>Everything your gear and cells add up to.</CardDescription>
+                         </CardHeader>
+-                        <CardContent className="max-h-80 overflow-y-auto">
++                        <CardContent className="max-h-80 overflow-y-auto pr-2">
+                             {view && view.perkTotals.length > 0 ? (
+-                                <div className="flex flex-col gap-2">
+-                                    {view.perkTotals.map(perk => (
+-                                        <div
+-                                            key={perk.name}
+-                                            className="flex items-center justify-between gap-2"
+-                                            title={gameData.perks[perk.name]?.description ?? undefined}
+-                                        >
+-                                            <div className="flex min-w-0 items-center gap-2">
+-                                                <CellDot slot={perk.type} />
+-                                                <span className="truncate text-sm">{perk.name}</span>
+-                                                <span className="shrink-0 text-[11px] text-muted-foreground">
+-                                                    {cellTypeLabel(perk.type)}
++                                <div className="flex flex-col gap-2.5">
++                                    {view.perkTotals.map(perk => {
++                                        const barWidth = Math.min(Math.max(perk.value, 0), 6) * (100 / 6);
++                                        return (
++                                            <div
++                                                key={perk.name}
++                                                className="group/perk flex items-center gap-3 rounded-md px-1.5 py-1 transition-colors hover:bg-accent/50"
++                                                title={gameData.perks[perk.name]?.description ?? undefined}
++                                            >
++                                                <div className="min-w-0 flex-1">
++                                                    <div className="flex items-center gap-2">
++                                                        <CellDot slot={perk.type} />
++                                                        <span className="truncate text-sm">{perk.name}</span>
++                                                        <span className="shrink-0 text-[11px] text-muted-foreground">
++                                                            {cellTypeLabel(perk.type)}
++                                                        </span>
++                                                    </div>
++                                                    <div
++                                                        className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted-foreground/20"
++                                                        aria-hidden
++                                                    >
++                                                        <div
++                                                            className="h-full rounded-full transition-[width] duration-500"
++                                                            style={{
++                                                                width: `${barWidth}%`,
++                                                                backgroundColor: cellTypeColor(perk.type),
++                                                                opacity: perk.value >= 6 ? 1 : 0.7,
++                                                            }}
++                                                        />
++                                                    </div>
++                                                </div>
++                                                <span
++                                                    className={`shrink-0 text-sm font-bold ${
++                                                        perk.value >= 6 ? "stat-glow text-primary" : "text-foreground"
++                                                    }`}
++                                                >
++                                                    {perk.value > 0 ? "+" : ""}
++                                                    {perk.value}
+                                                 </span>
+                                             </div>
+-                                            <span
+-                                                className={`shrink-0 text-sm font-bold ${
+-                                                    perk.value >= 6 ? "text-primary" : "text-foreground"
+-                                                }`}
+-                                            >
+-                                                {perk.value > 0 ? "+" : ""}
+-                                                {perk.value}
+-                                            </span>
+-                                        </div>
+-                                    ))}
++                                        );
++                                    })}
+                                 </div>
+                             ) : (
+                                 <p className="text-sm text-muted-foreground">
+@@ -901,7 +984,7 @@ const BuildEditor = () => {
+                     <Card>
+                         <CardHeader className="pb-3">
+                             <CardTitle className="flex items-center gap-2 text-base">
+-                                <Link2 className="h-4 w-4 text-primary" aria-hidden />
++                                <SectionIcon icon={Link2} />
+                                 Import a build
+                             </CardTitle>
+                             <CardDescription>
+@@ -944,7 +1027,7 @@ const BuildEditor = () => {
+                                 <CardHeader className="pb-3">
+                                     <CollapsibleTrigger className="flex w-full items-center justify-between gap-2 text-left">
+                                         <CardTitle className="flex items-center gap-2 text-base">
+-                                            <MessageSquare className="h-4 w-4 text-primary" aria-hidden />
++                                            <SectionIcon icon={MessageSquare} />
+                                             Discord preview
+                                         </CardTitle>
+                                         <span className="text-xs text-muted-foreground">toggle</span>
+diff --git a/src/components/builder/item-select.tsx b/src/components/builder/item-select.tsx
+index fb4d1b3..696393b 100755
+--- a/src/components/builder/item-select.tsx
++++ b/src/components/builder/item-select.tsx
+@@ -89,7 +89,7 @@ const ItemSelect = ({
+                                 alt=""
+                                 width={26}
+                                 height={26}
+-                                className="h-auto w-auto shrink-0 object-contain"
++                                className="icon-glow h-auto w-auto shrink-0 object-contain"
+                             />
+                         ) : null}
+                         <span className="truncate">{selected ? selected.label : placeholder}</span>
+@@ -123,7 +123,10 @@ const ItemSelect = ({
+                     )}
+                 </Button>
+             </PopoverTrigger>
+-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
++            <PopoverContent
++                className="w-[--radix-popover-trigger-width] rounded-xl border-primary/25 bg-popover/95 p-0 shadow-[0_16px_48px_-12px_oklch(0_0_0/0.7),0_0_0_1px_oklch(0.82_0.135_85/0.1)] backdrop-blur-md"
++                align="start"
++            >
+                 <Command shouldFilter={true}>
+                     <div className="flex items-center gap-2 border-b px-3">
+                         <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+@@ -159,7 +162,7 @@ const ItemSelect = ({
+                                                 alt=""
+                                                 width={26}
+                                                 height={26}
+-                                                className="h-auto w-auto shrink-0 object-contain"
++                                                className="h-auto w-auto shrink-0 object-contain transition-[filter] data-[selected=true]:icon-glow"
+                                             />
+                                         ) : null}
+                                         <span className="min-w-0 flex-1 truncate">{option.label}</span>
+@@ -170,7 +173,7 @@ const ItemSelect = ({
+                                         ) : null}
+                                         <Check
+                                             className={cn(
+-                                                "h-4 w-4 shrink-0",
++                                                "h-4 w-4 shrink-0 text-primary drop-shadow-[0_0_6px_oklch(0.82_0.135_85/0.5)]",
+                                                 option.value === value ? "opacity-100" : "opacity-0",
+                                             )}
+                                             aria-hidden
+diff --git a/src/components/chips.tsx b/src/components/chips.tsx
+index cb91afa..7a322d3 100644
+--- a/src/components/chips.tsx
++++ b/src/components/chips.tsx
+@@ -12,7 +12,8 @@ import { cellTypeColor, cellTypeLabel, elementColor } from "@/lib/site";
+  *   4. perk chips (gold outline)  5. cell chips (colored dot outline)
+  */
+ 
+-const CHIP_BASE = "h-6 px-2 py-0 text-[11px] font-medium gap-1.5";
++const CHIP_BASE =
++    "h-6 rounded-full px-2.5 py-0 text-[11px] font-medium gap-1.5 shadow-[0_1px_2px_oklch(0_0_0/0.3)]";
+ 
+ export const TypeChip = ({ label }: { label: string }) => (
+     <Badge variant="secondary" className={CHIP_BASE}>
+@@ -45,7 +46,10 @@ export const PerkChip = ({
+     value: number;
+     surged?: boolean;
+ }) => (
+-    <Badge variant="outline" className={`${CHIP_BASE} border-primary/45 bg-primary/10 text-primary`}>
++    <Badge
++        variant="outline"
++        className={`${CHIP_BASE} border-primary/45 bg-primary/10 text-primary ${surged ? "shadow-[0_1px_2px_oklch(0_0_0/0.3),0_0_8px_oklch(0.82_0.135_85/0.25)]" : ""}`}
++    >
+         {name} {value > 0 ? `+${value}` : value}
+         {surged ? " (surged)" : ""}
+     </Badge>
+diff --git a/src/components/site-nav-links.tsx b/src/components/site-nav-links.tsx
+new file mode 100644
+index 0000000..3b75a92
+--- /dev/null
++++ b/src/components/site-nav-links.tsx
+@@ -0,0 +1,47 @@
++"use client";
++
++import Link from "next/link";
++import { usePathname, useSearchParams } from "next/navigation";
++import { cn } from "@/lib/utils";
++
++/**
++ * Header nav links with an active pill state. Split into a client component
++ * so the root layout stays a server component.
++ */
++const NavLinks = () => {
++    const pathname = usePathname();
++    const searchParams = useSearchParams();
++    const databaseActive = pathname === "/" && searchParams.get("tab") === "database";
++    const builderActive = pathname === "/" && !databaseActive;
++
++    return (
++        <>
++            <Link
++                href="/"
++                aria-current={builderActive ? "page" : undefined}
++                className={cn(
++                    "rounded-full px-3 py-1.5 transition-all duration-200 hover:bg-accent/60 hover:text-foreground",
++                    builderActive
++                        ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_oklch(0.82_0.135_85/0.35)]"
++                        : "text-muted-foreground",
++                )}
++            >
++                Builder
++            </Link>
++            <Link
++                href="/?tab=database"
++                aria-current={databaseActive ? "page" : undefined}
++                className={cn(
++                    "rounded-full px-3 py-1.5 transition-all duration-200 hover:bg-accent/60 hover:text-foreground",
++                    databaseActive
++                        ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_oklch(0.82_0.135_85/0.35)]"
++                        : "text-muted-foreground",
++                )}
++            >
++                Database
++            </Link>
++        </>
++    );
++};
++
++export default NavLinks;
+diff --git a/src/components/ui/button.tsx b/src/components/ui/button.tsx
+index a2df8dc..d0f6558 100755
+--- a/src/components/ui/button.tsx
++++ b/src/components/ui/button.tsx
+@@ -10,11 +10,11 @@ const buttonVariants = cva(
+     variants: {
+       variant: {
+         default:
+-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
++          "bg-linear-to-b from-[oklch(0.85_0.14_88)] to-primary text-primary-foreground shadow-[0_1px_0_0_oklch(1_0_0/0.25)_inset,0_4px_14px_-4px_oklch(0.82_0.135_85/0.5)] hover:from-[oklch(0.89_0.13_92)] hover:to-[oklch(0.86_0.135_88)] hover:shadow-[0_1px_0_0_oklch(1_0_0/0.3)_inset,0_6px_18px_-4px_oklch(0.82_0.135_85/0.65)] active:to-[oklch(0.76_0.13_80)]",
+         destructive:
+           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+         outline:
+-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
++          "border border-input bg-background/60 shadow-xs backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-accent/70 hover:text-accent-foreground hover:shadow-[0_0_0_1px_oklch(0.82_0.135_85/0.25),0_4px_14px_-6px_oklch(0.82_0.135_85/0.35)] dark:bg-input/30 dark:border-input dark:hover:border-primary/50 dark:hover:bg-input/50",
+         secondary:
+           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+         ghost:
+diff --git a/src/components/ui/card.tsx b/src/components/ui/card.tsx
+index d05bbc6..1783bc5 100755
+--- a/src/components/ui/card.tsx
++++ b/src/components/ui/card.tsx
+@@ -7,7 +7,8 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
+     <div
+       data-slot="card"
+       className={cn(
+-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
++        "relative flex flex-col gap-6 rounded-xl border border-border/80 bg-card text-card-foreground py-6 shadow-[0_1px_0_0_oklch(0.93_0.012_95/0.04)_inset,0_8px_24px_-12px_oklch(0_0_0/0.5)] transition-[border-color,box-shadow] duration-300 hover:border-primary/25 hover:shadow-[0_1px_0_0_oklch(0.93_0.012_95/0.05)_inset,0_0_0_1px_oklch(0.82_0.135_85/0.08),0_12px_32px_-12px_oklch(0_0_0/0.55)]",
++        "bg-linear-to-b from-[oklch(0.225_0.035_260)] to-card",
+         className
+       )}
+       {...props}
+@@ -32,7 +33,10 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+   return (
+     <div
+       data-slot="card-title"
+-      className={cn("leading-none font-semibold", className)}
++      className={cn(
++        "flex items-center gap-2.5 leading-none font-semibold tracking-tight",
++        className
++      )}
+       {...props}
+     />
+   )
+diff --git a/src/components/ui/input.tsx b/src/components/ui/input.tsx
+index 03295ca..f72f6f5 100755
+--- a/src/components/ui/input.tsx
++++ b/src/components/ui/input.tsx
+@@ -11,6 +11,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+         "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+         "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
++        "hover:border-primary/40 focus-visible:border-primary/60 focus-visible:shadow-[0_0_0_1px_oklch(0.82_0.135_85/0.3),0_0_16px_-4px_oklch(0.82_0.135_85/0.4)]",
+         className
+       )}
+       {...props}
+diff --git a/src/components/ui/tabs.tsx b/src/components/ui/tabs.tsx
+index 2b4b181..e8650eb 100755
+--- a/src/components/ui/tabs.tsx
++++ b/src/components/ui/tabs.tsx
+@@ -26,7 +26,7 @@ function TabsList({
+     <TabsPrimitive.List
+       data-slot="tabs-list"
+       className={cn(
+-        "bg-muted/60 text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-md border border-border/70 p-[3px] shadow-inner",
++        "bg-muted/50 text-muted-foreground inline-flex h-10 w-fit items-center justify-center rounded-full border border-border/70 p-1 shadow-[0_2px_10px_-4px_oklch(0_0_0/0.5)_inset] backdrop-blur-sm",
+         className
+       )}
+       {...props}
+@@ -42,7 +42,7 @@ function TabsTrigger({
+     <TabsPrimitive.Trigger
+       data-slot="tabs-trigger"
+       className={cn(
+-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-sm border border-transparent px-3 py-1 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:font-semibold data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
++        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-full border border-transparent px-4 py-1 text-sm font-medium whitespace-nowrap transition-all duration-200 hover:text-foreground focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-linear-to-b data-[state=active]:from-[oklch(0.85_0.14_88)] data-[state=active]:to-primary data-[state=active]:text-primary-foreground data-[state=active]:font-semibold data-[state=active]:shadow-[0_1px_0_0_oklch(1_0_0/0.25)_inset,0_4px_14px_-4px_oklch(0.82_0.135_85/0.55)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+         className
+       )}
+       {...props}

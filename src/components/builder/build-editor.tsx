@@ -8,8 +8,14 @@ import {
     Copy,
     Dices,
     Eraser,
+    Gauge,
+    Lamp,
     Link2,
     MessageSquare,
+    Puzzle,
+    Shirt,
+    Sparkles,
+    Sword,
     TriangleAlert,
 } from "lucide-react";
 
@@ -44,6 +50,7 @@ import {
 import { buildBuildView, tryDeserialize } from "@/game/build-view";
 import type { CellType, Part, WeaponType } from "@/game/types";
 import {
+    cellTypeColor,
     cellTypeLabel,
     extractBuildId,
     GAME_EDITION,
@@ -314,6 +321,32 @@ const SurgedToggle = ({
         <Switch checked={surged} onCheckedChange={onChange} aria-label={`${label} power surge`} />
         {surged ? "Power Surged" : "Base level"}
     </label>
+);
+
+/** Gold-framed section icon used in every card title for a cohesive look. */
+const SectionIcon = ({ icon: Icon }: { icon: typeof Sword }) => (
+    <span
+        className="flex h-6 w-6 shrink-0 rotate-45 items-center justify-center rounded-[5px] border border-primary/40 bg-primary/12 text-primary shadow-[0_0_10px_oklch(0.82_0.135_85/0.2)]"
+        aria-hidden
+    >
+        <Icon className="h-3.5 w-3.5 -rotate-45" />
+    </span>
+);
+
+/** Seven little lantern slots showing how many cells are filled. */
+const CellFillDots = ({ filled }: { filled: number }) => (
+    <div className="mt-2 flex items-center justify-center gap-1" aria-hidden>
+        {Array.from({ length: 7 }, (_, index) => (
+            <span
+                key={index}
+                className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
+                    index < filled
+                        ? "bg-primary shadow-[0_0_6px_oklch(0.82_0.135_85/0.6)]"
+                        : "bg-muted-foreground/25"
+                }`}
+            />
+        ))}
+    </div>
 );
 
 /* ------------------------------------------------------------------ */
@@ -621,7 +654,10 @@ const BuildEditor = () => {
                     <Card>
                         <CardHeader className="pb-3">
                             <div className="flex flex-wrap items-center justify-between gap-2">
-                                <CardTitle className="text-base">Weapon</CardTitle>
+                                <CardTitle className="text-base">
+                                    <SectionIcon icon={Sword} />
+                                    Weapon
+                                </CardTitle>
                                 {weaponData ? (
                                     <SurgedToggle
                                         label="Weapon"
@@ -718,7 +754,10 @@ const BuildEditor = () => {
                     {/* Armour */}
                     <Card>
                         <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Armour</CardTitle>
+                            <CardTitle className="text-base">
+                                <SectionIcon icon={Shirt} />
+                                Armour
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-4 sm:grid-cols-2">
@@ -732,7 +771,10 @@ const BuildEditor = () => {
                                 ).map(([id, label, nameKey, surgedKey, cellKey]) => {
                                     const piece = draft[nameKey] ? findArmourByName(draft[nameKey]!) : null;
                                     return (
-                                        <div key={id} className="flex flex-col gap-2 rounded-md border border-border/70 bg-muted/20 p-3">
+                                        <div
+                                            key={id}
+                                            className="flex flex-col gap-2 rounded-lg border border-border/60 bg-muted/20 p-3 transition-colors duration-300 hover:border-primary/35 hover:bg-muted/35"
+                                        >
                                             <div className="flex items-center justify-between gap-2">
                                                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                                     {label}
@@ -789,7 +831,10 @@ const BuildEditor = () => {
                     <div className="grid gap-4 sm:grid-cols-2">
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-base">Lantern</CardTitle>
+                                <CardTitle className="text-base">
+                                    <SectionIcon icon={Lamp} />
+                                    Lantern
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-3">
                                 <ItemSelect
@@ -811,7 +856,10 @@ const BuildEditor = () => {
                         </Card>
                         <Card>
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-base">Omnicell</CardTitle>
+                                <CardTitle className="text-base">
+                                    <SectionIcon icon={Sparkles} />
+                                    Omnicell
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-3">
                                 <ItemSelect
@@ -834,24 +882,38 @@ const BuildEditor = () => {
                 {/* ------------------------- right column ------------------------- */}
                 <div className="flex flex-col gap-4 lg:col-span-2">
                     {/* Stats */}
-                    <Card>
+                    <Card className="overflow-hidden">
                         <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Build stats</CardTitle>
+                            <CardTitle className="text-base">
+                                <SectionIcon icon={Gauge} />
+                                Build stats
+                            </CardTitle>
                         </CardHeader>
                         <CardContent className="grid grid-cols-3 gap-3 text-center">
-                            <div>
-                                <p className="text-2xl font-bold text-primary">{totalPower}</p>
-                                <p className="text-xs text-muted-foreground">Weapon power</p>
+                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
+                                <span
+                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
+                                    aria-hidden
+                                />
+                                <p className="stat-glow text-2xl font-bold text-primary">{totalPower}</p>
+                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Weapon power</p>
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold text-primary">{totalResistance}</p>
-                                <p className="text-xs text-muted-foreground">Armour resistance</p>
+                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
+                                <span
+                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
+                                    aria-hidden
+                                />
+                                <p className="stat-glow text-2xl font-bold text-primary">{totalResistance}</p>
+                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Armour resistance</p>
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold text-primary">
-                                    {filledCells}/7
-                                </p>
-                                <p className="text-xs text-muted-foreground">Cells filled</p>
+                            <div className="relative rounded-lg border border-border/60 bg-muted/25 px-2 py-3">
+                                <span
+                                    className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
+                                    aria-hidden
+                                />
+                                <p className="stat-glow text-2xl font-bold text-primary">{filledCells}/7</p>
+                                <p className="mt-1 text-[11px] leading-tight text-muted-foreground">Cells filled</p>
+                                <CellFillDots filled={filledCells} />
                             </div>
                         </CardContent>
                     </Card>
@@ -859,35 +921,56 @@ const BuildEditor = () => {
                     {/* Perk totals */}
                     <Card className="flex min-h-0 flex-col">
                         <CardHeader className="pb-3">
-                            <CardTitle className="text-base">Perk totals</CardTitle>
+                            <CardTitle className="text-base">
+                                <SectionIcon icon={Puzzle} />
+                                Perk totals
+                            </CardTitle>
                             <CardDescription>Everything your gear and cells add up to.</CardDescription>
                         </CardHeader>
-                        <CardContent className="max-h-80 overflow-y-auto">
+                        <CardContent className="max-h-80 overflow-y-auto pr-2">
                             {view && view.perkTotals.length > 0 ? (
-                                <div className="flex flex-col gap-2">
-                                    {view.perkTotals.map(perk => (
-                                        <div
-                                            key={perk.name}
-                                            className="flex items-center justify-between gap-2"
-                                            title={gameData.perks[perk.name]?.description ?? undefined}
-                                        >
-                                            <div className="flex min-w-0 items-center gap-2">
-                                                <CellDot slot={perk.type} />
-                                                <span className="truncate text-sm">{perk.name}</span>
-                                                <span className="shrink-0 text-[11px] text-muted-foreground">
-                                                    {cellTypeLabel(perk.type)}
+                                <div className="flex flex-col gap-2.5">
+                                    {view.perkTotals.map(perk => {
+                                        const barWidth = Math.min(Math.max(perk.value, 0), 6) * (100 / 6);
+                                        return (
+                                            <div
+                                                key={perk.name}
+                                                className="group/perk flex items-center gap-3 rounded-md px-1.5 py-1 transition-colors hover:bg-accent/50"
+                                                title={gameData.perks[perk.name]?.description ?? undefined}
+                                            >
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <CellDot slot={perk.type} />
+                                                        <span className="truncate text-sm">{perk.name}</span>
+                                                        <span className="shrink-0 text-[11px] text-muted-foreground">
+                                                            {cellTypeLabel(perk.type)}
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted-foreground/20"
+                                                        aria-hidden
+                                                    >
+                                                        <div
+                                                            className="h-full rounded-full transition-[width] duration-500"
+                                                            style={{
+                                                                width: `${barWidth}%`,
+                                                                backgroundColor: cellTypeColor(perk.type),
+                                                                opacity: perk.value >= 6 ? 1 : 0.7,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <span
+                                                    className={`shrink-0 text-sm font-bold ${
+                                                        perk.value >= 6 ? "stat-glow text-primary" : "text-foreground"
+                                                    }`}
+                                                >
+                                                    {perk.value > 0 ? "+" : ""}
+                                                    {perk.value}
                                                 </span>
                                             </div>
-                                            <span
-                                                className={`shrink-0 text-sm font-bold ${
-                                                    perk.value >= 6 ? "text-primary" : "text-foreground"
-                                                }`}
-                                            >
-                                                {perk.value > 0 ? "+" : ""}
-                                                {perk.value}
-                                            </span>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <p className="text-sm text-muted-foreground">
@@ -901,7 +984,7 @@ const BuildEditor = () => {
                     <Card>
                         <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-base">
-                                <Link2 className="h-4 w-4 text-primary" aria-hidden />
+                                <SectionIcon icon={Link2} />
                                 Import a build
                             </CardTitle>
                             <CardDescription>
@@ -944,7 +1027,7 @@ const BuildEditor = () => {
                                 <CardHeader className="pb-3">
                                     <CollapsibleTrigger className="flex w-full items-center justify-between gap-2 text-left">
                                         <CardTitle className="flex items-center gap-2 text-base">
-                                            <MessageSquare className="h-4 w-4 text-primary" aria-hidden />
+                                            <SectionIcon icon={MessageSquare} />
                                             Discord preview
                                         </CardTitle>
                                         <span className="text-xs text-muted-foreground">toggle</span>

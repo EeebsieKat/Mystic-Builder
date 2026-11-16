@@ -89,7 +89,7 @@ const ItemSelect = ({
                                 alt=""
                                 width={26}
                                 height={26}
-                                className="h-auto w-auto shrink-0 object-contain"
+                                className="icon-glow h-auto w-auto shrink-0 object-contain"
                             />
                         ) : null}
                         <span className="truncate">{selected ? selected.label : placeholder}</span>
@@ -123,7 +123,10 @@ const ItemSelect = ({
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+            <PopoverContent
+                className="w-[--radix-popover-trigger-width] rounded-xl border-primary/25 bg-popover/95 p-0 shadow-[0_16px_48px_-12px_oklch(0_0_0/0.7),0_0_0_1px_oklch(0.82_0.135_85/0.1)] backdrop-blur-md"
+                align="start"
+            >
                 <Command shouldFilter={true}>
                     <div className="flex items-center gap-2 border-b px-3">
                         <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
@@ -159,7 +162,7 @@ const ItemSelect = ({
                                                 alt=""
                                                 width={26}
                                                 height={26}
-                                                className="h-auto w-auto shrink-0 object-contain"
+                                                className="h-auto w-auto shrink-0 object-contain transition-[filter] data-[selected=true]:icon-glow"
                                             />
                                         ) : null}
                                         <span className="min-w-0 flex-1 truncate">{option.label}</span>
@@ -170,7 +173,7 @@ const ItemSelect = ({
                                         ) : null}
                                         <Check
                                             className={cn(
-                                                "h-4 w-4 shrink-0",
+                                                "h-4 w-4 shrink-0 text-primary drop-shadow-[0_0_6px_oklch(0.82_0.135_85/0.5)]",
                                                 option.value === value ? "opacity-100" : "opacity-0",
                                             )}
                                             aria-hidden

@@ -45,11 +45,17 @@ const PieceCard = ({
     }
 
     return (
-        <Card>
+        <Card className="group">
             <CardContent className="flex flex-col gap-2 p-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1">
-                        <Image src={piece.icon} alt={piece.name} width={40} height={40} className="h-auto w-auto object-contain" />
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
+                        <Image
+                            src={piece.icon}
+                            alt={piece.name}
+                            width={40}
+                            height={40}
+                            className="h-auto w-auto object-contain transition-[filter] duration-300 group-hover:icon-glow"
+                        />
                     </div>
                     <div className="min-w-0">
                         <p className="text-xs text-muted-foreground">
@@ -110,7 +116,7 @@ export const BuildDisplay = ({ view }: { view: BuildView }) => {
                                         .map(part => (
                                             <div
                                                 key={part.label}
-                                                className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2.5"
+                                                className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2.5 transition-colors duration-300 hover:border-primary/35"
                                             >
                                                 <Image
                                                     src={part.part!.icon}

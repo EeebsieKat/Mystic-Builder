@@ -50,8 +50,8 @@
  */
 :root,
 .dark {
-  --radius: 0.5rem;
-  --background: oklch(0.15 0.028 262);
+  --radius: 0.625rem;
+  --background: oklch(0.14 0.026 262);
   --foreground: oklch(0.93 0.012 95);
   --card: oklch(0.19 0.032 260);
   --card-foreground: oklch(0.93 0.012 95);
@@ -82,6 +82,10 @@
   --sidebar-accent-foreground: oklch(0.93 0.012 95);
   --sidebar-border: oklch(0.31 0.04 258);
   --sidebar-ring: oklch(0.82 0.135 85 / 60%);
+
+  /* Extra Mystic Builder tokens (not part of shadcn). */
+  --gold-bright: oklch(0.88 0.13 92);
+  --gold-deep: oklch(0.72 0.14 78);
 }
 
 @layer base {
@@ -96,6 +100,28 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Ambient atmosphere                                                  */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Layered aether haze behind the whole site: lantern gold falling from the
+ * top, steel-blue and umbral-purple washes in the corners, plus a soft
+ * vignette so panels read clearly against the glow.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(75% 40% at 50% -5%, oklch(0.82 0.135 85 / 9%) 0%, transparent 68%),
+    radial-gradient(45% 35% at 8% 12%, oklch(0.6 0.1 250 / 12%) 0%, transparent 70%),
+    radial-gradient(45% 35% at 95% 25%, oklch(0.55 0.12 300 / 8%) 0%, transparent 70%),
+    radial-gradient(120% 90% at 50% 110%, oklch(0.1 0.02 262 / 80%) 0%, transparent 55%);
+}
+
 /* Radial glow behind the hero / editor header: gold over a blue aether haze. */
 .mystic-glow {
   background-image:
@@ -103,12 +129,17 @@
     radial-gradient(45% 40% at 15% 5%, oklch(0.6 0.1 250 / 10%) 0%, transparent 70%);
 }
 
+/* ------------------------------------------------------------------ */
+/* Signature utilities                                                 */
+/* ------------------------------------------------------------------ */
+
 /* Gold gradient rule used under the site header and section titles. */
 .gold-rule {
   background-image: linear-gradient(
     to right,
     transparent,
     oklch(0.82 0.135 85 / 55%) 20%,
+    oklch(0.88 0.13 92 / 70%) 50%,
     oklch(0.82 0.135 85 / 55%) 80%,
     transparent
   );
@@ -118,4 +149,83 @@
 /* Small-caps gold section label, like Dauntless menu headings. */
 .panel-label {
   @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-primary;
+}
+
+/* Lantern-gold gradient headline text. */
+@utility text-gold-gradient {
+  background-image: linear-gradient(
+    100deg,
+    oklch(0.82 0.135 85) 0%,
+    oklch(0.9 0.12 95) 35%,
+    oklch(0.78 0.14 75) 70%,
+    oklch(0.88 0.12 90) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Glowing number, used by the big stat figures. */
+@utility stat-glow {
+  text-shadow: 0 0 18px oklch(0.82 0.135 85 / 45%), 0 0 42px oklch(0.82 0.135 85 / 18%);
+}
+
+/* Soft lantern glow around icon badges and selected item icons. */
+@utility icon-glow {
+  filter: drop-shadow(0 0 6px oklch(0.82 0.135 85 / 35%));
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion                                                              */
+/* ------------------------------------------------------------------ */
+
+/* Slow breathing glow behind the hero lantern mark. */
+@keyframes mystic-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 18px 2px oklch(0.82 0.135 85 / 30%), 0 0 46px 8px oklch(0.82 0.135 85 / 12%);
+  }
+  50% {
+    box-shadow: 0 0 26px 6px oklch(0.82 0.135 85 / 45%), 0 0 60px 14px oklch(0.82 0.135 85 / 20%);
+  }
+}
+
+.mystic-pulse {
+  animation: mystic-pulse 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mystic-pulse {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scrollbars                                                          */
+/* ------------------------------------------------------------------ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.45 0.05 258) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: oklch(0.42 0.05 258);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.55 0.07 80);
+  background-clip: padding-box;
 }

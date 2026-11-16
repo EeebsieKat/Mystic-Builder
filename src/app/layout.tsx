@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import { Hammer, Github } from "lucide-react";
+import { Suspense } from "react";
+import { Github, Hammer } from "lucide-react";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
+import NavLinks from "@/components/site-nav-links";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -35,27 +37,33 @@ export const viewport: Viewport = {
 };
 
 const Header = () => (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
         <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
-            <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/50 bg-primary/15 text-primary shadow-[0_0_14px_oklch(0.82_0.135_85/0.35)]">
-                    <Hammer className="h-4 w-4" aria-hidden />
+            <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
+                <span
+                    className="mystic-pulse flex h-8 w-8 rotate-45 items-center justify-center rounded-md border border-primary/60 bg-primary/15 text-primary transition-transform duration-300 group-hover:rotate-[50deg]"
+                    aria-hidden
+                >
+                    <Hammer className="h-4 w-4 -rotate-45" />
                 </span>
-                <span className="text-primary">{SITE_NAME}</span>
+                <span className="whitespace-nowrap text-base sm:text-lg">
+                    <span className="text-gold-gradient">Mystic</span>{" "}
+                    <span className="text-foreground">Builder</span>
+                </span>
             </Link>
-            <nav className="flex items-center gap-4 text-sm text-muted-foreground" aria-label="Main navigation">
-                <Link href="/" className="transition-colors hover:text-foreground">
-                    Builder
-                </Link>
-                <Link href="/?tab=database" className="transition-colors hover:text-foreground">
-                    Database
-                </Link>
+            <nav
+                className="flex items-center gap-1 text-sm"
+                aria-label="Main navigation"
+            >
+                <Suspense fallback={null}>
+                    <NavLinks />
+                </Suspense>
                 <a
                     href="https://github.com/atomicptr/dauntless-builder-reforged"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 transition-colors hover:text-foreground"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:bg-accent/60 hover:text-foreground"
                 >
                     <Github className="h-4 w-4" aria-hidden />
                     <span className="hidden sm:inline">Source data</span>
@@ -66,7 +74,8 @@ const Header = () => (
 );
 
 const Footer = () => (
-    <footer className="mt-auto border-t py-6">
+    <footer className="relative mt-auto border-t py-6">
+        <div className="gold-rule absolute inset-x-0 top-0 opacity-60" aria-hidden />
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-4 text-xs text-muted-foreground sm:flex-row">
             <p>
                 {SITE_NAME} - a fan-made Dauntless build planner for the 1.14.7 Mystic Paradox revival. Dauntless and
@@ -78,7 +87,7 @@ const Footer = () => (
                     href="https://github.com/atomicptr/dauntless-builder-reforged"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:text-foreground"
+                    className="underline underline-offset-4 transition-colors hover:text-primary"
                 >
                     dauntless-builder-reforged
                 </a>{" "}

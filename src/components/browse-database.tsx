@@ -53,8 +53,14 @@ const normalize = (value: string): string => value.toLowerCase().trim();
 /* ------------------------------------------------------------------ */
 
 const IconBox = ({ src, name }: { src: string; name: string }) => (
-    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-border/60 bg-muted/30 p-1.5">
-        <Image src={src} alt={name} width={48} height={48} className="h-auto w-auto max-h-full max-w-full object-contain" />
+    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1.5 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
+        <Image
+            src={src}
+            alt={name}
+            width={48}
+            height={48}
+            className="h-auto w-auto max-h-full max-w-full object-contain transition-[filter] duration-300 group-hover:icon-glow"
+        />
     </div>
 );
 
@@ -103,7 +109,7 @@ const ItemCard = ({ icon, name, subtitle, children }: {
     subtitle?: string | null;
     children: React.ReactNode;
 }) => (
-    <Card className="h-full">
+    <Card className="group h-full">
         <CardContent className="relative flex h-full gap-3 p-4">
             {icon ? <IconBox src={icon} name={name} /> : null}
             <div className="flex min-w-0 flex-1 flex-col gap-2">
