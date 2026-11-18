@@ -1,12 +1,7 @@
 "use client";
 
-/**
- * Fixed 1920x1080 design canvas, transform-scaled to fit its container so the
- * loadout screen keeps the exact proportions of the in-game reference at any
- * desktop window size. Below ~900px effective width a notice is shown.
- */
-
 import { useEffect, useRef, useState } from "react";
+import BottomParticles from "@/components/bottom-particles";
 
 const DESIGN_W = 1920;
 const DESIGN_H = 1080;
@@ -42,8 +37,12 @@ export const LoadoutStage = ({ children, className = "" }: { children: React.Rea
             className={`lo-stage-wrapper relative w-full overflow-hidden ${className}`}
             style={{ height: "calc(100vh - 102px)", minHeight: 520 }}
         >
+            {/* 1. Renders right above .lo-stage-wrapper's background */}
+            <BottomParticles />
+
             {scale > 0 && (
                 <div
+                    className="relative z-10"
                     style={{
                         width: DESIGN_W,
                         height: DESIGN_H,
@@ -55,7 +54,8 @@ export const LoadoutStage = ({ children, className = "" }: { children: React.Rea
                     }}
                     aria-hidden={tooSmall || undefined}
                 >
-                    <div className="lo-stage">{children}</div>
+                    {/* 2. All loadout UI cards sit at z-10, cleanly above the particles */}
+                    <div className="lo-stage relative z-10">{children}</div>
                 </div>
             )}
             {tooSmall && (

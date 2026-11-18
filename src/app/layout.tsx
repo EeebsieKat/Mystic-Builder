@@ -141,12 +141,15 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`dark ${cinzel.variable} ${sourceSans.variable}`} suppressHydrationWarning>
-            <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
+            <body className="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
                 <Header />
-                {children}
-                <Footer /> <BottomParticles />
+                <div className="relative flex flex-1 flex-col">
+                    {children}
+                </div>
+                <Footer />
                 <Toaster />
             </body>
         </html>
     );
 }
+
