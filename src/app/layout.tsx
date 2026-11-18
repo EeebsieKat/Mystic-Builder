@@ -8,6 +8,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import NavLinks from "@/components/site-nav-links";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
+import BottomParticles from "@/components/bottom-particles";
 
 const siteUrl = getSiteUrl();
 
@@ -33,6 +34,9 @@ export const metadata: Metadata = {
         template: `%s - ${SITE_NAME}`,
     },
     description: SITE_TAGLINE,
+    icons: {
+        icon: '/icon.png',
+    },
     keywords: ["Dauntless", "Dauntless Builder", "build planner", "Mystic Paradox", "Discord embed", "Open Graph"],
     openGraph: {
         title: SITE_NAME,
@@ -57,12 +61,8 @@ const Header = () => (
         <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
             <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
-                <span
-                    className="mystic-pulse flex h-8 w-8 rotate-45 items-center justify-center rounded-md border border-primary/60 bg-primary/15 text-primary transition-transform duration-300 group-hover:rotate-[50deg]"
-                    aria-hidden
-                >
-                    <Hammer className="h-4 w-4 -rotate-45" />
-                </span>
+                <img alt="Mystic Paradox Logo" width="50" src="/assets/awakening-ui/logo/icon.png">
+                </img>
                 <span className="whitespace-nowrap text-base sm:text-lg">
                     <span className="text-gold-gradient">Mystic</span>{" "}
                     <span className="text-foreground">Builder</span>
@@ -83,6 +83,15 @@ const Header = () => (
                 >
                     <Github className="h-4 w-4" aria-hidden />
                     <span className="hidden sm:inline">Source data</span>
+                </a>
+                <a
+                    href="https://github.com/EeebsieKat/Mystic-Builder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground transition-all duration-200 hover:bg-accent/60 hover:text-foreground"
+                >
+                    <Github className="h-4 w-4" aria-hidden />
+                    <span className="hidden sm:inline">Source code</span>
                 </a>
             </nav>
         </div>
@@ -109,6 +118,18 @@ const Footer = () => (
                 </a>{" "}
                 (AGPL-3.0, data public domain).
             </p>
+            <p>
+                Source code{" "}
+                <a
+                    href="https://github.com/EeebsieKat/Mystic-Builder"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4 transition-colors hover:text-primary"
+                >
+                    Mystic-Builder
+                </a>{" "}
+                (AGPL-3.0, data public domain).
+            </p>
         </div>
     </footer>
 );
@@ -123,7 +144,7 @@ export default function RootLayout({
             <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
                 <Header />
                 {children}
-                <Footer />
+                <Footer /> <BottomParticles />
                 <Toaster />
             </body>
         </html>

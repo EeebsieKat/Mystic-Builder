@@ -84,49 +84,8 @@ const Star = ({ x, y, size, fill = "#f0c25e" }: { x: number; y: number; size: nu
  * maroon heraldic shield, star on top and a three-star rank banner.
  */
 export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; className?: string }) => (
-    <svg
-        width={size}
-        height={(size * 160) / 200}
-        viewBox="0 0 200 160"
-        className={className}
-        aria-hidden
-        style={{ filter: "drop-shadow(0 0 14px rgba(224,163,62,0.28))" }}
-    >
-        <defs>
-            <GoldGradient id="crest-gold" />
-            <linearGradient id="crest-gold-soft" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#e8b959" />
-                <stop offset="100%" stopColor="#c8955a" />
-            </linearGradient>
-            <ShieldGradient id="crest-shield" />
-        </defs>
-
-        <Wing side="l" />
-        <Wing side="r" />
-
-        {/* shield */}
-        <path
-            d="M100 34 L134 46 L134 84 C 134 108, 118 124, 100 132 C 82 124, 66 108, 66 84 L66 46 Z"
-            fill="url(#crest-shield)"
-            stroke="url(#crest-gold)"
-            strokeWidth="3"
-        />
-        <path
-            d="M100 42 L126 51 L126 83 C 126 102, 114 115, 100 122 C 86 115, 74 102, 74 83 L74 51 Z"
-            fill="none"
-            stroke="#e0a33e"
-            strokeWidth="0.8"
-            opacity="0.55"
-        />
-
-        <Star x={100} y={26} size={11} />
-
-        {/* rank banner with three stars */}
-        <path d="M70 134 C 84 128, 116 128, 130 134 L124 146 C 112 141, 88 141, 76 146 Z" fill="url(#crest-gold)" stroke="#8a6428" strokeWidth="1" />
-        <Star x={88} y={140} size={4} fill="#fff3d6" />
-        <Star x={100} y={139} size={4.6} fill="#fff3d6" />
-        <Star x={112} y={140} size={4} fill="#fff3d6" />
-    </svg>
+    <img alt="Loadout Crest" width="180" src="assets/awakening-ui/loadout/loadoutlevel10.png">
+    </img>
 );
 
 /* ------------------------------------------------------------------ */
@@ -134,27 +93,11 @@ export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; cla
 /* ------------------------------------------------------------------ */
 
 export const SwordGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden>
-        <path
-            d="M20 4 L14 10 M20 4 h-4 M20 4 v4 M12.5 8.5 L5 16 M6.5 21 L3 17.5 L4.5 16 L8 19.5 Z M9 12 L12 15"
-            stroke="#f2efe7"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            fill="none"
-        />
-    </svg>
+    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/generic/Weapon.png"></img>
 );
 
 export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden>
-        <path
-            d="M12 3 L19 6 V11 C 19 16, 16 20, 12 21.5 C 8 20, 5 16, 5 11 V6 Z"
-            stroke="#f2efe7"
-            strokeWidth="1.6"
-            fill="none"
-            strokeLinejoin="round"
-        />
-    </svg>
+    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/generic/Head.png"></img>
 );
 
 /* ------------------------------------------------------------------ */
@@ -163,20 +106,7 @@ export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; clas
 
 /** White hexagonal ring used for cell slots (filled & empty states). */
 export const CellHexIcon = ({ size = 56, dim = false }: { size?: number; dim?: boolean }) => (
-    <svg width={size} height={size * 1.05} viewBox="0 0 52 55" aria-hidden style={{ opacity: dim ? 0.4 : 1 }}>
-        <polygon
-            points="26,2 48,14 48,41 26,53 4,41 4,14"
-            fill="none"
-            stroke="#e8e4da"
-            strokeWidth="2.4"
-        />
-        <polygon
-            points="26,12 40,20 40,35 26,43 12,35 12,20"
-            fill="none"
-            stroke="#9a9a94"
-            strokeWidth="1.2"
-        />
-    </svg>
+    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/perks/NoCell.png"></img>
 );
 
 /* ------------------------------------------------------------------ */
