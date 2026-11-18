@@ -23,21 +23,6 @@ npx prisma db push
 npm run dev        # http://localhost:3000
 ```
 
-## Deploy to Netlify via GitHub
-
-1. Push this repo to GitHub (do not commit `.env`; `.env.example` is included).
-2. In Netlify: **Add new site > Import an existing project** and pick the repo.
-3. Build settings are read from `netlify.toml` (build command `npm run build`,
-   publish `.next`, Next.js runtime plugin enabled).
-4. Environment variables to set in Netlify (Site configuration > Environment variables):
-   - `DATABASE_URL` - e.g. your hosted Postgres/SQLite-compatible URL. For the
-     default SQLite setup on Netlify, use a hosted provider (e.g. Turso or
-     Neon) or Netlify DB, because the file system is ephemeral.
-   - `NEXT_PUBLIC_SITE_URL` - the final site URL (used to build canonical links
-     and Discord preview URLs).
-5. Deploy. Discord link previews work out of the box: `/b/<buildId>` renders
-   dynamic `og:` tags, and `/api/builds/<buildId>/preview` serves the OG image.
-
 ## Project layout
 
 - `src/app` - pages (home with builder + database tabs, `/b/[buildId]` shared
