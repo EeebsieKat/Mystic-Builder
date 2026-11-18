@@ -9,7 +9,7 @@ import { buildIdsEncode, buildIdsProgressiveDecode } from "./build-id";
 import { gameData, namesMap } from "./data";
 import type { CellType, Lantern, Armour, Omnicell, Part, Weapon, WeaponType, NamesMapType } from "./types";
 
-export const CURRENT_BUILD_ID = 8;
+export const CURRENT_BUILD_ID = 9;
 
 export enum BuildFlags {
     UpgradedBuild = 0b0001,
@@ -42,6 +42,9 @@ enum BuildFields {
     Lantern,
     LanternCell,
     Omnicell,
+    Consumable1,
+    Consumable2,
+    Consumable3,
 }
 
 export class BuildModel {
@@ -70,6 +73,10 @@ export class BuildModel {
     lantern: string | null = null;
     lanternCell: string | null = null;
     omnicell: string | null = null;
+    /** Awakening loadout consumable slots 2-4 (slot 1 is always the Healing Flask). */
+    consumable1: string | null = null;
+    consumable2: string | null = null;
+    consumable3: string | null = null;
 
     hasFlag(flag: BuildFlags): boolean {
         return (this.flags & flag) >= 1;
@@ -105,6 +112,9 @@ export class BuildModel {
             this.lantern !== null ? mapIdByName("Lanterns", this.lantern) : 0,
             this.lanternCell !== null ? mapIdByName("Cells", this.lanternCell) : 0,
             this.omnicell !== null ? mapIdByName("Omnicells", this.omnicell) : 0,
+            this.consumable1 !== null ? mapIdByName("Consumables", this.consumable1) : 0,
+            this.consumable2 !== null ? mapIdByName("Consumables", this.consumable2) : 0,
+            this.consumable3 !== null ? mapIdByName("Consumables", this.consumable3) : 0,
         ];
 
         return buildIdsEncode([...params]);
@@ -236,6 +246,12 @@ export class BuildModel {
         build.lanternCell = nameById("Cells", data[BuildFields.LanternCell]);
         build.omnicell = nameById("Omnicells", data[BuildFields.Omnicell]);
 
+        if (data.length > BuildFields.Consumable1) {
+            build.consumable1 = nameById("Consumables", data[BuildFields.Consumable1]);
+            build.consumable2 = nameById("Consumables", data[BuildFields.Consumable2]);
+            build.consumable3 = nameById("Consumables", data[BuildFields.Consumable3]);
+        }
+
         return build;
     }
 
@@ -261,6 +277,8 @@ export class BuildModel {
                 return data.length === 25;
             case 8:
                 return data.length === 25;
+            case 9:
+                return data.length === 28;
             default:
                 return false;
         }

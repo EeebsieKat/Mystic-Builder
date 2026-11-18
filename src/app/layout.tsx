@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Cinzel, Source_Sans_3 } from "next/font/google";
 import { Github, Hammer } from "lucide-react";
 import "./globals.css";
 
@@ -9,6 +10,21 @@ import NavLinks from "@/components/site-nav-links";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
+
+/* Awakening loadout typography: Trajan-style display serif + clean UI sans. */
+const cinzel = Cinzel({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    variable: "--font-display",
+    display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+    subsets: ["latin"],
+    weight: ["300", "400", "600", "700"],
+    variable: "--font-ui",
+    display: "swap",
+});
 
 export const metadata: Metadata = {
     metadataBase: new URL(siteUrl),
@@ -103,7 +119,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="dark" suppressHydrationWarning>
+        <html lang="en" className={`dark ${cinzel.variable} ${sourceSans.variable}`} suppressHydrationWarning>
             <body className="flex min-h-screen flex-col bg-background text-foreground antialiased">
                 <Header />
                 {children}

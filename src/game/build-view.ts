@@ -5,8 +5,9 @@
 import { BuildModel, BuildFlags, doesCellFitIntoSlot, findCellByVariantName, findPerkByName } from "./build-model";
 import { upgradeBuild } from "./upgrade-build";
 import { gameData } from "./data";
+import { HEALING_FLASK } from "./consumables";
 import { GAME_VERSION } from "@/lib/site";
-import type { Armour, CellType, Lantern, Omnicell, Part, Weapon } from "./types";
+import type { Armour, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "./types";
 
 export interface CellSlotView {
     variantName: string | null;
@@ -57,6 +58,7 @@ export interface BuildView {
         cell: CellSlotView;
     } | null;
     omnicell: Omnicell | null;
+    consumables: Consumable[];
     perkTotals: PerkTotal[];
     gameVersion: string;
 }
@@ -262,6 +264,9 @@ export const buildBuildView = (build: BuildModel, buildId: string): BuildView =>
                   }
                 : null,
         omnicell: build.omnicellData,
+        consumables: [HEALING_FLASK, build.consumable1, build.consumable2, build.consumable3]
+            .map(name => (name !== null && name in gameData.consumables ? gameData.consumables[name] : null))
+            .filter((item): item is Consumable => item !== null),
         perkTotals,
         gameVersion: GAME_VERSION,
     };

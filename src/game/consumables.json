@@ -1,0 +1,93 @@
+{
+    "Healing Flask": {
+        "name": "Healing Flask",
+        "type": "flask",
+        "icon": "/assets/awakening-ui/tonics/HealingFlask.png",
+        "capacity": 5,
+        "description": "Restores 425 Health. Can be used to revive a downed Slayer. Always equipped in the first slot."
+    },
+    "Aetherdrive Tonic": {
+        "name": "Aetherdrive Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/AetherdriveTonic.png",
+        "capacity": 5,
+        "description": "Increases the recharge rate of your lantern's ability by 100% for 60 seconds."
+    },
+    "Assault Tonic": {
+        "name": "Assault Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/AssaultTonic.png",
+        "capacity": 5,
+        "description": "Grants 40% increased Stagger damage dealt for 60 seconds."
+    },
+    "Blitz Tonic": {
+        "name": "Blitz Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/BlitzTonic.png",
+        "capacity": 5,
+        "description": "Grants 15% increased attack speed for 60 seconds."
+    },
+    "Bulwark Tonic": {
+        "name": "Bulwark Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/BulwarkTonic.png",
+        "capacity": 3,
+        "description": "Reduces damage taken by 45% for the next 3 hits."
+    },
+    "Frenzy Tonic": {
+        "name": "Frenzy Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/FrenzyTonic.png",
+        "capacity": 5,
+        "description": "Grants 15% increased damage dealt for 60 seconds. Grants 30% if a Behemoth is enraged."
+    },
+    "Insight Tonic": {
+        "name": "Insight Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/InsightTonic.png",
+        "capacity": 5,
+        "description": "Grants 40% increased Wound damage dealt for 60 seconds."
+    },
+    "Lifedrain Tonic": {
+        "name": "Lifedrain Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/LifedrainTonic.png",
+        "capacity": 3,
+        "description": "12% of all damage dealt will heal all nearby Slayers for 30 seconds."
+    },
+    "Stamina Tonic": {
+        "name": "Stamina Tonic",
+        "type": "tonic",
+        "icon": "/assets/awakening-ui/tonics/StaminaTonic.png",
+        "capacity": 3,
+        "description": "Grants 50% increased stamina regen and 50% reduced stamina costs for 120 seconds."
+    },
+    "Cleansing Pylon": {
+        "name": "Cleansing Pylon",
+        "type": "pylon",
+        "icon": "/assets/awakening-ui/tonics/CleansingPylon.png",
+        "capacity": 1,
+        "description": "Place a pylon that removes negative conditions from nearby Slayers and reduces their frostbite level by 25%. The pylon's aura will also prevent frostbite levels from increasing."
+    },
+    "Inspiring Pylon": {
+        "name": "Inspiring Pylon",
+        "type": "pylon",
+        "icon": "/assets/awakening-ui/tonics/InspiringPylon.png",
+        "capacity": 2,
+        "description": "Place a pylon that grants 25% increased damage dealt to all nearby Slayers for 45 seconds."
+    },
+    "Lifespring Pylon": {
+        "name": "Lifespring Pylon",
+        "type": "pylon",
+        "icon": "/assets/awakening-ui/tonics/LifespringPylon.png",
+        "capacity": 2,
+        "description": "Place a pylon that restores 15 health per second to nearby Slayers for 30 seconds."
+    },
+    "Ironhide Pylon": {
+        "name": "Ironhide Pylon",
+        "type": "pylon",
+        "icon": "/assets/awakening-ui/tonics/IronhidePylon.png",
+        "capacity": 2,
+        "description": "Place a pylon that grants 40% decreased damage taken to all nearby Slayers for 45 seconds."
+    }
+}

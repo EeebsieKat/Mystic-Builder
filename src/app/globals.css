@@ -229,3 +229,332 @@ body::before {
   background: oklch(0.55 0.07 80);
   background-clip: padding-box;
 }
+
+/* ------------------------------------------------------------------ */
+/* Awakening loadout UI                                                */
+/*                                                                     */
+/* Pixel-faithful recreation of the in-game Awakening (2.x) loadout    */
+/* screen. Colors sampled from reference screenshots.                  */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --lo-bg: #0b0c0e;
+  --lo-bg-radial: #1a1c22;
+  --lo-panel: #101318;
+  --lo-card: #0a0c10;
+  --lo-border: #3a3f47;
+  --lo-gold: #e0a33e;
+  --lo-gold-soft: #c8955a;
+  --lo-glow-gold: 0 0 12px rgba(224, 163, 62, 0.4);
+  --lo-teal: #3fd8c8;
+  --lo-plaque-red-a: #7a1f24;
+  --lo-plaque-red-b: #a83232;
+  --lo-plaque-blue: #2a3550;
+  --lo-text: #e8e4da;
+  --lo-text-dim: #9a9a94;
+  --lo-perk-red: #a0524d;
+  --lo-pos: #7ec86a;
+  --lo-neg: #b8a98c;
+  --lo-gauge-track: #2a2d33;
+}
+
+/* Display serif for headers/numbers; UI sans for perk names and labels. */
+.lo-serif {
+  font-family: var(--font-display), "Cinzel", "Times New Roman", serif;
+}
+.lo-sans {
+  font-family: var(--font-ui), "Source Sans 3", "Segoe UI", sans-serif;
+}
+
+/* ---- stage -------------------------------------------------------- */
+
+.lo-stage-wrapper {
+  background:
+    radial-gradient(120% 100% at 50% 42%, var(--lo-bg-radial) 0%, var(--lo-bg) 62%, #060708 100%);
+}
+
+.lo-stage {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  color: var(--lo-text);
+  font-family: var(--font-ui), "Source Sans 3", "Segoe UI", sans-serif;
+}
+
+/* Diagonal light shafts behind the slayer pedestal. */
+.lo-light-shaft {
+  position: absolute;
+  width: 300px;
+  height: 1600px;
+  top: -260px;
+  transform: rotate(30deg);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 251, 240, 0.035) 0%,
+    rgba(255, 251, 240, 0.018) 45%,
+    transparent 80%
+  );
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* Soft pedestal glow where the slayer model will eventually live. */
+.lo-pedestal {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgba(120, 140, 170, 0.14) 0%,
+    rgba(90, 110, 150, 0.07) 45%,
+    transparent 75%
+  );
+  pointer-events: none;
+}
+
+/* ---- panels / cards ------------------------------------------------ */
+
+.lo-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 42%), var(--lo-panel);
+  border: 1px solid var(--lo-border);
+  border-radius: 4px;
+}
+
+.lo-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 45%), var(--lo-card);
+  border: 1px solid var(--lo-border);
+  border-radius: 4px;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.lo-card:hover {
+  border-color: #565d68;
+}
+
+.lo-card-selected {
+  border-color: var(--lo-gold);
+  box-shadow: var(--lo-glow-gold), inset 0 0 24px rgba(224, 163, 62, 0.07);
+  background-color: #14161c;
+}
+
+/* Gold corner brackets + bottom diamond tab on the selected gear card. */
+.lo-selected-frame {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.lo-selected-frame::before,
+.lo-selected-frame::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--lo-gold);
+}
+.lo-selected-frame::before {
+  left: 3px;
+  top: 3px;
+  border-right: none;
+  border-bottom: none;
+}
+.lo-selected-frame::after {
+  right: 3px;
+  bottom: 3px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Teal edge variant seen on selected armour cards in the reference. */
+.lo-card-selected-teal {
+  border-color: var(--lo-teal);
+  box-shadow: 0 0 12px rgba(63, 216, 200, 0.35);
+}
+
+/* Level chip: serif numeral, gold-white, minimal box (gear cards). */
+.lo-level-chip {
+  padding: 2px 6px;
+  font-family: var(--font-display), "Cinzel", serif;
+  font-size: 20px;
+  line-height: 1.15;
+  color: #f0e6c8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 12px rgba(224, 163, 62, 0.25);
+}
+
+/* Thin XP gauge at the bottom of gear cards. */
+.lo-gauge {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--lo-gauge-track);
+  overflow: hidden;
+}
+.lo-gauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d8d4c8, #ffffff);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.35);
+}
+
+/* ---- text styles ---------------------------------------------------- */
+
+.lo-title {
+  font-family: var(--font-display), "Cinzel", serif;
+  letter-spacing: 0.12em;
+  color: var(--lo-text);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+}
+
+.lo-sublabel {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lo-text-dim);
+}
+
+.lo-button-text {
+  font-family: var(--font-display), "Cinzel", serif;
+  font-size: 19px;
+  letter-spacing: 0.22em;
+  color: #e5e5e0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  transition: color 150ms ease, text-shadow 150ms ease;
+}
+.lo-button-text:hover,
+.lo-button-text:focus-visible {
+  color: var(--lo-gold);
+  text-shadow: 0 0 14px rgba(224, 163, 62, 0.5);
+}
+.lo-button-text:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* Gold gradient rule under item names in the detail card. */
+.lo-gold-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(224, 163, 62, 0.85) 0%,
+    rgba(200, 149, 90, 0.45) 65%,
+    transparent 100%
+  );
+}
+
+/* Diamond-ended flourish rules flanking section headers. */
+.lo-flourish {
+  height: 1px;
+  flex: 1 1 0%;
+  background: linear-gradient(to right, transparent, rgba(190, 186, 174, 0.55));
+}
+.lo-flourish-r {
+  background: linear-gradient(to left, transparent, rgba(190, 186, 174, 0.55));
+}
+
+/* ---- perk rows ------------------------------------------------------ */
+
+.lo-perk-row {
+  background: rgba(10, 12, 16, 0.94);
+  border: 1px solid var(--lo-border);
+  border-radius: 3px;
+  transition: border-color 150ms ease;
+}
+.lo-perk-row:hover {
+  border-color: #565d68;
+}
+.lo-perk-row-inactive {
+  opacity: 0.78;
+}
+
+/* ---- plaques (crest header) ----------------------------------------- */
+
+.lo-plaque-red {
+  background: linear-gradient(180deg, var(--lo-plaque-red-b) 0%, var(--lo-plaque-red-a) 100%);
+  border: 1px solid rgba(224, 163, 62, 0.4);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.lo-plaque-blue {
+  background: linear-gradient(180deg, #41517c 0%, #2c3a5e 100%);
+  border: 1px solid rgba(224, 163, 62, 0.4);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- item showcase box (right panel) -------------------------------- */
+
+.lo-showcase {
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0%, transparent 28%, transparent 72%, rgba(255, 255, 255, 0.03) 100%),
+    linear-gradient(180deg, #14171d 0%, #0b0d11 100%);
+  border: 1px solid rgba(200, 149, 90, 0.38);
+  border-radius: 4px;
+}
+
+/* ---- consumable slots ----------------------------------------------- */
+
+.lo-consumable {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 50%), var(--lo-card);
+  border: 1px solid var(--lo-border);
+  border-radius: 4px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.lo-consumable:hover {
+  border-color: #565d68;
+}
+.lo-consumable-locked {
+  cursor: not-allowed;
+}
+
+/* ---- picker overlay -------------------------------------------------- */
+
+.lo-picker-backdrop {
+  background: rgba(4, 5, 7, 0.88);
+  backdrop-filter: blur(3px);
+}
+.lo-picker-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 45%), var(--lo-card);
+  border: 1px solid var(--lo-border);
+  border-radius: 4px;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+.lo-picker-card:hover,
+.lo-picker-card[data-active="true"] {
+  border-color: var(--lo-gold);
+  box-shadow: var(--lo-glow-gold);
+  transform: translateY(-2px);
+}
+
+/* ---- motion ---------------------------------------------------------- */
+
+@keyframes lo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.lo-fade-in {
+  animation: lo-fade-in 220ms ease-out;
+}
+
+@keyframes lo-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.lo-overlay-in {
+  animation: lo-overlay-in 160ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lo-fade-in,
+  .lo-overlay-in {
+    animation: none;
+  }
+}
+

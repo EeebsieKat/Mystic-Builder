@@ -95,7 +95,18 @@ export interface Omnicell {
     name: string;
     description: string;
     icon: string;
+    ability_icon?: string;
+    active?: string;
+    passive?: string;
     unique_effects?: { name?: string; description: string; values?: Record<string, string | number>; powerSurged?: boolean }[];
+}
+
+export interface Consumable {
+    name: string;
+    type: "flask" | "tonic" | "pylon";
+    icon: string | null;
+    capacity: number;
+    description: string;
 }
 
 export interface Part {
@@ -121,6 +132,7 @@ export interface RepeaterParts {
 export interface GameData {
     armours: { [name: string]: Armour };
     cells: { [name: string]: Cell };
+    consumables: { [name: string]: Consumable };
     lanterns: { [name: string]: Lantern };
     misc: {
         dauntless_version: string;
@@ -146,6 +158,7 @@ export type NamesMapType =
     | "Armours"
     | "Lanterns"
     | "Omnicells"
+    | "Consumables"
     | "Parts:Aetherstrikers"
     | "Parts:Axe"
     | "Parts:Chainblades"

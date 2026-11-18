@@ -1,0 +1,1171 @@
+"use client";
+
+/**
+ * The Awakening loadout screen - full replacement for the old card-based
+ * build editor. Renders the pixel-faithful 1920x1080 in-game loadout stage
+ * with the complete 1.14.7 item database wired in.
+ */
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Check, Copy, Dices, Eraser, Link2 } from "lucide-react";
+
+import { useToast } from "@/hooks/use-toast";
+import { gameData } from "@/game/data";
+import {
+    BuildModel,
+    doesCellFitIntoSlot,
+    findArmourByName,
+    findCellByVariantName,
+    findLanternByName,
+    findOmnicellByName,
+    findWeaponByName,
+} from "@/game/build-model";
+import { buildBuildView, tryDeserialize } from "@/game/build-view";
+import { consumableOptions, consumables, findConsumableByName, HEALING_FLASK } from "@/game/consumables";
+import type {
+    Armour,
+    CellType,
+    Consumable,
+    Lantern,
+    Omnicell,
+    Part,
+    PerkValue,
+    Weapon,
+    WeaponType,
+} from "@/game/types";
+import { cellTypeLabel, extractBuildId, localBuildPath } from "@/lib/site";
+
+import { LoadoutStage } from "./loadout-stage";
+import {
+    ArmourCard,
+    ConsumableRow,
+    LanternOmnicellCard,
+    LoadoutTabsStub,
+    WeaponCard,
+} from "./gear-grid";
+import { CrestHeader, ItemDetailPanel, PerkSummaryPanel } from "./right-panel";
+import { DetailCard, type DetailCardData } from "./detail-card";
+import { ItemPickerOverlay, type PickerItem } from "./item-picker";
+import { DiamondPip, FlourishHeader, ItemIcon } from "./decor";
+import type {
+    ArmourSlotId,
+    CellSlotKey,
+    LoadoutDraft,
+    PartSlotKey,
+    PickerTarget,
+    SelectionId,
+} from "./loadout-types";
+import { interpolate, type PerkRow } from "./loadout-types";
+
+/* ------------------------------------------------------------------ */
+/* Draft                                                               */
+/* ------------------------------------------------------------------ */
+
+const EMPTY_DRAFT: LoadoutDraft = {
+    weaponName: null,
+    weaponSurged: true,
+    weaponPart1: null,
+    weaponPart2: null,
+    weaponPart3: null,
+    bondWeapon: null,
+    weaponCell1: null,
+    weaponCell2: null,
+    headName: null,
+    headSurged: true,
+    headCell: null,
+    torsoName: null,
+    torsoSurged: true,
+    torsoCell: null,
+    armsName: null,
+    armsSurged: true,
+    armsCell: null,
+    legsName: null,
+    legsSurged: true,
+    legsCell: null,
+    lantern: null,
+    lanternCell: null,
+    omnicell: null,
+    consumable1: null,
+    consumable2: null,
+    consumable3: null,
+    buildName: "SLAYER",
+};
+
+const draftFromModel = (model: BuildModel): LoadoutDraft => ({
+    ...EMPTY_DRAFT,
+    ...Object.fromEntries(
+        Object.entries({
+            weaponName: model.weaponName,
+            weaponSurged: model.weaponSurged,
+            weaponPart1: model.weaponPart1,
+            weaponPart2: model.weaponPart2,
+            weaponPart3: model.weaponPart3,
+            bondWeapon: model.bondWeapon,
+            weaponCell1: model.weaponCell1,
+            weaponCell2: model.weaponCell2,
+            headName: model.headName,
+            headSurged: model.headSurged,
+            headCell: model.headCell,
+            torsoName: model.torsoName,
+            torsoSurged: model.torsoSurged,
+            torsoCell: model.torsoCell,
+            armsName: model.armsName,
+            armsSurged: model.armsSurged,
+            armsCell: model.armsCell,
+            legsName: model.legsName,
+            legsSurged: model.legsSurged,
+            legsCell: model.legsCell,
+            lantern: model.lantern,
+            lanternCell: model.lanternCell,
+            omnicell: model.omnicell,
+            consumable1: model.consumable1,
+            consumable2: model.consumable2,
+            consumable3: model.consumable3,
+        }).filter(([, value]) => value !== undefined),
+    ),
+});
+
+const draftToModel = (draft: LoadoutDraft): BuildModel => {
+    const model = new BuildModel();
+    const { buildName: _buildName, ...rest } = draft;
+    Object.assign(model, rest);
+    return model;
+};
+
+const hasAnyItem = (draft: LoadoutDraft): boolean =>
+    Boolean(
+        draft.weaponName ||
+            draft.headName ||
+            draft.torsoName ||
+            draft.armsName ||
+            draft.legsName ||
+            draft.lantern ||
+            draft.omnicell ||
+            draft.consumable1 ||
+            draft.consumable2 ||
+            draft.consumable3,
+    );
+
+const randomOf = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
+
+/* ------------------------------------------------------------------ */
+/* Perk helpers                                                        */
+/* ------------------------------------------------------------------ */
+
+interface PerkEffects {
+    description: string;
+    effects?: Record<string, { description: string; values?: Record<string, string | number> }>;
+}
+
+const perkEffectAt = (name: string, rank: number): string => {
+    const perk = gameData.perks[name] as (PerkEffects & { name: string; type: CellType }) | undefined;
+    if (!perk) {
+        return "";
+    }
+    if (perk.effects) {
+        const ranks = Object.keys(perk.effects)
+            .map(Number)
+            .sort((a, b) => a - b);
+        const clamped = Math.min(ranks[ranks.length - 1] ?? 6, Math.max(ranks[0] ?? 1, rank));
+        const effect = perk.effects[String(clamped)];
+        if (effect) {
+            return interpolate(effect.description, effect.values);
+        }
+    }
+    return perk.description ?? "";
+};
+
+const perkRowsFromGear = (perks: PerkValue[] | undefined, surged: boolean): PerkRow[] =>
+    (perks ?? [])
+        .filter(perk => (perk.powerSurged ?? false) === surged)
+        .map(perk => ({
+            name: perk.name,
+            points: perk.value,
+            description: perkEffectAt(perk.name, perk.value),
+            activatesAt: perk.value,
+            fromCell: false,
+            cellSlot: gameData.perks[perk.name]?.type ?? null,
+        }));
+
+const cellRow = (variantName: string | null): PerkRow | null => {
+    if (!variantName) {
+        return null;
+    }
+    const cell = findCellByVariantName(variantName);
+    if (!cell) {
+        return null;
+    }
+    const variant = cell.variants[variantName];
+    const entry = Object.entries(variant?.perks ?? {})[0];
+    if (!entry) {
+        return null;
+    }
+    const [perkName, value] = entry;
+    return {
+        name: perkName,
+        points: value,
+        description: perkEffectAt(perkName, value),
+        activatesAt: value,
+        fromCell: true,
+        cellSlot: cell.slot,
+    };
+};
+
+/* ------------------------------------------------------------------ */
+/* Screen                                                              */
+/* ------------------------------------------------------------------ */
+
+const ARMOUR_SLOTS: { id: ArmourSlotId; nameKey: "headName" | "torsoName" | "armsName" | "legsName"; surgedKey: "headSurged" | "torsoSurged" | "armsSurged" | "legsSurged"; cellKey: CellSlotKey; label: string }[] = [
+    { id: "head", nameKey: "headName", surgedKey: "headSurged", cellKey: "headCell", label: "Head" },
+    { id: "torso", nameKey: "torsoName", surgedKey: "torsoSurged", cellKey: "torsoCell", label: "Torso" },
+    { id: "arms", nameKey: "armsName", surgedKey: "armsSurged", cellKey: "armsCell", label: "Arms" },
+    { id: "legs", nameKey: "legsName", surgedKey: "legsSurged", cellKey: "legsCell", label: "Legs" },
+];
+
+const LoadoutScreen = () => {
+    const searchParams = useSearchParams();
+    const { toast } = useToast();
+
+    const [draft, setDraft] = useState<LoadoutDraft>(() => {
+        const id = searchParams.get("b");
+        if (id) {
+            const parsed = tryDeserialize(id);
+            if (parsed) {
+                return draftFromModel(parsed);
+            }
+        }
+        return EMPTY_DRAFT;
+    });
+    const [selectedSlot, setSelectedSlot] = useState<SelectionId>("weapon");
+    /* The center detail card always shows the last inspected gear slot, even
+       while the right panel is switched to the perk summary (game behaviour). */
+    const [detailSlot, setDetailSlot] = useState<SelectionId>("weapon");
+    const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
+    const [importOpen, setImportOpen] = useState(false);
+    const [importValue, setImportValue] = useState("");
+    const [copied, setCopied] = useState(false);
+
+    const model = useMemo(() => draftToModel(draft), [draft]);
+    const buildId = useMemo(() => {
+        try {
+            return model.serialize();
+        } catch {
+            return null;
+        }
+    }, [model]);
+    const view = useMemo(() => (buildId ? buildBuildView(model, buildId) : null), [model, buildId]);
+
+    /* URL sync so the editor state is always shareable. */
+    useEffect(() => {
+        if (!buildId) {
+            return;
+        }
+        const url = hasAnyItem(draft) ? `/?b=${buildId}` : "/";
+        window.history.replaceState(null, "", url);
+    }, [buildId, draft]);
+
+    /* Esc deselects back to the perk summary (and closes overlays). */
+    useEffect(() => {
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === "Escape" && !pickerTarget && !importOpen) {
+                setSelectedSlot("summary");
+            }
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [pickerTarget, importOpen]);
+
+    const set = useCallback(<K extends keyof LoadoutDraft>(key: K, value: LoadoutDraft[K]) => {
+        setDraft(previous => {
+            const next = { ...previous, [key]: value };
+
+            if (key === "weaponName") {
+                const previousWeapon = findWeaponByName(previous.weaponName ?? "");
+                const nextWeapon = findWeaponByName((value as string | null) ?? "");
+                if (previousWeapon?.type !== nextWeapon?.type) {
+                    next.weaponPart1 = null;
+                    next.weaponPart2 = null;
+                    next.weaponPart3 = null;
+                    next.bondWeapon = null;
+                }
+                if (!nextWeapon?.bond) {
+                    next.bondWeapon = null;
+                }
+                const allowed = nextWeapon?.cells ?? null;
+                if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
+                    next.weaponCell1 = null;
+                }
+                if (!doesCellFitIntoSlot(allowed, next.weaponCell2)) {
+                    next.weaponCell2 = null;
+                }
+            }
+
+            const armourCheck: [keyof LoadoutDraft, keyof LoadoutDraft][] = [
+                ["headName", "headCell"],
+                ["torsoName", "torsoCell"],
+                ["armsName", "armsCell"],
+                ["legsName", "legsCell"],
+            ];
+            for (const [nameKey, cellKey] of armourCheck) {
+                if (key === nameKey) {
+                    const piece = findArmourByName((next[nameKey] as string | null) ?? "");
+                    if (!doesCellFitIntoSlot(piece?.cells ?? null, next[cellKey] as string | null)) {
+                        next[cellKey] = null;
+                    }
+                }
+            }
+            if (key === "lantern") {
+                const lantern = findLanternByName(next.lantern ?? "");
+                if (!doesCellFitIntoSlot(lantern?.cells ?? null, next.lanternCell)) {
+                    next.lanternCell = null;
+                }
+            }
+
+            return next;
+        });
+    }, []);
+
+    /* --------------------------- actions --------------------------- */
+
+    const randomize = useCallback(() => {
+        const weaponsWithCells = Object.values(gameData.weapons).filter(weapon => weapon.cells !== null);
+        const weapon = randomOf(weaponsWithCells);
+        const partsKey = ({
+            "Aether Strikers": "aetherstrikers",
+            Axe: "axe",
+            "Chain Blades": "chainblades",
+            Hammer: "hammer",
+            Repeater: "repeater",
+            Sword: "sword",
+            "War Pike": "warpike",
+        } as const)[weapon.type];
+        const category = gameData.parts[partsKey] as unknown as Record<string, Record<string, Part>>;
+
+        const pickFittingCell = (allowed: CellType | CellType[] | null): string | null => {
+            if (allowed === null) {
+                return null;
+            }
+            const fitting: string[] = [];
+            for (const cell of Object.values(gameData.cells)) {
+                for (const variantName of Object.keys(cell.variants)) {
+                    if (doesCellFitIntoSlot(allowed, variantName)) {
+                        fitting.push(variantName);
+                    }
+                }
+            }
+            return fitting.length > 0 ? randomOf(fitting) : null;
+        };
+
+        const randomArmour = (type: string) =>
+            randomOf(Object.values(gameData.armours).filter(armour => armour.type === type));
+
+        const head = randomArmour("Head");
+        const torso = randomArmour("Torso");
+        const arms = randomArmour("Arms");
+        const legs = randomArmour("Legs");
+        const lantern = randomOf(Object.values(gameData.lanterns));
+        const omnicell = randomOf(Object.values(gameData.omnicells));
+
+        const bondPool = Object.values(gameData.weapons).filter(
+            candidate => candidate.bond && candidate.elemental === weapon.elemental,
+        );
+
+        const options = consumableOptions();
+        const pickConsumable = () => (Math.random() < 0.75 ? randomOf(options).name : null);
+
+        setDraft({
+            ...EMPTY_DRAFT,
+            buildName: draft.buildName,
+            weaponName: weapon.name,
+            weaponSurged: Math.random() >= 0.5,
+            weaponPart1:
+                weapon.type === "Repeater"
+                    ? category?.chambers
+                        ? randomOf(Object.keys(category.chambers))
+                        : null
+                    : category?.specials
+                      ? randomOf(Object.keys(category.specials))
+                      : null,
+            weaponPart2:
+                weapon.type === "Repeater"
+                    ? category?.grips
+                        ? randomOf(Object.keys(category.grips))
+                        : null
+                    : category?.mods
+                      ? randomOf(Object.keys(category.mods))
+                      : null,
+            weaponPart3: weapon.type === "Repeater" && category?.mods ? randomOf(Object.keys(category.mods)) : null,
+            bondWeapon: bondPool.length > 0 && Math.random() < 0.3 ? randomOf(bondPool).name : null,
+            weaponCell1: pickFittingCell(weapon.cells),
+            weaponCell2: pickFittingCell(weapon.cells),
+            headName: head.name,
+            headSurged: Math.random() >= 0.5,
+            headCell: pickFittingCell(head.cells),
+            torsoName: torso.name,
+            torsoSurged: Math.random() >= 0.5,
+            torsoCell: pickFittingCell(torso.cells),
+            armsName: arms.name,
+            armsSurged: Math.random() >= 0.5,
+            armsCell: pickFittingCell(arms.cells),
+            legsName: legs.name,
+            legsSurged: Math.random() >= 0.5,
+            legsCell: pickFittingCell(legs.cells),
+            lantern: lantern.name,
+            lanternCell: pickFittingCell(lantern.cells),
+            omnicell: omnicell.name,
+            consumable1: pickConsumable(),
+            consumable2: pickConsumable(),
+            consumable3: pickConsumable(),
+        });
+
+        toast({ title: "Random build rolled", description: "Feeling lucky, Slayer?" });
+    }, [draft.buildName, toast]);
+
+    const importBuild = useCallback(() => {
+        const id = extractBuildId(importValue);
+        if (!id) {
+            toast({
+                title: "Not a build link",
+                description: "Paste a full /b/ link or a raw build id.",
+                variant: "destructive",
+            });
+            return;
+        }
+        const parsed = tryDeserialize(id);
+        if (!parsed) {
+            toast({
+                title: "Could not decode that build",
+                description: "The link may be corrupted or use an unsupported format.",
+                variant: "destructive",
+            });
+            return;
+        }
+        setDraft(draftFromModel(parsed));
+        setImportValue("");
+        setImportOpen(false);
+        toast({ title: "Build loaded into the loadout" });
+    }, [importValue, toast]);
+
+    const copyShareLink = useCallback(async () => {
+        if (!buildId) {
+            return;
+        }
+        const url = `${window.location.origin}${localBuildPath(buildId)}`;
+        try {
+            await navigator.clipboard.writeText(url);
+            setCopied(true);
+            toast({ title: "Build link copied", description: url });
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            toast({ title: "Could not copy", description: url, variant: "destructive" });
+        }
+    }, [buildId, toast]);
+
+    const selectSlot = useCallback((slot: SelectionId) => {
+        setSelectedSlot(slot);
+        if (slot !== "summary") {
+            setDetailSlot(slot);
+        }
+    }, []);
+
+    /* --------------------------- derived --------------------------- */
+
+    const weapon = draft.weaponName ? findWeaponByName(draft.weaponName) : null;
+    const lantern = draft.lantern ? findLanternByName(draft.lantern) : null;
+    const omnicell = draft.omnicell ? findOmnicellByName(draft.omnicell) : null;
+
+    const armourPieces = ARMOUR_SLOTS.map(slot => ({
+        ...slot,
+        data: draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null,
+    }));
+
+    const totalPower = weapon
+        ? draft.weaponSurged
+            ? weapon.power.powerSurged ?? weapon.power.base
+            : weapon.power.base
+        : 0;
+    const totalResistance = armourPieces.reduce(
+        (sum, piece) =>
+            sum +
+            (piece.data
+                ? draft[piece.surgedKey]
+                    ? piece.data.resistance.powerSurged ?? piece.data.resistance.base
+                    : piece.data.resistance.base
+                : 0),
+        0,
+    );
+
+    const consumableNames: [string, string | null, string | null, string | null] = [
+        HEALING_FLASK,
+        draft.consumable1,
+        draft.consumable2,
+        draft.consumable3,
+    ];
+
+    /* ---------------------- detail card data ----------------------- */
+
+    const detailData: DetailCardData = useMemo(() => {
+        const emptyFor = (title: string, hint: string) => ({ emptyTitle: title, emptyHint: hint });
+
+        if (detailSlot === "summary") {
+            return { item: null, appearance: "", statValue: null, statLabel: "", perks: [], uniqueEffects: [] };
+        }
+
+        if (detailSlot === "weapon") {
+            const perks: PerkRow[] = [
+                ...perkRowsFromGear(weapon?.perks, draft.weaponSurged),
+                ...perkRowsFromGear(model.bondWeaponData?.perks, draft.weaponSurged),
+            ];
+            const cells = [cellRow(draft.weaponCell1), cellRow(draft.weaponCell2)].filter(
+                (row): row is PerkRow => row !== null,
+            );
+            const uniqueEffects = (weapon?.unique_effects ?? [])
+                .filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged)
+                .map(effect => interpolate(effect.description, effect.values));
+            return {
+                item: weapon ? { name: weapon.name } : null,
+                ...emptyFor("No weapon equipped", "Double-click the weapon card to open the armoury and pick a weapon."),
+                appearance: "Default",
+                statValue: weapon ? totalPower : null,
+                statLabel: "POWER",
+                weapon,
+                perks: [...perks, ...cells],
+                uniqueEffects,
+            };
+        }
+
+        if (detailSlot === "lantern") {
+            const cells = cellRow(draft.lanternCell);
+            const ability = lantern?.lantern_ability;
+            const effects: string[] = [];
+            if (ability?.hold) {
+                effects.push(interpolate(ability.hold, lantern?.values));
+            }
+            if (ability?.instant) {
+                effects.push(interpolate(ability.instant, lantern?.values));
+            }
+            return {
+                item: lantern ? { name: lantern.name } : null,
+                ...emptyFor("No lantern equipped", "Double-click the lantern half of the second card to choose a lantern."),
+                appearance: "Default",
+                statValue: null,
+                statLabel: "",
+                perks: cells ? [cells] : [],
+                uniqueEffects: effects,
+            };
+        }
+
+        if (detailSlot === "omnicell") {
+            const effects: string[] = [];
+            if (omnicell?.passive) {
+                effects.push(interpolate(omnicell.passive, omnicell.passive_values));
+            }
+            if (omnicell?.active) {
+                effects.push(interpolate(omnicell.active, omnicell.active_values));
+            }
+            return {
+                item: omnicell ? { name: omnicell.name } : null,
+                ...emptyFor("No omnicell equipped", "Double-click the omnicell half of the second card to choose an omnicell."),
+                appearance: "Default",
+                statValue: null,
+                statLabel: "",
+                perks: [],
+                uniqueEffects: effects,
+            };
+        }
+
+        const consumableIndex: Record<string, 1 | 2 | 3> = {
+            consumable1: 1,
+            consumable2: 2,
+            consumable3: 3,
+        };
+        if (detailSlot in consumableIndex) {
+            const name = consumableNames[consumableIndex[selectedSlot]];
+            const consumable = name ? findConsumableByName(name) : null;
+            return {
+                item: consumable ? { name: consumable.name } : null,
+                ...emptyFor("Empty tonic slot", "Double-click this slot to pick a tonic or pylon. The first slot is always the healing flask."),
+                appearance: "Default",
+                statValue: null,
+                statLabel: "",
+                perks: [],
+                uniqueEffects: consumable ? [consumable.description] : [],
+            };
+        }
+
+        const slot = ARMOUR_SLOTS.find(entry => entry.id === detailSlot);
+        const armour = slot?.data ?? null;
+        const perks = perkRowsFromGear(armour?.perks, slot ? draft[slot.surgedKey] : true);
+        const cells = cellRow(slot ? draft[slot.cellKey] : null);
+        return {
+            item: armour ? { name: armour.name } : null,
+            ...emptyFor(
+                `No ${slot?.label?.toLowerCase() ?? "armour"} armour equipped`,
+                "Double-click an armour card to browse every piece in the game.",
+            ),
+            appearance: armour ? "Default" : "",
+            statValue: armour
+                ? slot && draft[slot.surgedKey]
+                    ? armour.resistance.powerSurged ?? armour.resistance.base
+                    : armour.resistance.base
+                : null,
+            statLabel: "RESIST",
+            armour,
+            perks: cells ? [...perks, cells] : perks,
+            uniqueEffects: [],
+        };
+    }, [detailSlot, weapon, lantern, omnicell, draft, model.bondWeaponData, totalPower, consumableNames]);
+
+    /* ---------------------- right panel data ----------------------- */
+
+    const rightPanel = useMemo(() => {
+        if (selectedSlot === "summary" || !detailData.item) {
+            return null;
+        }
+
+        if (selectedSlot === "weapon") {
+            const parts = model.parts;
+            const partRows: { label: string; part: Part | null }[] = [];
+            if (weapon && parts) {
+                if (weapon.type === "Repeater") {
+                    partRows.push({ label: "Chamber", part: parts.chamber });
+                    partRows.push({ label: "Grip", part: parts.grip });
+                    partRows.push({ label: "Mod", part: parts.mod });
+                } else {
+                    partRows.push({ label: "Special", part: parts.special });
+                    partRows.push({ label: "Mod", part: parts.mod });
+                }
+            }
+            const cellSlots = weapon?.cells
+                ? Array.isArray(weapon.cells)
+                    ? [
+                          { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
+                          { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
+                      ]
+                    : [{ key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells }]
+                : [];
+            return {
+                slotLabel: "Weapon",
+                name: weapon?.name ?? "",
+                icon: weapon?.icon ?? "",
+                item: weapon,
+                weapon,
+                parts: partRows,
+                bond: model.bondWeaponData ? { name: model.bondWeaponData.name, icon: model.bondWeaponData.icon } : null,
+                cellSlots,
+            };
+        }
+
+        if (selectedSlot === "lantern") {
+            return {
+                slotLabel: "Lantern",
+                name: lantern?.name ?? "",
+                icon: lantern?.icon ?? "",
+                item: lantern,
+                lantern,
+                parts: [],
+                bond: null,
+                cellSlots: lantern?.cells
+                    ? [{ key: "lanternCell" as CellSlotKey, variantName: draft.lanternCell, allowed: lantern.cells }]
+                    : [],
+            };
+        }
+
+        if (selectedSlot === "omnicell") {
+            return {
+                slotLabel: "Omnicell",
+                name: omnicell?.name ?? "",
+                icon: omnicell?.icon ?? "",
+                item: omnicell,
+                omnicell,
+                parts: [],
+                bond: null,
+                cellSlots: [],
+            };
+        }
+
+        const consumableIndex: Record<string, 1 | 2 | 3> = { consumable1: 1, consumable2: 2, consumable3: 3 };
+        if (selectedSlot in consumableIndex) {
+            const name = consumableNames[consumableIndex[selectedSlot]];
+            const consumable = name ? findConsumableByName(name) : null;
+            return {
+                slotLabel: consumable?.type === "pylon" ? "Pylon" : "Tonic",
+                name: consumable?.name ?? "",
+                icon: consumable?.icon ?? "",
+                item: consumable,
+                consumable,
+                parts: [],
+                bond: null,
+                cellSlots: [],
+            };
+        }
+
+        const slot = ARMOUR_SLOTS.find(entry => entry.id === selectedSlot);
+        const armour = slot?.data ?? null;
+        return {
+            slotLabel: slot?.label ?? "Armour",
+            name: armour?.name ?? "",
+            icon: armour?.icon ?? "",
+            item: armour,
+            armour,
+            parts: [],
+            bond: null,
+            cellSlots: armour?.cells
+                ? [{ key: slot!.cellKey, variantName: draft[slot!.cellKey], allowed: armour.cells }]
+                : [],
+        };
+    }, [selectedSlot, detailData.item, weapon, lantern, omnicell, draft, model, consumableNames]);
+
+    /* ---------------------- picker items --------------------------- */
+
+    const picker = useMemo(() => {
+        const target = pickerTarget;
+        if (!target) {
+            return null;
+        }
+
+        if (target.kind === "weapon") {
+            const items: PickerItem[] = Object.values(gameData.weapons)
+                .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name))
+                .map(entry => ({
+                    value: entry.name,
+                    label: entry.name,
+                    icon: entry.icon,
+                    group: entry.type,
+                    hint: entry.elemental ?? undefined,
+                    meta: String(entry.power.powerSurged ?? entry.power.base),
+                }));
+            return {
+                title: "Weapons",
+                items,
+                selected: draft.weaponName,
+                filterLabel: "Element",
+                filterValues: ["Blaze", "Frost", "Shock", "Terra", "Radiant", "Umbral"],
+                filterOf: (item: PickerItem) => item.hint ?? "",
+                apply: (value: string | null) => set("weaponName", value),
+            };
+        }
+
+        if (target.kind === "armour") {
+            const items: PickerItem[] = Object.values(gameData.armours)
+                .filter(entry => entry.type === target.slot[0].toUpperCase() + target.slot.slice(1))
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(entry => ({
+                    value: entry.name,
+                    label: entry.name,
+                    icon: entry.icon,
+                    group: entry.behemoth ?? "Generic",
+                    hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
+                    meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
+                }));
+            return {
+                title: `${target.slot[0].toUpperCase() + target.slot.slice(1)} Armour`,
+                items,
+                selected: draft[`${target.slot}Name` as "headName"],
+                filterLabel: "Strength",
+                filterValues: ["Blaze", "Frost", "Shock", "Terra", "Radiant", "Umbral"],
+                filterOf: () => "",
+                apply: (value: string | null) => set(`${target.slot}Name` as "headName", value),
+            };
+        }
+
+        if (target.kind === "lantern") {
+            const items: PickerItem[] = Object.values(gameData.lanterns)
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(entry => ({
+                    value: entry.name,
+                    label: entry.name,
+                    icon: entry.icon,
+                    group: "Lanterns",
+                    hint: entry.cells ? `${cellTypeLabel(entry.cells)} cell` : undefined,
+                }));
+            return {
+                title: "Lanterns",
+                items,
+                selected: draft.lantern,
+                apply: (value: string | null) => set("lantern", value),
+            };
+        }
+
+        if (target.kind === "omnicell") {
+            const items: PickerItem[] = Object.values(gameData.omnicells)
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(entry => ({
+                    value: entry.name,
+                    label: entry.name,
+                    icon: entry.icon,
+                    group: "Omnicells",
+                }));
+            return {
+                title: "Omnicells",
+                items,
+                selected: draft.omnicell,
+                apply: (value: string | null) => set("omnicell", value),
+            };
+        }
+
+        if (target.kind === "cell") {
+            const allowed = (() => {
+                switch (target.cellKey) {
+                    case "weaponCell1":
+                    case "weaponCell2":
+                        return weapon?.cells ?? null;
+                    case "headCell":
+                        return findArmourByName(draft.headName ?? "")?.cells ?? null;
+                    case "torsoCell":
+                        return findArmourByName(draft.torsoName ?? "")?.cells ?? null;
+                    case "armsCell":
+                        return findArmourByName(draft.armsName ?? "")?.cells ?? null;
+                    case "legsCell":
+                        return findArmourByName(draft.legsName ?? "")?.cells ?? null;
+                    case "lanternCell":
+                        return lantern?.cells ?? null;
+                }
+            })();
+            const items: PickerItem[] = [];
+            for (const cell of Object.values(gameData.cells)) {
+                for (const variantName of Object.keys(cell.variants)) {
+                    if (!doesCellFitIntoSlot(allowed, variantName)) {
+                        continue;
+                    }
+                    const perks = Object.entries(cell.variants[variantName].perks);
+                    items.push({
+                        value: variantName,
+                        label: variantName,
+                        icon: `/assets/icons/perks/${cell.slot}.png`,
+                        group: cellTypeLabel(cell.slot),
+                        hint: perks.map(([name, value]) => `${name} +${value}`).join(", "),
+                    });
+                }
+            }
+            items.sort((a, b) => a.group.localeCompare(b.group) || a.label.localeCompare(b.label));
+            return {
+                title: "Cells",
+                items,
+                selected: draft[target.cellKey],
+                apply: (value: string | null) => set(target.cellKey, value),
+            };
+        }
+
+        if (target.kind === "part") {
+            const weaponType = weapon?.type;
+            if (!weaponType) {
+                return null;
+            }
+            const partsKey = ({
+                "Aether Strikers": "aetherstrikers",
+                Axe: "axe",
+                "Chain Blades": "chainblades",
+                Hammer: "hammer",
+                Repeater: "repeater",
+                Sword: "sword",
+                "War Pike": "warpike",
+            } as const)[weaponType];
+            const category = gameData.parts[partsKey] as unknown as Record<string, Record<string, Part>>;
+            const bucket = category?.[target.bucket] ?? {};
+            const items: PickerItem[] = Object.values(bucket)
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(part => ({
+                    value: part.name,
+                    label: part.name,
+                    icon: part.icon,
+                    group: target.bucket[0].toUpperCase() + target.bucket.slice(1),
+                    hint: (part.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
+                }));
+            const labelByBucket: Record<string, string> = {
+                specials: "Weapon Special",
+                mods: "Weapon Mod",
+                chambers: "Chamber",
+                grips: "Grip",
+            };
+            return {
+                title: labelByBucket[target.bucket] ?? "Weapon Part",
+                items,
+                selected: draft[target.partKey],
+                apply: (value: string | null) => set(target.partKey, value),
+            };
+        }
+
+        if (target.kind === "bond") {
+            const items: PickerItem[] = Object.values(gameData.weapons)
+                .filter(candidate => candidate.bond && candidate.elemental === weapon?.elemental)
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(candidate => ({
+                    value: candidate.name,
+                    label: candidate.name,
+                    icon: candidate.icon,
+                    group: "Bondable Weapons",
+                    hint: candidate.elemental ?? undefined,
+                }));
+            return {
+                title: "Bonded Weapon",
+                items,
+                selected: draft.bondWeapon,
+                apply: (value: string | null) => set("bondWeapon", value),
+            };
+        }
+
+        /* consumable */
+        const items: PickerItem[] = consumableOptions().map(entry => ({
+            value: entry.name,
+            label: entry.name,
+            icon: entry.icon,
+            group: entry.type === "tonic" ? "Tonics" : "Pylons",
+            hint: entry.description,
+            consumableType: entry.type,
+            meta: `x${entry.capacity}`,
+        }));
+        const consumableKey = (`consumable${target.index}` as "consumable1");
+        return {
+            title: "Tonics & Pylons",
+            items,
+            selected: draft[consumableKey],
+            apply: (value: string | null) => set(consumableKey, value),
+        };
+    }, [pickerTarget, draft, weapon, lantern, set]);
+
+    /* --------------------------- render ---------------------------- */
+
+    return (
+        <LoadoutStage>
+            {/* backdrop */}
+            <span className="lo-light-shaft" style={{ left: 700 }} aria-hidden />
+            <span className="lo-light-shaft" style={{ left: 1050 }} aria-hidden />
+            <span className="lo-pedestal" style={{ left: 690, top: 540, width: 540, height: 190 }} aria-hidden />
+            <span
+                className="pointer-events-none absolute inset-0"
+                style={{ background: "radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(4,5,7,0.55) 100%)" }}
+                aria-hidden
+            />
+
+            {/* reserved slayer slot hook - intentionally empty for now */}
+            <span data-slayer-slot="" aria-hidden />
+
+            {/* nameplate */}
+            <div className="absolute left-1/2 top-[46px] -translate-x-1/2 text-center">
+                <input
+                    type="text"
+                    value={draft.buildName}
+                    onChange={event => setDraft(previous => ({ ...previous, buildName: event.target.value.slice(0, 24) }))}
+                    aria-label="Build name"
+                    className="lo-serif w-[420px] bg-transparent text-center text-[40px] font-semibold tracking-[0.14em] text-[#e8e4da] outline-none transition-colors focus:text-white/95 hover:text-[#f5f1e8] focus-visible:text-[#e0a33e]"
+                    style={{ textShadow: "0 2px 14px rgba(0,0,0,0.8)" }}
+                    spellCheck={false}
+                />
+                <p className="mt-[6px] text-[13px] font-semibold normal-case tracking-[0.28em] text-[var(--lo-gold)]">
+                    MYSTIC PARADOX
+                </p>
+            </div>
+
+            {/* left column */}
+            <div className="absolute left-[40px] top-[24px]">
+                <LoadoutTabsStub />
+            </div>
+
+            <div className="absolute left-[40px] top-[128px] grid grid-cols-2 gap-[14px]">
+                <WeaponCard
+                    weapon={weapon}
+                    surged={draft.weaponSurged}
+                    selected={selectedSlot === "weapon"}
+                    onSelect={() => selectSlot("weapon")}
+                    onOpenPicker={() => setPickerTarget({ kind: "weapon" })}
+                />
+                <LanternOmnicellCard
+                    lantern={lantern}
+                    omnicell={omnicell}
+                    selectedSlot={selectedSlot}
+                    onSelect={slot => selectSlot(slot)}
+                    onOpenPicker={target => setPickerTarget({ kind: target })}
+                />
+                {ARMOUR_SLOTS.slice(0, 2).map(slot => (
+                    <ArmourCard
+                        key={slot.id}
+                        slot={slot.id}
+                        armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
+                        surged={draft[slot.surgedKey]}
+                        selected={selectedSlot === slot.id}
+                        onSelect={() => selectSlot(slot.id)}
+                        onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
+                    />
+                ))}
+                {ARMOUR_SLOTS.slice(2).map(slot => (
+                    <ArmourCard
+                        key={slot.id}
+                        slot={slot.id}
+                        armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
+                        surged={draft[slot.surgedKey]}
+                        selected={selectedSlot === slot.id}
+                        onSelect={() => selectSlot(slot.id)}
+                        onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
+                    />
+                ))}
+            </div>
+
+            <div className="absolute left-[40px] top-[782px]">
+                <ConsumableRow
+                    consumableNames={consumableNames}
+                    selectedSlot={selectedSlot}
+                    onSelect={slot => selectSlot(slot)}
+                    onOpenPicker={index => setPickerTarget({ kind: "consumable", index })}
+                    findConsumable={name => (name ? findConsumableByName(name) : null)}
+                />
+            </div>
+
+            {/* center detail card */}
+            {(
+                <div className="absolute left-[585px] top-[610px] h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
+                    <DetailCard data={detailData} />
+                </div>
+            )}
+
+            {/* right panel */}
+            <div className="absolute left-[1440px] top-[64px] w-[440px]">
+                <CrestHeader power={totalPower} resistance={totalResistance} />
+                <FlourishHeader
+                    title={rightPanel ? rightPanel.slotLabel : "Perk Summary"}
+                    className="mt-[18px]"
+                />
+                <div className="mt-[14px]">
+                    {rightPanel ? (
+                        <ItemDetailPanel
+                            data={rightPanel}
+                            cellSlots={rightPanel.cellSlots}
+                            selectedCellKey={null}
+                            onCellClick={key => setPickerTarget({ kind: "cell", cellKey: key })}
+                            onPartClick={partKey => {
+                                const weaponType = weapon?.type;
+                                if (!weaponType) {
+                                    return;
+                                }
+                                const bucket =
+                                    weaponType === "Repeater"
+                                        ? partKey === "weaponPart1"
+                                            ? "chambers"
+                                            : partKey === "weaponPart2"
+                                              ? "grips"
+                                              : "mods"
+                                        : partKey === "weaponPart1"
+                                          ? "specials"
+                                          : "mods";
+                                setPickerTarget({ kind: "part", partKey, bucket });
+                            }}
+                            onBondClick={() => setPickerTarget({ kind: "bond" })}
+                        />
+                    ) : (
+                        <PerkSummaryPanel perkTotals={view?.perkTotals ?? []} />
+                    )}
+                </div>
+            </div>
+
+            {/* bottom bar */}
+            <div className="absolute inset-x-0 bottom-0 flex h-[75px] items-center border-t border-[#3a3f47]/60 bg-gradient-to-t from-[rgba(6,7,8,0.9)] to-transparent px-[60px]">
+                <div className="flex items-center gap-[56px]">
+                    <button
+                        type="button"
+                        onClick={copyShareLink}
+                        disabled={!buildId || !hasAnyItem(draft)}
+                        className="lo-button-text flex items-center gap-2"
+                    >
+                        {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                        COPY
+                    </button>
+                    <button type="button" onClick={randomize} className="lo-button-text flex items-center gap-2">
+                        <Dices className="h-4 w-4" aria-hidden />
+                        RANDOMIZE
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setDraft(previous => ({ ...EMPTY_DRAFT, buildName: previous.buildName }));
+                            selectSlot("weapon");
+                        }}
+                        disabled={!hasAnyItem(draft)}
+                        className="lo-button-text flex items-center gap-2"
+                    >
+                        <Eraser className="h-4 w-4" aria-hidden />
+                        RESET
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setImportOpen(true)}
+                    className="lo-button-text ml-auto flex items-center gap-2"
+                >
+                    <Link2 className="h-4 w-4" aria-hidden />
+                    IMPORT
+                </button>
+            </div>
+
+            {/* picker overlay */}
+            {picker && pickerTarget && (
+                <ItemPickerOverlay
+                    title={picker.title}
+                    items={picker.items}
+                    selectedValue={picker.selected}
+                    onSelect={picker.apply}
+                    onClose={() => setPickerTarget(null)}
+                    filterLabel={picker.filterLabel}
+                    filterValues={picker.filterValues}
+                    filterOf={picker.filterOf}
+                />
+            )}
+
+            {/* import overlay */}
+            {importOpen && (
+                <div
+                    className="lo-picker-backdrop lo-overlay-in absolute inset-0 z-50 flex items-center justify-center"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Import a build"
+                >
+                    <div className="lo-panel lo-fade-in w-[640px] p-[28px]">
+                        <FlourishHeader title="Import Build" />
+                        <p className="mt-4 text-[14px] leading-relaxed text-[#9a9a94]">
+                            Paste a Mystic Builder link ({"« /b/… »"}) or a raw build id. Links from the original
+                            Dauntless Builder are upgraded automatically.
+                        </p>
+                        <input
+                            type="text"
+                            autoFocus
+                            value={importValue}
+                            onChange={event => setImportValue(event.target.value)}
+                            onKeyDown={event => {
+                                if (event.key === "Enter") {
+                                    importBuild();
+                                }
+                                if (event.key === "Escape") {
+                                    setImportOpen(false);
+                                }
+                            }}
+                            placeholder="https://dauntlessbuilderembeds.netlify.app/b/…"
+                            className="lo-card mt-5 h-[46px] w-full px-4 text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                            aria-label="Build link or id"
+                        />
+                        <div className="mt-6 flex items-center justify-between">
+                            <DiamondPip size={9} color="#6f7783" />
+                            <div className="flex gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setImportOpen(false)}
+                                    className="lo-button-text !text-[15px]"
+                                >
+                                    CANCEL
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={importBuild}
+                                    className="lo-button-text !text-[15px] !text-[#e0a33e]"
+                                >
+                                    LOAD BUILD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </LoadoutStage>
+    );
+};
+
+export default LoadoutScreen;
