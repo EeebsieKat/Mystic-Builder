@@ -292,6 +292,19 @@ const LoadoutScreen = () => {
                 if (!nextWeapon?.bond) {
                     next.bondWeapon = null;
                 }
+                if (next.bondWeapon !== null) {
+                    const bondWeapon = findWeaponByName(next.bondWeapon);
+                    const bondStillValid =
+                        nextWeapon !== null &&
+                        nextWeapon.bond !== undefined &&
+                        bondWeapon !== null &&
+                        bondWeapon.elemental === nextWeapon.elemental &&
+                        bondWeapon.type === nextWeapon.type &&
+                        bondWeapon.name !== nextWeapon.name;
+                    if (!bondStillValid) {
+                        next.bondWeapon = null;
+                    }
+                }
                 const allowed = nextWeapon?.cells ?? null;
                 if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
                     next.weaponCell1 = null;
@@ -368,7 +381,10 @@ const LoadoutScreen = () => {
         const omnicell = randomOf(Object.values(gameData.omnicells));
 
         const bondPool = Object.values(gameData.weapons).filter(
-            candidate => candidate.bond && candidate.elemental === weapon.elemental,
+            candidate =>
+                candidate.elemental === weapon.elemental &&
+                candidate.type === weapon.type &&
+                candidate.name !== weapon.name,
         );
 
         const options = consumableOptions();
@@ -520,9 +536,24 @@ const LoadoutScreen = () => {
             const cells = [cellRow(draft.weaponCell1), cellRow(draft.weaponCell2)].filter(
                 (row): row is PerkRow => row !== null,
             );
-            const uniqueEffects = (weapon?.unique_effects ?? [])
-                .filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged)
-                .map(effect => interpolate(effect.description, effect.values));
+            /* Bonding a weapon to a legendary adds that weapon's innate perk and
+               unique effect, so render the bond partner's effects right below the
+               legendary ability (falls back to non-surged text like the build page). */
+            const bondWeaponData = model.bondWeaponData;
+            const surgeMatchingEffects = (effects: Weapon["unique_effects"]): string[] => {
+                const list = effects ?? [];
+                const matching = list.filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged);
+                const chosen = matching.length > 0 ? matching : list.filter(effect => !effect.powerSurged);
+                return chosen.map(effect => interpolate(effect.description, effect.values));
+            };
+            const uniqueEffects = [
+                ...surgeMatchingEffects(weapon?.unique_effects),
+                ...(bondWeaponData !== null
+                    ? surgeMatchingEffects(bondWeaponData.unique_effects).map(
+                          effect => `${bondWeaponData.name} (bonded): ${effect}`,
+                      )
+                    : []),
+            ];
             return {
                 item: weapon ? { name: weapon.name } : null,
                 ...emptyFor("No weapon equipped", "Double-click the weapon card to open the armoury and pick a weapon."),
@@ -889,14 +920,23 @@ const LoadoutScreen = () => {
 
         if (target.kind === "bond") {
             const items: PickerItem[] = Object.values(gameData.weapons)
-                .filter(candidate => candidate.bond && candidate.elemental === weapon?.elemental)
+                .filter(
+                    candidate =>
+                        candidate.elemental === weapon?.elemental &&
+                        candidate.type === weapon?.type &&
+                        candidate.name !== weapon?.name,
+                )
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(candidate => ({
                     value: candidate.name,
                     label: candidate.name,
                     icon: candidate.icon,
                     group: "Bondable Weapons",
-                    hint: candidate.elemental ?? undefined,
+                    hint:
+                        candidate.perks
+                            ?.filter(perk => !(perk.powerSurged ?? false))
+                            .map(perk => `${perk.name} +${perk.value}`)
+                            .join(", ") || undefined,
                 }));
             return {
                 title: "Bonded Weapon",

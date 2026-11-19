@@ -1,0 +1,236 @@
+From 1054f30cf982f5b94977b6f9662cdb0619c3d584 Mon Sep 17 00:00:00 2001
+From: Mystic Builder Dev <dev@mysticbuilder.local>
+Date: Thu, 19 Nov 2026 04:11:52 +0000
+Subject: [PATCH] Re-add weapon bonds to legendary weapons
+
+Legendary weapons can again bond another weapon, with the bond pool
+limited to weapons of the same type and element (e.g. an Umbral Axe
+bonds other Umbral Axes):
+
+- Awakening loadout: the Bonded slot row is now always shown for
+  bond-capable weapons (it previously only rendered when a bond was
+  already stored in the build code, so there was no way to add one)
+- Bondable pools in the loadout picker, random builds and the legacy
+  build editor now match type + element and exclude the weapon itself
+  (previously: any legendary weapon of the same element, including the
+  equipped weapon)
+- Switching weapons re-validates the bond and clears it when the new
+  weapon is not bond-capable or the type/element no longer match
+- The bonded weapon's unique effect now renders in the weapon detail
+  card below the legendary ability (bonding grants the partner's UE
+  and innate perk, like in game); effect text falls back to the
+  non-surged variant when no surged variant exists
+---
+ src/components/builder/build-editor.tsx   | 24 +++++++++--
+ src/components/loadout/loadout-screen.tsx | 52 ++++++++++++++++++++---
+ src/components/loadout/right-panel.tsx    | 23 ++++++----
+ 3 files changed, 81 insertions(+), 18 deletions(-)
+
+diff --git a/src/components/builder/build-editor.tsx b/src/components/builder/build-editor.tsx
+index 679325e..55c4a20 100755
+--- a/src/components/builder/build-editor.tsx
++++ b/src/components/builder/build-editor.tsx
+@@ -249,12 +249,17 @@ const partOptions = (weaponType: WeaponType, bucket: "specials" | "mods" | "cham
+         }));
+ };
+ 
+-const bondableWeapons = (weapon: { elemental: string | null; name: string } | null): SelectOption[] => {
++const bondableWeapons = (weapon: { type: string; elemental: string | null; name: string } | null): SelectOption[] => {
+     if (!weapon) {
+         return [];
+     }
+     return Object.values(gameData.weapons)
+-        .filter(candidate => candidate.bond && candidate.elemental === weapon.elemental)
++        .filter(
++            candidate =>
++                candidate.elemental === weapon.elemental &&
++                candidate.type === weapon.type &&
++                candidate.name !== weapon.name,
++        )
+         .sort((a, b) => a.name.localeCompare(b.name))
+         .map(candidate => ({
+             value: candidate.name,
+@@ -408,6 +413,19 @@ const BuildEditor = () => {
+                 if (!nextWeapon?.bond) {
+                     next.bondWeapon = null;
+                 }
++                if (next.bondWeapon !== null) {
++                    const bondWeapon = findWeaponByName(next.bondWeapon);
++                    const bondStillValid =
++                        nextWeapon !== null &&
++                        nextWeapon.bond !== undefined &&
++                        bondWeapon !== null &&
++                        bondWeapon.elemental === nextWeapon.elemental &&
++                        bondWeapon.type === nextWeapon.type &&
++                        bondWeapon.name !== nextWeapon.name;
++                    if (!bondStillValid) {
++                        next.bondWeapon = null;
++                    }
++                }
+                 const allowed = nextWeapon?.cells ?? null;
+                 if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
+                     next.weaponCell1 = null;
+@@ -472,7 +490,7 @@ const BuildEditor = () => {
+         const lantern = randomOf(Object.values(gameData.lanterns));
+         const omnicell = randomOf(Object.values(gameData.omnicells));
+ 
+-        const bondPool = bondableWeapons({ elemental: weapon.elemental, name: weapon.name });
++        const bondPool = bondableWeapons({ type: weapon.type, elemental: weapon.elemental, name: weapon.name });
+ 
+         setDraft({
+             weaponName: weapon.name,
+diff --git a/src/components/loadout/loadout-screen.tsx b/src/components/loadout/loadout-screen.tsx
+index 8bfb9e2..ef08556 100644
+--- a/src/components/loadout/loadout-screen.tsx
++++ b/src/components/loadout/loadout-screen.tsx
+@@ -292,6 +292,19 @@ const LoadoutScreen = () => {
+                 if (!nextWeapon?.bond) {
+                     next.bondWeapon = null;
+                 }
++                if (next.bondWeapon !== null) {
++                    const bondWeapon = findWeaponByName(next.bondWeapon);
++                    const bondStillValid =
++                        nextWeapon !== null &&
++                        nextWeapon.bond !== undefined &&
++                        bondWeapon !== null &&
++                        bondWeapon.elemental === nextWeapon.elemental &&
++                        bondWeapon.type === nextWeapon.type &&
++                        bondWeapon.name !== nextWeapon.name;
++                    if (!bondStillValid) {
++                        next.bondWeapon = null;
++                    }
++                }
+                 const allowed = nextWeapon?.cells ?? null;
+                 if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
+                     next.weaponCell1 = null;
+@@ -368,7 +381,10 @@ const LoadoutScreen = () => {
+         const omnicell = randomOf(Object.values(gameData.omnicells));
+ 
+         const bondPool = Object.values(gameData.weapons).filter(
+-            candidate => candidate.bond && candidate.elemental === weapon.elemental,
++            candidate =>
++                candidate.elemental === weapon.elemental &&
++                candidate.type === weapon.type &&
++                candidate.name !== weapon.name,
+         );
+ 
+         const options = consumableOptions();
+@@ -520,9 +536,24 @@ const LoadoutScreen = () => {
+             const cells = [cellRow(draft.weaponCell1), cellRow(draft.weaponCell2)].filter(
+                 (row): row is PerkRow => row !== null,
+             );
+-            const uniqueEffects = (weapon?.unique_effects ?? [])
+-                .filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged)
+-                .map(effect => interpolate(effect.description, effect.values));
++            /* Bonding a weapon to a legendary adds that weapon's innate perk and
++               unique effect, so render the bond partner's effects right below the
++               legendary ability (falls back to non-surged text like the build page). */
++            const bondWeaponData = model.bondWeaponData;
++            const surgeMatchingEffects = (effects: Weapon["unique_effects"]): string[] => {
++                const list = effects ?? [];
++                const matching = list.filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged);
++                const chosen = matching.length > 0 ? matching : list.filter(effect => !effect.powerSurged);
++                return chosen.map(effect => interpolate(effect.description, effect.values));
++            };
++            const uniqueEffects = [
++                ...surgeMatchingEffects(weapon?.unique_effects),
++                ...(bondWeaponData !== null
++                    ? surgeMatchingEffects(bondWeaponData.unique_effects).map(
++                          effect => `${bondWeaponData.name} (bonded): ${effect}`,
++                      )
++                    : []),
++            ];
+             return {
+                 item: weapon ? { name: weapon.name } : null,
+                 ...emptyFor("No weapon equipped", "Double-click the weapon card to open the armoury and pick a weapon."),
+@@ -889,14 +920,23 @@ const LoadoutScreen = () => {
+ 
+         if (target.kind === "bond") {
+             const items: PickerItem[] = Object.values(gameData.weapons)
+-                .filter(candidate => candidate.bond && candidate.elemental === weapon?.elemental)
++                .filter(
++                    candidate =>
++                        candidate.elemental === weapon?.elemental &&
++                        candidate.type === weapon?.type &&
++                        candidate.name !== weapon?.name,
++                )
+                 .sort((a, b) => a.name.localeCompare(b.name))
+                 .map(candidate => ({
+                     value: candidate.name,
+                     label: candidate.name,
+                     icon: candidate.icon,
+                     group: "Bondable Weapons",
+-                    hint: candidate.elemental ?? undefined,
++                    hint:
++                        candidate.perks
++                            ?.filter(perk => !(perk.powerSurged ?? false))
++                            .map(perk => `${perk.name} +${perk.value}`)
++                            .join(", ") || undefined,
+                 }));
+             return {
+                 title: "Bonded Weapon",
+diff --git a/src/components/loadout/right-panel.tsx b/src/components/loadout/right-panel.tsx
+index 84f7d6b..24945ec 100644
+--- a/src/components/loadout/right-panel.tsx
++++ b/src/components/loadout/right-panel.tsx
+@@ -216,10 +216,12 @@ const PartSlotRow = ({
+     label,
+     part,
+     onClick,
++    emptyLabel = "None equipped",
+ }: {
+     label: string;
+     part: Part | null;
+     onClick: () => void;
++    emptyLabel?: string;
+ }) => (
+     <button
+         type="button"
+@@ -234,7 +236,7 @@ const PartSlotRow = ({
+                 <span className="truncate text-[14px] font-semibold text-[#e8e4da]">{part.name}</span>
+             </>
+         ) : (
+-            <span className="text-[13px] text-[#7c828c]">None equipped</span>
++            <span className="text-[13px] text-[#7c828c]">{emptyLabel}</span>
+         )}
+     </button>
+ );
+@@ -276,7 +278,7 @@ export const ItemDetailPanel = ({
+                 <DiamondPip size={7} color="#c8955a" />
+             </div>
+ 
+-            {/* weapon parts + bond */}
++            {/* weapon parts */}
+             {data.parts && data.parts.length > 0 && (
+                 <div className="flex flex-col gap-[8px]">
+                     {data.parts.map(partRow =>
+@@ -299,16 +301,19 @@ export const ItemDetailPanel = ({
+                             />
+                         ) : null,
+                     )}
+-                    {data.bond && (
+-                        <PartSlotRow
+-                            label="Bonded"
+-                            part={{ name: data.bond.name, icon: data.bond.icon } as Part}
+-                            onClick={onBondClick}
+-                        />
+-                    )}
+                 </div>
+             )}
+ 
++            {/* bond slot - legendary weapons can bond another weapon of the same type and element */}
++            {data.weapon?.bond && (
++                <PartSlotRow
++                    label="Bonded"
++                    part={data.bond ? ({ name: data.bond.name, icon: data.bond.icon } as Part) : null}
++                    emptyLabel="None bonded - click to choose"
++                    onClick={onBondClick}
++                />
++            )}
++
+             {/* cell slots */}
+             {showCells && (
+                 <div className={`flex gap-[10px] ${cellSlots.length === 1 ? "" : ""}`}>
+-- 
+2.47.3
+

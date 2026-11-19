@@ -249,12 +249,17 @@ const partOptions = (weaponType: WeaponType, bucket: "specials" | "mods" | "cham
         }));
 };
 
-const bondableWeapons = (weapon: { elemental: string | null; name: string } | null): SelectOption[] => {
+const bondableWeapons = (weapon: { type: string; elemental: string | null; name: string } | null): SelectOption[] => {
     if (!weapon) {
         return [];
     }
     return Object.values(gameData.weapons)
-        .filter(candidate => candidate.bond && candidate.elemental === weapon.elemental)
+        .filter(
+            candidate =>
+                candidate.elemental === weapon.elemental &&
+                candidate.type === weapon.type &&
+                candidate.name !== weapon.name,
+        )
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(candidate => ({
             value: candidate.name,
@@ -408,6 +413,19 @@ const BuildEditor = () => {
                 if (!nextWeapon?.bond) {
                     next.bondWeapon = null;
                 }
+                if (next.bondWeapon !== null) {
+                    const bondWeapon = findWeaponByName(next.bondWeapon);
+                    const bondStillValid =
+                        nextWeapon !== null &&
+                        nextWeapon.bond !== undefined &&
+                        bondWeapon !== null &&
+                        bondWeapon.elemental === nextWeapon.elemental &&
+                        bondWeapon.type === nextWeapon.type &&
+                        bondWeapon.name !== nextWeapon.name;
+                    if (!bondStillValid) {
+                        next.bondWeapon = null;
+                    }
+                }
                 const allowed = nextWeapon?.cells ?? null;
                 if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
                     next.weaponCell1 = null;
@@ -472,7 +490,7 @@ const BuildEditor = () => {
         const lantern = randomOf(Object.values(gameData.lanterns));
         const omnicell = randomOf(Object.values(gameData.omnicells));
 
-        const bondPool = bondableWeapons({ elemental: weapon.elemental, name: weapon.name });
+        const bondPool = bondableWeapons({ type: weapon.type, elemental: weapon.elemental, name: weapon.name });
 
         setDraft({
             weaponName: weapon.name,

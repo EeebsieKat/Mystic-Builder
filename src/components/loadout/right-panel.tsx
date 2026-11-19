@@ -216,10 +216,12 @@ const PartSlotRow = ({
     label,
     part,
     onClick,
+    emptyLabel = "None equipped",
 }: {
     label: string;
     part: Part | null;
     onClick: () => void;
+    emptyLabel?: string;
 }) => (
     <button
         type="button"
@@ -234,7 +236,7 @@ const PartSlotRow = ({
                 <span className="truncate text-[14px] font-semibold text-[#e8e4da]">{part.name}</span>
             </>
         ) : (
-            <span className="text-[13px] text-[#7c828c]">None equipped</span>
+            <span className="text-[13px] text-[#7c828c]">{emptyLabel}</span>
         )}
     </button>
 );
@@ -276,7 +278,7 @@ export const ItemDetailPanel = ({
                 <DiamondPip size={7} color="#c8955a" />
             </div>
 
-            {/* weapon parts + bond */}
+            {/* weapon parts */}
             {data.parts && data.parts.length > 0 && (
                 <div className="flex flex-col gap-[8px]">
                     {data.parts.map(partRow =>
@@ -299,14 +301,17 @@ export const ItemDetailPanel = ({
                             />
                         ) : null,
                     )}
-                    {data.bond && (
-                        <PartSlotRow
-                            label="Bonded"
-                            part={{ name: data.bond.name, icon: data.bond.icon } as Part}
-                            onClick={onBondClick}
-                        />
-                    )}
                 </div>
+            )}
+
+            {/* bond slot - legendary weapons can bond another weapon of the same type and element */}
+            {data.weapon?.bond && (
+                <PartSlotRow
+                    label="Bonded"
+                    part={data.bond ? ({ name: data.bond.name, icon: data.bond.icon } as Part) : null}
+                    emptyLabel="None bonded - click to choose"
+                    onClick={onBondClick}
+                />
             )}
 
             {/* cell slots */}
