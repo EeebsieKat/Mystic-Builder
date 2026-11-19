@@ -93,11 +93,11 @@ export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; cla
 /* ------------------------------------------------------------------ */
 
 export const SwordGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/generic/Weapon.png"></img>
+    <img alt="Weapon Level" width="30" height="30" src="/assets/icons/generic/Weapon.png"></img>
 );
 
 export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/generic/Head.png"></img>
+    <img alt="Weapon Level" width="30" height="30" src="/assets/icons/generic/Head.png"></img>
 );
 
 /* ------------------------------------------------------------------ */

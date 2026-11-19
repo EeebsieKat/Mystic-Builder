@@ -21,20 +21,37 @@ import type { PerkTotal as ViewPerkTotal } from "@/game/build-view";
 
 export const CrestHeader = ({ power, resistance }: { power: number; resistance: number }) => (
     <div className="relative flex h-[152px] items-center justify-between" aria-label="Loadout ratings">
-        <div className="lo-plaque-red relative flex h-[78px] w-[126px] items-center justify-center">
-            <span className="absolute -right-[9px] -top-[9px] flex h-[26px] w-[26px] items-center justify-center rounded-[3px] border border-[#e0a33e]/60 bg-[#101318]">
-                <SwordGlyph size={15} />
+        {/* Power / Weapon Section (Left) */}
+        <div className="relative flex h-[133px] w-[214px] items-center justify-center">
+            <img alt="Power Plaque - Weapon" className="w-full h-full object-contain" src="assets/awakening-ui/loadout/PowerPlaque.png" />
+            <span className="absolute -left-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
+                <SwordGlyph size={26} />
             </span>
-            <span className="lo-serif text-[40px] font-semibold leading-none text-[#f5f1e8]">{power}</span>
+            <span 
+                className="absolute inset-0 flex items-center justify-center -translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
+                style={{ backgroundImage: `url(assets/awakening-ui/text-gradients/damage_wound.png)` }}
+            >
+                {power}
+            </span>
         </div>
+
+        {/* Armor / Resistance Section (Right) */}
+        <div className="relative flex h-[133px] w-[214px] items-center justify-center">
+            <img alt="Power Plaque - Armor" className="w-full h-full object-contain scale-x-[-1]" src="assets/awakening-ui/loadout/PowerPlaque.png" />
+            <span className="absolute -right-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
+                <ShieldGlyph size={26} />
+            </span>
+            <span 
+                className="absolute inset-0 flex items-center justify-center translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
+                style={{ backgroundImage: `url(assets/awakening-ui/text-gradients/damage_stagger.png)` }}
+            >
+                {resistance}
+            </span>
+        </div>
+
+        {/* Center Emblem */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <CrestEmblem size={148} />
-        </div>
-        <div className="lo-plaque-blue relative flex h-[78px] w-[126px] items-center justify-center">
-            <span className="absolute -left-[9px] -top-[9px] flex h-[26px] w-[26px] items-center justify-center rounded-[3px] border border-[#e0a33e]/60 bg-[#101318]">
-                <ShieldGlyph size={15} />
-            </span>
-            <span className="lo-serif text-[40px] font-semibold leading-none text-[#f5f1e8]">{resistance}</span>
         </div>
     </div>
 );
