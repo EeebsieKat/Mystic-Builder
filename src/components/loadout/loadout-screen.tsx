@@ -31,7 +31,6 @@ import type {
     Omnicell,
     Part,
     PerkValue,
-    Weapon,
     WeaponType,
 } from "@/game/types";
 import { cellTypeLabel, extractBuildId, localBuildPath } from "@/lib/site";
@@ -210,6 +209,20 @@ const cellRow = (variantName: string | null): PerkRow | null => {
         fromCell: true,
         cellSlot: cell.slot,
     };
+};
+
+/* Surge-aware unique effect text shared by weapons and armour so both gear
+   kinds render their legendary effects in the detail card alike. */
+const surgeMatchingEffects = (
+    effects:
+        | { description?: string; values?: Record<string, string | number>; powerSurged?: boolean }[]
+        | undefined,
+    surged: boolean,
+): string[] => {
+    const list = effects ?? [];
+    const matching = list.filter(effect => (effect.powerSurged ?? false) === surged);
+    const chosen = matching.length > 0 ? matching : list.filter(effect => !effect.powerSurged);
+    return chosen.map(effect => interpolate(effect.description, effect.values));
 };
 
 /* ------------------------------------------------------------------ */
@@ -540,16 +553,10 @@ const LoadoutScreen = () => {
                unique effect, so render the bond partner's effects right below the
                legendary ability (falls back to non-surged text like the build page). */
             const bondWeaponData = model.bondWeaponData;
-            const surgeMatchingEffects = (effects: Weapon["unique_effects"]): string[] => {
-                const list = effects ?? [];
-                const matching = list.filter(effect => (effect.powerSurged ?? false) === draft.weaponSurged);
-                const chosen = matching.length > 0 ? matching : list.filter(effect => !effect.powerSurged);
-                return chosen.map(effect => interpolate(effect.description, effect.values));
-            };
             const uniqueEffects = [
-                ...surgeMatchingEffects(weapon?.unique_effects),
+                ...surgeMatchingEffects(weapon?.unique_effects, draft.weaponSurged),
                 ...(bondWeaponData !== null
-                    ? surgeMatchingEffects(bondWeaponData.unique_effects).map(
+                    ? surgeMatchingEffects(bondWeaponData.unique_effects, draft.weaponSurged).map(
                           effect => `${bondWeaponData.name} (bonded): ${effect}`,
                       )
                     : []),
@@ -625,9 +632,13 @@ const LoadoutScreen = () => {
             };
         }
 
+        /* ARMOUR_SLOTS entries carry slot metadata only - resolve the equipped
+           piece from the draft so the bottom box lists the armour's perks and
+           stats the same way it does for weapons. */
         const slot = ARMOUR_SLOTS.find(entry => entry.id === detailSlot);
-        const armour = slot?.data ?? null;
-        const perks = perkRowsFromGear(armour?.perks, slot ? draft[slot.surgedKey] : true);
+        const armour = slot ? findArmourByName(draft[slot.nameKey] ?? "") : null;
+        const surged = slot ? draft[slot.surgedKey] : true;
+        const perks = perkRowsFromGear(armour?.perks, surged);
         const cells = cellRow(slot ? draft[slot.cellKey] : null);
         return {
             item: armour ? { name: armour.name } : null,
@@ -637,14 +648,14 @@ const LoadoutScreen = () => {
             ),
             appearance: armour ? "Default" : "",
             statValue: armour
-                ? slot && draft[slot.surgedKey]
+                ? surged
                     ? armour.resistance.powerSurged ?? armour.resistance.base
                     : armour.resistance.base
                 : null,
             statLabel: "RESIST",
             armour,
             perks: cells ? [...perks, cells] : perks,
-            uniqueEffects: [],
+            uniqueEffects: armour ? surgeMatchingEffects(armour.unique_effects, surged) : [],
         };
     }, [detailSlot, weapon, lantern, omnicell, draft, model.bondWeaponData, totalPower, consumableNames]);
 
@@ -732,8 +743,10 @@ const LoadoutScreen = () => {
             };
         }
 
+        /* Same resolution fix as the detail card: without the equipped piece the
+           armour panel could never render its cell slot. */
         const slot = ARMOUR_SLOTS.find(entry => entry.id === selectedSlot);
-        const armour = slot?.data ?? null;
+        const armour = slot ? findArmourByName(draft[slot.nameKey] ?? "") : null;
         return {
             slotLabel: slot?.label ?? "Armour",
             name: armour?.name ?? "",
@@ -742,8 +755,8 @@ const LoadoutScreen = () => {
             armour,
             parts: [],
             bond: null,
-            cellSlots: armour?.cells
-                ? [{ key: slot!.cellKey, variantName: draft[slot!.cellKey], allowed: armour.cells }]
+            cellSlots: slot && armour?.cells
+                ? [{ key: slot.cellKey, variantName: draft[slot.cellKey], allowed: armour.cells }]
                 : [],
         };
     }, [selectedSlot, detailData.item, weapon, lantern, omnicell, draft, model, consumableNames]);
