@@ -124,7 +124,7 @@ const ItemSelect = ({
                 </Button>
             </PopoverTrigger>
             <PopoverContent
-                className="w-[--radix-popover-trigger-width] rounded-xl border-primary/25 bg-popover/95 p-0 shadow-[0_16px_48px_-12px_oklch(0_0_0/0.7),0_0_0_1px_oklch(0.82_0.135_85/0.1)] backdrop-blur-md"
+                className="w-[--radix-popover-trigger-width] rounded-xl border-primary/25 bg-popover/95 p-0 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.7),0_0_0_1px_rgba(91,163,255,0.1)] backdrop-blur-md"
                 align="start"
             >
                 <Command shouldFilter={true}>
@@ -173,7 +173,7 @@ const ItemSelect = ({
                                         ) : null}
                                         <Check
                                             className={cn(
-                                                "h-4 w-4 shrink-0 text-primary drop-shadow-[0_0_6px_oklch(0.82_0.135_85/0.5)]",
+                                                "h-4 w-4 shrink-0 text-primary drop-shadow-[0_0_6px_rgba(91,163,255,0.5)]",
                                                 option.value === value ? "opacity-100" : "opacity-0",
                                             )}
                                             aria-hidden

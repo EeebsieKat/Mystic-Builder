@@ -51,7 +51,7 @@ export const builderLinkFor = (buildId: string): string => `${BUILDER_ORIGIN}/b/
 export const localBuildPath = (buildId: string): string => `/b/${buildId}`;
 
 /** Local editor link that opens a build in the Mystic Builder editor. */
-export const localEditPath = (buildId: string): string => `/?b=${buildId}`;
+export const localEditPath = (buildId: string): string => `/builder?b=${buildId}`;
 
 export const elementColor = (elemental: string | null | undefined): string =>
     ({
@@ -63,14 +63,63 @@ export const elementColor = (elemental: string | null | undefined): string =>
         Umbral: "#8A5FE8",
     })[elemental ?? ""] ?? "#8E8E93";
 
-export const cellTypeColor = (slot: string | null | undefined): string =>
-    ({
-        Fortitude: "#E2574C",
-        Insight: "#EFC94C",
-        Finesse: "#4FCE8B",
-        Alacrity: "#C58BEA",
-        Brutality: "#E88C3A",
-        Prismatic: "#9FD8CB",
-    })[slot ?? ""] ?? "#8E8E93";
+export const cellTypeColor = (slot: string | string[] | null | undefined): string => {
+    const s = Array.isArray(slot) ? slot[0] : slot;
+    return (
+        ({
+            Fortitude: "#E2574C",
+            Insight: "#EFC94C",
+            Finesse: "#4FCE8B",
+            Alacrity: "#C58BEA",
+            Brutality: "#E88C3A",
+            Prismatic: "#9FD8CB",
+            Defense: "#E2574C",
+            Utility: "#EFC94C",
+            Technique: "#4FCE8B",
+            Mobility: "#C58BEA",
+            Power: "#E88C3A",
+        })[s ?? ""] ?? "#8E8E93"
+    );
+};
 
-export const cellTypeLabel = (slot: string | null | undefined): string => slot ?? "None";
+export const cellTypeLabel = (slot: string | string[] | null | undefined): string => {
+    if (Array.isArray(slot)) return slot.join(" / ");
+    return slot ?? "None";
+};
+
+export const cellTypeIcon = (slot: string | string[] | null | undefined): string => {
+    const s = Array.isArray(slot) ? slot[0] : slot;
+    if (!s) return "/assets/icons/perks/NoCell.png";
+    const normalized =
+        ({
+            Power: "Brutality",
+            Technique: "Finesse",
+            Defense: "Fortitude",
+            Mobility: "Alacrity",
+            Utility: "Insight",
+        })[s] ?? s;
+    return `/assets/icons/perks/${normalized}.png`;
+};
+
+/**
+ * Returns style attributes to render a luminous neon text glow on an item's title,
+ * matching the game's elemental or cell type aura on dark backgrounds.
+ * Uses a smooth 3-stage Gaussian falloff with zero clipping or harsh edges.
+ */
+export const getTextGlowStyle = (
+    color?: string | null,
+): { color?: string; textShadow?: string } => {
+    if (!color) return {};
+    const hex = color.startsWith("#") && color.length === 7 ? color : null;
+    if (hex) {
+        return {
+            color: hex,
+            textShadow: `0 0 6px ${hex}99, 0 0 12px ${hex}40, 0 0 20px ${hex}18`,
+        };
+    }
+    return {
+        color,
+        textShadow: `0 0 6px ${color}, 0 0 12px ${color}`,
+    };
+};
+

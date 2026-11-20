@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import BottomParticles from "@/components/bottom-particles";
 
-const DESIGN_W = 1920;
+const MIN_DESIGN_W = 1920;
 const DESIGN_H = 1080;
 
 export const LoadoutStage = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(0);
-    const [offsetX, setOffsetX] = useState(0);
+    const [stageWidth, setStageWidth] = useState(MIN_DESIGN_W);
 
     useEffect(() => {
         const el = wrapperRef.current;
@@ -19,9 +18,11 @@ export const LoadoutStage = ({ children, className = "" }: { children: React.Rea
         const update = () => {
             const w = el.clientWidth;
             const h = el.clientHeight;
-            const next = Math.min(w / DESIGN_W, h / DESIGN_H);
-            setScale(next);
-            setOffsetX(Math.max(0, (w - DESIGN_W * next) / 2));
+            if (w === 0 || h === 0) return;
+            const nextScale = Math.min(w / MIN_DESIGN_W, h / DESIGN_H);
+            const nextWidth = Math.max(MIN_DESIGN_W, w / nextScale);
+            setScale(nextScale);
+            setStageWidth(nextWidth);
         };
         update();
         const observer = new ResizeObserver(update);
@@ -29,33 +30,38 @@ export const LoadoutStage = ({ children, className = "" }: { children: React.Rea
         return () => observer.disconnect();
     }, []);
 
-    const tooSmall = scale > 0 && scale < 0.47;
+    const tooSmall = scale > 0 && scale < 0.45;
 
     return (
         <div
             ref={wrapperRef}
             className={`lo-stage-wrapper relative w-full overflow-hidden ${className}`}
-            style={{ height: "calc(100vh - 102px)", minHeight: 520 }}
+<<<<<<< HEAD
+            style={{ height: "100dvh", minHeight: 520 }}
+=======
+            style={{ height: "calc(100vh - 56px)", minHeight: 520 }}
+>>>>>>> 03511302b138c57110588e09df9171cfdad17763
         >
-            {/* 1. Renders right above .lo-stage-wrapper's background */}
-            <BottomParticles />
+            {/* Stage content */}
 
             {scale > 0 && (
                 <div
                     className="relative z-10"
                     style={{
-                        width: DESIGN_W,
+                        width: stageWidth,
                         height: DESIGN_H,
                         transform: `scale(${scale})`,
                         transformOrigin: "top left",
                         position: "absolute",
-                        left: offsetX,
+                        left: 0,
                         top: 0,
                     }}
                     aria-hidden={tooSmall || undefined}
                 >
                     {/* 2. All loadout UI cards sit at z-10, cleanly above the particles */}
-                    <div className="lo-stage relative z-10">{children}</div>
+                    <div className="lo-stage relative z-10" style={{ width: stageWidth, height: DESIGN_H }}>
+                        {children}
+                    </div>
                 </div>
             )}
             {tooSmall && (

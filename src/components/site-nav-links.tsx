@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Database, Hammer, Heart, Info, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -12,34 +13,38 @@ const NavLinks = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const databaseActive = pathname === "/" && searchParams.get("tab") === "database";
-    const builderActive = pathname === "/" && !databaseActive;
+    const suggestionsActive = pathname === "/" && searchParams.get("tab") === "suggestions";
+    const likedActive = pathname === "/" && searchParams.get("tab") === "liked";
+    const builderActive =
+        (pathname === "/" || pathname.startsWith("/b/")) && !databaseActive && !suggestionsActive && !likedActive;
+    const aboutActive = pathname === "/about";
+
+    const navItems = [
+        { href: "/", label: "Builder", icon: Hammer, active: builderActive },
+        { href: "/?tab=database", label: "Database", icon: Database, active: databaseActive },
+        { href: "/?tab=suggestions", label: "Suggestions", icon: Lightbulb, active: suggestionsActive },
+        { href: "/?tab=liked", label: "Liked", icon: Heart, active: likedActive },
+        { href: "/about", label: "About", icon: Info, active: aboutActive },
+    ];
 
     return (
         <>
-            <Link
-                href="/"
-                aria-current={builderActive ? "page" : undefined}
-                className={cn(
-                    "rounded-full px-3 py-1.5 transition-all duration-200 hover:bg-accent/60 hover:text-foreground",
-                    builderActive
-                        ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_oklch(0.82_0.135_85/0.35)]"
-                        : "text-muted-foreground",
-                )}
-            >
-                Builder
-            </Link>
-            <Link
-                href="/?tab=database"
-                aria-current={databaseActive ? "page" : undefined}
-                className={cn(
-                    "rounded-full px-3 py-1.5 transition-all duration-200 hover:bg-accent/60 hover:text-foreground",
-                    databaseActive
-                        ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_oklch(0.82_0.135_85/0.35)]"
-                        : "text-muted-foreground",
-                )}
-            >
-                Database
-            </Link>
+            {navItems.map(({ href, label, icon: Icon, active }) => (
+                <Link
+                    key={href}
+                    href={href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                        "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border",
+                        active
+                            ? "border-[var(--aether-line)] bg-[var(--aether-a10)] text-white shadow-xs [&>svg]:text-[var(--aether-hi)]"
+                            : "border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)]",
+                    )}
+                >
+                    <Icon className="h-3.5 w-3.5 transition-colors" />
+                    <span>{label}</span>
+                </Link>
+            ))}
         </>
     );
 };
