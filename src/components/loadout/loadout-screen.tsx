@@ -34,15 +34,18 @@ import type {
     PerkValue,
     WeaponType,
 } from "@/game/types";
+<<<<<<< HEAD
 import { cellTypeLabel, extractBuildId, localBuildPath } from "@/lib/site";
 import { SiteInfoCompact, VERSION_LABEL } from "@/components/menu-ui";
+=======
+import { cellTypeColor, cellTypeLabel, elementColor, extractBuildId, localBuildPath } from "@/lib/site";
+>>>>>>> 03511302b138c57110588e09df9171cfdad17763
 
 import { LoadoutStage } from "./loadout-stage";
 import {
     ArmourCard,
     ConsumableRow,
     LanternOmnicellCard,
-    LoadoutTabsStub,
     WeaponCard,
 } from "./gear-grid";
 import { CrestHeader, ItemDetailPanel, PerkSummaryPanel } from "./right-panel";
@@ -137,15 +140,15 @@ const draftToModel = (draft: LoadoutDraft): BuildModel => {
 const hasAnyItem = (draft: LoadoutDraft): boolean =>
     Boolean(
         draft.weaponName ||
-            draft.headName ||
-            draft.torsoName ||
-            draft.armsName ||
-            draft.legsName ||
-            draft.lantern ||
-            draft.omnicell ||
-            draft.consumable1 ||
-            draft.consumable2 ||
-            draft.consumable3,
+        draft.headName ||
+        draft.torsoName ||
+        draft.armsName ||
+        draft.legsName ||
+        draft.lantern ||
+        draft.omnicell ||
+        draft.consumable1 ||
+        draft.consumable2 ||
+        draft.consumable3,
     );
 
 const randomOf = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
@@ -238,12 +241,16 @@ const ARMOUR_SLOTS: { id: ArmourSlotId; nameKey: "headName" | "torsoName" | "arm
     { id: "legs", nameKey: "legsName", surgedKey: "legsSurged", cellKey: "legsCell", label: "Legs" },
 ];
 
-const LoadoutScreen = () => {
+export interface LoadoutScreenProps {
+    initialBuildId?: string;
+}
+
+export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
     const searchParams = useSearchParams();
     const { toast } = useToast();
 
     const [draft, setDraft] = useState<LoadoutDraft>(() => {
-        const id = searchParams.get("b");
+        const id = initialBuildId || searchParams.get("b");
         if (id) {
             const parsed = tryDeserialize(id);
             if (parsed) {
@@ -252,6 +259,16 @@ const LoadoutScreen = () => {
         }
         return EMPTY_DRAFT;
     });
+
+    useEffect(() => {
+        if (initialBuildId) {
+            const parsed = tryDeserialize(initialBuildId);
+            if (parsed) {
+                setDraft(draftFromModel(parsed));
+            }
+        }
+    }, [initialBuildId]);
+
     const [selectedSlot, setSelectedSlot] = useState<SelectionId>("weapon");
     /* The center detail card always shows the last inspected gear slot, even
        while the right panel is switched to the perk summary (game behaviour). */
@@ -276,7 +293,12 @@ const LoadoutScreen = () => {
         if (!buildId) {
             return;
         }
+<<<<<<< HEAD
         const url = hasAnyItem(draft) ? `/builder?b=${buildId}` : "/builder";
+=======
+        const isBRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/b/");
+        const url = hasAnyItem(draft) ? (isBRoute ? `/b/${buildId}` : `/?b=${buildId}`) : "/";
+>>>>>>> 03511302b138c57110588e09df9171cfdad17763
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
 
@@ -339,7 +361,7 @@ const LoadoutScreen = () => {
                 if (key === nameKey) {
                     const piece = findArmourByName((next[nameKey] as string | null) ?? "");
                     if (!doesCellFitIntoSlot(piece?.cells ?? null, next[cellKey] as string | null)) {
-                        next[cellKey] = null;
+                        (next as Record<string, unknown>)[cellKey] = null;
                     }
                 }
             }
@@ -416,16 +438,16 @@ const LoadoutScreen = () => {
                         ? randomOf(Object.keys(category.chambers))
                         : null
                     : category?.specials
-                      ? randomOf(Object.keys(category.specials))
-                      : null,
+                        ? randomOf(Object.keys(category.specials))
+                        : null,
             weaponPart2:
                 weapon.type === "Repeater"
                     ? category?.grips
                         ? randomOf(Object.keys(category.grips))
                         : null
                     : category?.mods
-                      ? randomOf(Object.keys(category.mods))
-                      : null,
+                        ? randomOf(Object.keys(category.mods))
+                        : null,
             weaponPart3: weapon.type === "Repeater" && category?.mods ? randomOf(Object.keys(category.mods)) : null,
             bondWeapon: bondPool.length > 0 && Math.random() < 0.3 ? randomOf(bondPool).name : null,
             weaponCell1: pickFittingCell(weapon.cells),
@@ -559,8 +581,8 @@ const LoadoutScreen = () => {
                 ...surgeMatchingEffects(weapon?.unique_effects, draft.weaponSurged),
                 ...(bondWeaponData !== null
                     ? surgeMatchingEffects(bondWeaponData.unique_effects, draft.weaponSurged).map(
-                          effect => `${bondWeaponData.name} (bonded): ${effect}`,
-                      )
+                        effect => `${bondWeaponData.name} (bonded): ${effect}`,
+                    )
                     : []),
             ];
             return {
@@ -577,13 +599,18 @@ const LoadoutScreen = () => {
 
         if (detailSlot === "lantern") {
             const cells = cellRow(draft.lanternCell);
-            const ability = lantern?.lantern_ability;
+            const ability = (lantern as any)?.lantern_ability;
             const effects: string[] = [];
             if (ability?.hold) {
-                effects.push(interpolate(ability.hold, lantern?.values));
+                effects.push(interpolate(ability.hold, (lantern as any)?.values));
             }
             if (ability?.instant) {
-                effects.push(interpolate(ability.instant, lantern?.values));
+                effects.push(interpolate(ability.instant, (lantern as any)?.values));
+            }
+            if (lantern?.unique_effects) {
+                for (const ue of lantern.unique_effects) {
+                    effects.push(ue.description);
+                }
             }
             return {
                 item: lantern ? { name: lantern.name } : null,
@@ -599,10 +626,10 @@ const LoadoutScreen = () => {
         if (detailSlot === "omnicell") {
             const effects: string[] = [];
             if (omnicell?.passive) {
-                effects.push(interpolate(omnicell.passive, omnicell.passive_values));
+                effects.push(interpolate(omnicell.passive, (omnicell as any)?.passive_values));
             }
             if (omnicell?.active) {
-                effects.push(interpolate(omnicell.active, omnicell.active_values));
+                effects.push(interpolate(omnicell.active, (omnicell as any)?.active_values));
             }
             return {
                 item: omnicell ? { name: omnicell.name } : null,
@@ -684,9 +711,9 @@ const LoadoutScreen = () => {
             const cellSlots = weapon?.cells
                 ? Array.isArray(weapon.cells)
                     ? [
-                          { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
-                          { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
-                      ]
+                        { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
+                        { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
+                    ]
                     : [{ key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells }]
                 : [];
             return {
@@ -779,8 +806,10 @@ const LoadoutScreen = () => {
                     label: entry.name,
                     icon: entry.icon,
                     group: entry.type,
+                    behemoth: entry.behemoth ?? null,
                     hint: entry.elemental ?? undefined,
                     meta: String(entry.power.powerSurged ?? entry.power.base),
+                    color: entry.elemental ? elementColor(entry.elemental) : undefined,
                 }));
             return {
                 title: "Weapons",
@@ -794,24 +823,28 @@ const LoadoutScreen = () => {
         }
 
         if (target.kind === "armour") {
+            const slotName = target.slot[0].toUpperCase() + target.slot.slice(1);
             const items: PickerItem[] = Object.values(gameData.armours)
-                .filter(entry => entry.type === target.slot[0].toUpperCase() + target.slot.slice(1))
+                .filter(entry => entry.type === slotName)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(entry => ({
                     value: entry.name,
                     label: entry.name,
                     icon: entry.icon,
-                    group: entry.behemoth ?? "Generic",
+                    group: `${slotName} Armour`,
+                    behemoth: entry.behemoth ?? null,
+                    strength: entry.strength ?? null,
                     hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
                     meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
+                    color: entry.strength ? elementColor(entry.strength) : undefined,
                 }));
             return {
-                title: `${target.slot[0].toUpperCase() + target.slot.slice(1)} Armour`,
+                title: `${slotName} Armour`,
                 items,
                 selected: draft[`${target.slot}Name` as "headName"],
                 filterLabel: "Strength",
                 filterValues: ["Blaze", "Frost", "Shock", "Terra", "Radiant", "Umbral"],
-                filterOf: () => "",
+                filterOf: (item: PickerItem) => item.strength ?? "",
                 apply: (value: string | null) => set(`${target.slot}Name` as "headName", value),
             };
         }
@@ -825,6 +858,7 @@ const LoadoutScreen = () => {
                     icon: entry.icon,
                     group: "Lanterns",
                     hint: entry.cells ? `${cellTypeLabel(entry.cells)} cell` : undefined,
+                    color: "#e0a33e",
                 }));
             return {
                 title: "Lanterns",
@@ -842,6 +876,7 @@ const LoadoutScreen = () => {
                     label: entry.name,
                     icon: entry.icon,
                     group: "Omnicells",
+                    color: "#c58bea",
                 }));
             return {
                 title: "Omnicells",
@@ -882,6 +917,7 @@ const LoadoutScreen = () => {
                         icon: `/assets/icons/perks/${cell.slot}.png`,
                         group: cellTypeLabel(cell.slot),
                         hint: perks.map(([name, value]) => `${name} +${value}`).join(", "),
+                        color: cellTypeColor(cell.slot),
                     });
                 }
             }
@@ -947,6 +983,7 @@ const LoadoutScreen = () => {
                     label: candidate.name,
                     icon: candidate.icon,
                     group: "Bondable Weapons",
+                    behemoth: candidate.behemoth ?? null,
                     hint:
                         candidate.perks
                             ?.filter(perk => !(perk.powerSurged ?? false))
@@ -985,9 +1022,9 @@ const LoadoutScreen = () => {
     return (
         <LoadoutStage>
             {/* backdrop */}
-            <span className="lo-light-shaft" style={{ left: 700 }} aria-hidden />
-            <span className="lo-light-shaft" style={{ left: 1050 }} aria-hidden />
-            <span className="lo-pedestal" style={{ left: 690, top: 540, width: 540, height: 190 }} aria-hidden />
+            <span className="lo-light-shaft" style={{ left: "calc(50% - 260px)" }} aria-hidden />
+            <span className="lo-light-shaft" style={{ left: "calc(50% + 90px)" }} aria-hidden />
+            <span className="lo-pedestal absolute left-1/2 -translate-x-1/2" style={{ top: 540, width: 540, height: 190 }} aria-hidden />
             <span
                 className="pointer-events-none absolute inset-0"
                 style={{ background: "radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(4,5,7,0.55) 100%)" }}
@@ -995,7 +1032,7 @@ const LoadoutScreen = () => {
             />
 
             {/* reserved slayer slot hook - intentionally empty for now */}
-            <span data-slayer-slot="" aria-hidden />
+            <span data-slayer-slot="" className="absolute left-1/2 -translate-x-1/2" aria-hidden />
 
             {/* nameplate */}
             <div className="absolute left-1/2 top-[46px] -translate-x-1/2 text-center">
@@ -1014,10 +1051,6 @@ const LoadoutScreen = () => {
             </div>
 
             {/* left column */}
-            <div className="absolute left-[40px] top-[24px]">
-                <LoadoutTabsStub />
-            </div>
-
             <div className="absolute left-[40px] top-[128px] grid grid-cols-2 gap-[14px]">
                 <WeaponCard
                     weapon={weapon}
@@ -1069,13 +1102,13 @@ const LoadoutScreen = () => {
 
             {/* center detail card */}
             {(
-                <div className="absolute left-[585px] top-[610px] h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
+                <div className="absolute left-1/2 top-[610px] -translate-x-1/2 h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
                     <DetailCard data={detailData} />
                 </div>
             )}
 
             {/* right panel */}
-            <div className="absolute left-[1440px] top-[64px] w-[440px]">
+            <div className="absolute right-[40px] top-[64px] w-[440px]">
                 <CrestHeader power={totalPower} resistance={totalResistance} />
                 <FlourishHeader
                     title={rightPanel ? rightPanel.slotLabel : "Perk Summary"}
@@ -1098,11 +1131,11 @@ const LoadoutScreen = () => {
                                         ? partKey === "weaponPart1"
                                             ? "chambers"
                                             : partKey === "weaponPart2"
-                                              ? "grips"
-                                              : "mods"
+                                                ? "grips"
+                                                : "mods"
                                         : partKey === "weaponPart1"
-                                          ? "specials"
-                                          : "mods";
+                                            ? "specials"
+                                            : "mods";
                                 setPickerTarget({ kind: "part", partKey, bucket });
                             }}
                             onBondClick={() => setPickerTarget({ kind: "bond" })}
@@ -1178,6 +1211,12 @@ const LoadoutScreen = () => {
                     filterLabel={picker.filterLabel}
                     filterValues={picker.filterValues}
                     filterOf={picker.filterOf}
+                    armourSlot={pickerTarget.kind === "armour" ? pickerTarget.slot : undefined}
+                    onSwitchArmourSlot={(slot) => {
+                        setSelectedSlot(slot);
+                        setPickerTarget({ kind: "armour", slot });
+                    }}
+                    pickerKind={pickerTarget.kind}
                 />
             )}
 

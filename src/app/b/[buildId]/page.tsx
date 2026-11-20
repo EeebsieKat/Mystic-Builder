@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Hammer, Pencil, TriangleAlert } from "lucide-react";
+import { Suspense } from "react";
+import { ArrowLeft, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { BuildDisplay } from "@/components/build-display";
-import { CopyLinkButton } from "@/components/copy-link-button";
 import { ViewCounter } from "@/components/view-counter";
+import { LoadoutScreen } from "@/components/loadout/loadout-screen";
 import { buildSummary, buildTitle, parseBuildId } from "@/game/build-view";
-import { elementColor, localEditPath, SITE_NAME } from "@/lib/site";
+import { elementColor, SITE_NAME } from "@/lib/site";
 
 export const revalidate = 86400;
 
@@ -78,6 +76,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
     const { view } = parsed;
 
     return (
+<<<<<<< HEAD
         /* Share pages are documents-in-a-shell: the page never scrolls,
            the inner region does - the sticky header stays visible. */
         <main className="flex h-dvh min-h-0 flex-1 flex-col">
@@ -140,6 +139,21 @@ const BuildPage = async ({ params }: BuildPageProps) => {
                     <BuildDisplay view={view} />
                 </div>
             </div>
+=======
+        <main className="flex w-full flex-1 flex-col">
+            <div className="sr-only">
+                <ViewCounter buildId={view.buildId} />
+            </div>
+            <Suspense
+                fallback={
+                    <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">
+                        Loading loadout…
+                    </div>
+                }
+            >
+                <LoadoutScreen initialBuildId={buildId} />
+            </Suspense>
+>>>>>>> 03511302b138c57110588e09df9171cfdad17763
         </main>
     );
 };

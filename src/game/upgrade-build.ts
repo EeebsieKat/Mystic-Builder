@@ -181,6 +181,7 @@ export const convertVersion7To8 = (version7BuildId: string): UpgradeResult => {
 };
 
 export const convertVersion8To9 = (version8BuildId: string): UpgradeResult => {
+<<<<<<< HEAD
     const numbers = buildIdsDecode(version8BuildId, BuildIdsProvider.SQIDS_V8);
 
     // v9 only appended the three consumable slots after the omnicell,
@@ -188,6 +189,13 @@ export const convertVersion8To9 = (version8BuildId: string): UpgradeResult => {
     numbers[0] = 9;
     numbers.push(0, 0, 0);
 
+=======
+    const numbers = buildIdsDecode(version8BuildId);
+    numbers[0] = 9;
+    while (numbers.length < 28) {
+        numbers.push(0);
+    }
+>>>>>>> 03511302b138c57110588e09df9171cfdad17763
     return { buildId: buildIdsEncode(numbers), wasUpgraded: false };
 };
 

@@ -5,27 +5,27 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] text-[13.5px] font-semibold transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:outline-2 focus-visible:outline-[var(--aether)] focus-visible:outline-offset-2 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         default:
-          "bg-linear-to-b from-[oklch(0.85_0.14_88)] to-primary text-primary-foreground shadow-[0_1px_0_0_oklch(1_0_0/0.25)_inset,0_4px_14px_-4px_oklch(0.82_0.135_85/0.5)] hover:from-[oklch(0.89_0.13_92)] hover:to-[oklch(0.86_0.135_88)] hover:shadow-[0_1px_0_0_oklch(1_0_0/0.3)_inset,0_6px_18px_-4px_oklch(0.82_0.135_85/0.65)] active:to-[oklch(0.76_0.13_80)]",
+          "bg-gradient-to-b from-[#67adff] to-[#2f7bef] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.32),inset_0_0_0_1px_rgba(170,210,255,0.25),0_10px_26px_-12px_rgba(47,123,239,0.85)] hover:brightness-108 active:brightness-95",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "border border-[var(--bad-line)] bg-[var(--bad-a)] text-[#ffd3da] hover:bg-[var(--bad-a)]/80 shadow-xs",
         outline:
-          "border border-input bg-background/60 shadow-xs backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-accent/70 hover:text-accent-foreground hover:shadow-[0_0_0_1px_oklch(0.82_0.135_85/0.25),0_4px_14px_-6px_oklch(0.82_0.135_85/0.35)] dark:bg-input/30 dark:border-input dark:hover:border-primary/50 dark:hover:bg-input/50",
+          "border border-[var(--line-2)] bg-white/[0.045] text-[var(--ink)] shadow-xs backdrop-blur-sm transition-all hover:border-[var(--line-3)] hover:bg-white/[0.08] hover:text-white",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "border border-[var(--line-2)] bg-white/[0.045] text-[var(--ink)] shadow-xs hover:border-[var(--line-3)] hover:bg-white/[0.08]",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "text-[var(--ink-2)] hover:bg-white/[0.05] hover:text-[var(--ink)]",
+        link: "text-[var(--aether)] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "h-10 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 rounded-[10px] gap-1.5 px-3 text-[12.5px] has-[>svg]:px-2.5",
+        lg: "h-12 rounded-[14px] px-6 has-[>svg]:px-4",
+        icon: "size-9 rounded-[10px]",
       },
     },
     defaultVariants: {
