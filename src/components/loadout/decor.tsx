@@ -37,7 +37,7 @@ export const FlourishHeader = ({ title, className = "" }: { title: string; class
 /* ------------------------------------------------------------------ */
 
 export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Loadout Crest" width="180" src="assets/awakening-ui/loadout/loadoutlevel10.png">
+    <img alt="Loadout Crest" width="180" src="/assets/awakening-ui/loadout/loadoutlevel10.png">
     </img>
 );
 

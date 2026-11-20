@@ -14,7 +14,7 @@ import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor } from "@/lib/
  */
 
 const CHIP_BASE =
-    "h-6 rounded-full px-2.5 py-0 text-[11px] font-medium gap-1.5 shadow-[0_1px_2px_oklch(0_0_0/0.3)]";
+    "h-6 rounded-full px-2.5 py-0 text-[11.5px] font-semibold gap-1.5 shadow-xs border border-[var(--line)] bg-white/[0.055] text-[var(--ink-2)]";
 
 export const TypeChip = ({ label }: { label: string }) => (
     <Badge variant="secondary" className={CHIP_BASE}>

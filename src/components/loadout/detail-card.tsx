@@ -13,6 +13,7 @@ import { elementColor, getTextGlowStyle } from "@/lib/site";
 
 import { DiamondPip, ItemIcon } from "./decor";
 import { interpolate, type PerkRow } from "./loadout-types";
+import { highlightGameText } from "@/lib/game-text-highlighter";
 
 /* ------------------------------------------------------------------ */
 /* Perk row                                                            */
@@ -32,7 +33,7 @@ const DetailPerkRow = ({ perk }: { perk: PerkRow }) => (
             <span className="text-[12px] tracking-[0.05em] text-[#9a9a94]">PERK POINTS: {perk.points}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-[3px] pt-[2px]">
-            <p className="text-[14.5px] leading-[1.38] text-[#cfcfc9]">{perk.description}</p>
+            <p className="text-[14.5px] leading-[1.38] text-[#cfcfc9]">{highlightGameText(perk.description)}</p>
             <span className="text-[12px] tracking-[0.05em] text-[#84888f]">
                 ACTIVATES AT: {perk.activatesAt} PERK POINT{perk.activatesAt === 1 ? "" : "S"}
             </span>
@@ -176,7 +177,7 @@ export const DetailCard = ({ data }: { data: DetailCardData }) => {
                     <div key={index} className="flex gap-4 py-[9px]">
                         <ItemIcon icon="/assets/icons/perks/Prismatic.png" alt="" size={40} className="mt-[3px] shrink-0" />
                         <div className="flex min-w-0 flex-1 flex-col gap-[3px] pt-[2px]">
-                            <p className="text-[14.5px] leading-[1.38] text-[#cfcfc9]">{effect}</p>
+                            <p className="text-[14.5px] leading-[1.38] text-[#cfcfc9]">{highlightGameText(effect)}</p>
                         </div>
                     </div>
                 ))}

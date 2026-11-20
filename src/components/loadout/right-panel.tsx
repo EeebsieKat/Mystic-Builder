@@ -23,13 +23,13 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
     <div className="relative flex h-[152px] items-center justify-between" aria-label="Loadout ratings">
         {/* Power / Weapon Section (Left) */}
         <div className="relative flex h-[133px] w-[214px] items-center justify-center">
-            <img alt="Power Plaque - Weapon" className="w-full h-full object-contain" src="assets/awakening-ui/loadout/PowerPlaque.png" />
+            <img alt="Power Plaque - Weapon" className="w-full h-full object-contain" src="/assets/awakening-ui/loadout/PowerPlaque.png" />
             <span className="absolute -left-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
                 <SwordGlyph size={26} />
             </span>
             <span 
                 className="absolute inset-0 flex items-center justify-center -translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
-                style={{ backgroundImage: `url(assets/awakening-ui/text-gradients/damage_wound.png)` }}
+                style={{ backgroundImage: `url(/assets/awakening-ui/text-gradients/damage_wound.png)` }}
             >
                 {power}
             </span>
@@ -37,13 +37,13 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
 
         {/* Armor / Resistance Section (Right) */}
         <div className="relative flex h-[133px] w-[214px] items-center justify-center">
-            <img alt="Power Plaque - Armor" className="w-full h-full object-contain scale-x-[-1]" src="assets/awakening-ui/loadout/PowerPlaque.png" />
+            <img alt="Power Plaque - Armor" className="w-full h-full object-contain scale-x-[-1]" src="/assets/awakening-ui/loadout/PowerPlaque.png" />
             <span className="absolute -right-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
                 <ShieldGlyph size={26} />
             </span>
             <span 
                 className="absolute inset-0 flex items-center justify-center translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
-                style={{ backgroundImage: `url(assets/awakening-ui/text-gradients/damage_stagger.png)` }}
+                style={{ backgroundImage: `url(/assets/awakening-ui/text-gradients/damage_stagger.png)` }}
             >
                 {resistance}
             </span>

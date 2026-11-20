@@ -1,12 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
     ArrowRight,
+    Check,
     ChevronLeft,
     ChevronRight,
+    Copy,
+    ExternalLink,
+    Heart,
+    Lightbulb,
     RotateCcw,
     Search,
     Shield,
@@ -38,8 +44,38 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { gameData } from "@/game/data";
+import metaBuildsData from "@/game/meta-builds-indexed.json";
 import type { Armour, Cell, Lantern, Omnicell, PerkValue, Weapon } from "@/game/types";
 import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
+import { getClientId, getClientFingerprint } from "@/lib/client-id";
+import { highlightGameText } from "@/lib/game-text-highlighter";
+import { cn } from "@/lib/utils";
+
+interface IndexedMetaBuild {
+    buildId: string;
+    title: string;
+    category: string;
+    vsElement: string | null;
+    subcategory: string | null;
+    weaponType: string;
+    weaponName: string;
+    weaponIcon: string;
+    weaponElement: string;
+    bondName: string | null;
+    bondIcon: string | null;
+    specialName: string | null;
+    modName: string | null;
+    omnicellName: string | null;
+    omnicellIcon: string | null;
+    lanternName: string;
+    lanternIcon: string;
+    perks: { name: string; value: number }[];
+    cells: { slot: string; cellName: string }[];
+    head: { name: string; icon: string };
+    torso: { name: string; icon: string };
+    arms: { name: string; icon: string };
+    legs: { name: string; icon: string };
+}
 
 const interpolate = (
     text: string | null | undefined,
@@ -180,8 +216,8 @@ const EffectList = ({
                         ) : (
                             <span className="mt-1 inline-block h-2 w-2 shrink-0 rounded-full bg-primary" />
                         )}
-                        <span className="min-w-0 flex-1 whitespace-pre-line text-foreground/90">
-                            {cleanText(text)}
+                        <span className="min-w-0 flex-1 whitespace-pre-line text-foreground/90 leading-relaxed">
+                            {highlightGameText(cleanText(text))}
                         </span>
                     </div>
                 );
@@ -492,6 +528,57 @@ const OmnicellRow = ({ omnicell, onSelect }: { omnicell: OmnicellItem; onSelect:
 );
 
 /* ------------------------------------------------------------------ */
+/* Weapon Suggested Meta Builds Option                                */
+/* ------------------------------------------------------------------ */
+
+const WeaponSuggestedBuilds = ({
+    weaponName,
+    weaponType,
+}: {
+    weaponName: string;
+    weaponType: string;
+}) => {
+    const matchingBuilds = useMemo(() => {
+        const lower = weaponName.toLowerCase();
+        return (metaBuildsData.builds as IndexedMetaBuild[]).filter(
+            b => b.weaponName.toLowerCase() === lower || (b.bondName && b.bondName.toLowerCase() === lower),
+        );
+    }, [weaponName]);
+
+    // Don't show the builds in the dialog; if it has any, provide an option to open in the suggestion tab
+    if (matchingBuilds.length === 0) return null;
+
+    return (
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/40 bg-gradient-to-r from-primary/15 via-primary/10 to-transparent p-3.5 mt-2">
+            <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/45 bg-primary/20 text-primary shadow-xs">
+                    <Lightbulb className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-foreground">Suggested Builds Available</span>
+                        <span className="rounded-full bg-primary/25 border border-primary/40 px-2 py-0.5 text-[10px] font-bold text-primary">
+                            {matchingBuilds.length} {matchingBuilds.length === 1 ? "build" : "builds"}
+                        </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
+                        This weapon has {matchingBuilds.length} community meta loadout {matchingBuilds.length === 1 ? "guide" : "guides"}
+                    </p>
+                </div>
+            </div>
+
+            <Link
+                href={`/?tab=suggestions&weapon=${encodeURIComponent(weaponType)}&q=${encodeURIComponent(weaponName)}&category=all`}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(91,163,255,0.25)] cursor-pointer shrink-0"
+            >
+                <span>Open in Suggestions</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+            </Link>
+        </div>
+    );
+};
+
+/* ------------------------------------------------------------------ */
 /* Item Detail Dialog (Modal on Click)                                 */
 /* ------------------------------------------------------------------ */
 
@@ -544,7 +631,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             {desc ? (
                                 <p className="text-xs leading-relaxed text-muted-foreground italic border-l-2 border-primary/50 pl-3">
                                     {desc}
@@ -617,6 +704,9 @@ const ItemDetailDialog = ({
                                     <EffectList effects={weapon.unique_effects ?? []} />
                                 </div>
                             ) : null}
+
+                            {/* Suggested Meta Builds from Suggestions */}
+                            <WeaponSuggestedBuilds weaponName={weapon.name} weaponType={weapon.type} />
                         </div>
                     </>
                 );
@@ -661,7 +751,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             {desc ? (
                                 <p className="text-xs leading-relaxed text-muted-foreground italic border-l-2 border-primary/50 pl-3">
                                     {desc}
@@ -786,7 +876,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-foreground/90">
                                 <span className="font-semibold text-primary block mb-0.5">Overview</span>
                                 {perk.description}
@@ -887,7 +977,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
                                 Fits into any equipment with a{" "}
                                 <span className="font-semibold text-foreground">{cellTypeLabel(cell.slot)}</span> or{" "}
@@ -971,7 +1061,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             <div className="flex flex-col gap-2">
                                 <h4 className="text-xs font-bold uppercase tracking-wider text-primary">
                                     Cell Sockets & Inherent Perks
@@ -1039,7 +1129,7 @@ const ItemDetailDialog = ({
                             </div>
                         </DialogHeader>
 
-                        <div className="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
                             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
                                 {omnicell.description}
                             </div>
@@ -1081,7 +1171,7 @@ const ItemDetailDialog = ({
 
     return (
         <Dialog open={item !== null} onOpenChange={open => !open && onClose()}>
-            <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto sm:max-w-2xl bg-card border-border/80 shadow-2xl p-6">
+            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto sm:max-w-2xl bg-card border-border/80 shadow-2xl p-6">
                 {renderDialogContent()}
             </DialogContent>
         </Dialog>
@@ -1623,7 +1713,7 @@ const DatabaseBrowser = () => {
                             value={tab.value}
                             className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${
                                 isActive
-                                    ? "text-primary font-semibold drop-shadow-[0_0_8px_oklch(0.82_0.135_85/0.4)]"
+                                    ? "text-primary font-semibold drop-shadow-[0_0_8px_rgba(91,163,255,0.4)]"
                                     : "text-muted-foreground hover:text-foreground"
                             }`}
                         >
@@ -1631,7 +1721,7 @@ const DatabaseBrowser = () => {
                             {isActive && (
                                 <motion.div
                                     layoutId="databaseTabUnderline"
-                                    className="absolute bottom-0 inset-x-0 mx-auto h-[2.5px] w-8 rounded-full bg-primary shadow-[0_0_8px_oklch(0.82_0.135_85/0.8),0_0_14px_oklch(0.82_0.135_85/0.4)]"
+                                    className="absolute bottom-0 inset-x-0 mx-auto h-[2.5px] w-8 rounded-full bg-primary shadow-[0_0_8px_rgba(91,163,255,0.8),0_0_14px_rgba(91,163,255,0.4)]"
                                     transition={{ type: "spring", stiffness: 450, damping: 35 }}
                                 />
                             )}

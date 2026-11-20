@@ -180,6 +180,15 @@ export const convertVersion7To8 = (version7BuildId: string): UpgradeResult => {
     return { buildId: buildIdsEncode(numbers), wasUpgraded: false };
 };
 
+export const convertVersion8To9 = (version8BuildId: string): UpgradeResult => {
+    const numbers = buildIdsDecode(version8BuildId);
+    numbers[0] = 9;
+    while (numbers.length < 28) {
+        numbers.push(0);
+    }
+    return { buildId: buildIdsEncode(numbers), wasUpgraded: false };
+};
+
 export const upgradeBuild = (buildId: string): string => {
     const buildVersion = () => {
         try {
@@ -226,6 +235,11 @@ export const upgradeBuild = (buildId: string): string => {
 
     if (buildVersion() === 7) {
         const { buildId: newBuildId } = convertVersion7To8(buildId);
+        buildId = newBuildId;
+    }
+
+    if (buildVersion() === 8) {
+        const { buildId: newBuildId } = convertVersion8To9(buildId);
         buildId = newBuildId;
     }
 

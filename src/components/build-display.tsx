@@ -60,7 +60,7 @@ const PieceCard = ({
         <Card className="group">
             <CardContent className="flex flex-col gap-2 p-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_rgba(91,163,255,0.25)]">
                         <Image
                             src={piece.icon}
                             alt={piece.name}
