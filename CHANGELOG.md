@@ -97,6 +97,12 @@ All notable changes since commit [`be23802`](https://github.com/your-repo/commit
 - **TypeScript Integrity**:
   - Verified 0 compilation errors across the entire codebase (`npx tsc --noEmit`).
 
+### 7. Weapon Specials & Mods Picker in Builder
+- **Empty Slot Visibility**: Fixed `partRow.part ? (...) : null` bug in `src/components/loadout/right-panel.tsx` which caused unequipped Special and Mod slots to be completely hidden. Slots now always render with an intuitive `[+] Select Special` / `[+] Select Mod` state and `CHOOSE` action button.
+- **Picker Isolation for Weapon Parts**: Fixed `isWeaponPicker` heuristic in `src/components/loadout/item-picker.tsx` so that "Weapon Special" and "Weapon Mod" do not incorrectly render the weapon class rail or filter out parts.
+- **Repeaters Triple Part Support**: Accurately mapped Repeaters to `Chamber` (`weaponPart1`), `Grip` (`weaponPart2`), and `Mod` (`weaponPart3`), fixing the previous bug where Mod overwrote `weaponPart2`.
+- **Dynamic Descriptions & Rich Tooltips**: Augmented part objects with interpolated `part_effect` descriptions and syntax-highlighted tooltips.
+
 ---
 
 ## File Changes Overview
@@ -115,8 +121,10 @@ All notable changes since commit [`be23802`](https://github.com/your-repo/commit
 | **Modified** | `prisma/schema.prisma` | Added `BuildLike` and `BuildStat` models |
 | **Modified** | `src/app/page.tsx` | Added `tab=suggestions` and `tab=liked` routing |
 | **Modified** | `src/components/site-nav-links.tsx` | Added `Suggestions` and `Liked` navigation links |
-| **Modified** | `src/components/loadout/item-picker.tsx` | Weapon class rail, armor slot tabs, Radix tooltips, behemoth grouping |
-| **Modified** | `src/components/loadout/loadout-screen.tsx` | Removed "COMING WITH ACCOUNTS" placeholder tabs |
+| **Modified** | `src/components/loadout/item-picker.tsx` | Weapon class rail, armor slot tabs, Radix tooltips, weapon part picker isolation |
+| **Modified** | `src/components/loadout/loadout-screen.tsx` | Removed placeholder tabs; fixed weapon part slots & repeater mapping |
+| **Modified** | `src/components/loadout/right-panel.tsx` | Always render Special/Mod/Chamber/Grip slot rows with empty states & actions |
+| **Modified** | `src/game/types.ts` | Extended `Part` interface with `part_effect` and `values` |
 | **Modified** | `src/app/globals.css` | Mystic Paradox color palette & text brightness boost |
 | **Modified** | `src/components/browse-database.tsx` | Database browser improvements & crafting origin badges |
 | **Modified** | `src/app/b/[buildId]/page.tsx` | Build viewer enhancements and likes integration |

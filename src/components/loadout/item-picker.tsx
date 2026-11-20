@@ -544,7 +544,7 @@ export const ItemPickerOverlay = ({
     onSwitchArmourSlot,
     pickerKind,
 }: ItemPickerProps) => {
-    const isWeaponPicker = pickerKind === "weapon" || title.toLowerCase().includes("weapon");
+    const isWeaponPicker = pickerKind === "weapon" || (!pickerKind && title.toLowerCase() === "weapon");
     const [weaponClass, setWeaponClass] = useState<string>("all");
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<string | null>(null);
