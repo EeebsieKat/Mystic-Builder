@@ -40,7 +40,6 @@ import {
     ArmourCard,
     ConsumableRow,
     LanternOmnicellCard,
-    LoadoutTabsStub,
     WeaponCard,
 } from "./gear-grid";
 import { CrestHeader, ItemDetailPanel, PerkSummaryPanel } from "./right-panel";
@@ -135,15 +134,15 @@ const draftToModel = (draft: LoadoutDraft): BuildModel => {
 const hasAnyItem = (draft: LoadoutDraft): boolean =>
     Boolean(
         draft.weaponName ||
-            draft.headName ||
-            draft.torsoName ||
-            draft.armsName ||
-            draft.legsName ||
-            draft.lantern ||
-            draft.omnicell ||
-            draft.consumable1 ||
-            draft.consumable2 ||
-            draft.consumable3,
+        draft.headName ||
+        draft.torsoName ||
+        draft.armsName ||
+        draft.legsName ||
+        draft.lantern ||
+        draft.omnicell ||
+        draft.consumable1 ||
+        draft.consumable2 ||
+        draft.consumable3,
     );
 
 const randomOf = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
@@ -236,12 +235,16 @@ const ARMOUR_SLOTS: { id: ArmourSlotId; nameKey: "headName" | "torsoName" | "arm
     { id: "legs", nameKey: "legsName", surgedKey: "legsSurged", cellKey: "legsCell", label: "Legs" },
 ];
 
-const LoadoutScreen = () => {
+export interface LoadoutScreenProps {
+    initialBuildId?: string;
+}
+
+export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
     const searchParams = useSearchParams();
     const { toast } = useToast();
 
     const [draft, setDraft] = useState<LoadoutDraft>(() => {
-        const id = searchParams.get("b");
+        const id = initialBuildId || searchParams.get("b");
         if (id) {
             const parsed = tryDeserialize(id);
             if (parsed) {
@@ -250,6 +253,16 @@ const LoadoutScreen = () => {
         }
         return EMPTY_DRAFT;
     });
+
+    useEffect(() => {
+        if (initialBuildId) {
+            const parsed = tryDeserialize(initialBuildId);
+            if (parsed) {
+                setDraft(draftFromModel(parsed));
+            }
+        }
+    }, [initialBuildId]);
+
     const [selectedSlot, setSelectedSlot] = useState<SelectionId>("weapon");
     /* The center detail card always shows the last inspected gear slot, even
        while the right panel is switched to the perk summary (game behaviour). */
@@ -274,7 +287,8 @@ const LoadoutScreen = () => {
         if (!buildId) {
             return;
         }
-        const url = hasAnyItem(draft) ? `/?b=${buildId}` : "/";
+        const isBRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/b/");
+        const url = hasAnyItem(draft) ? (isBRoute ? `/b/${buildId}` : `/?b=${buildId}`) : "/";
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
 
@@ -414,16 +428,16 @@ const LoadoutScreen = () => {
                         ? randomOf(Object.keys(category.chambers))
                         : null
                     : category?.specials
-                      ? randomOf(Object.keys(category.specials))
-                      : null,
+                        ? randomOf(Object.keys(category.specials))
+                        : null,
             weaponPart2:
                 weapon.type === "Repeater"
                     ? category?.grips
                         ? randomOf(Object.keys(category.grips))
                         : null
                     : category?.mods
-                      ? randomOf(Object.keys(category.mods))
-                      : null,
+                        ? randomOf(Object.keys(category.mods))
+                        : null,
             weaponPart3: weapon.type === "Repeater" && category?.mods ? randomOf(Object.keys(category.mods)) : null,
             bondWeapon: bondPool.length > 0 && Math.random() < 0.3 ? randomOf(bondPool).name : null,
             weaponCell1: pickFittingCell(weapon.cells),
@@ -557,8 +571,8 @@ const LoadoutScreen = () => {
                 ...surgeMatchingEffects(weapon?.unique_effects, draft.weaponSurged),
                 ...(bondWeaponData !== null
                     ? surgeMatchingEffects(bondWeaponData.unique_effects, draft.weaponSurged).map(
-                          effect => `${bondWeaponData.name} (bonded): ${effect}`,
-                      )
+                        effect => `${bondWeaponData.name} (bonded): ${effect}`,
+                    )
                     : []),
             ];
             return {
@@ -687,9 +701,9 @@ const LoadoutScreen = () => {
             const cellSlots = weapon?.cells
                 ? Array.isArray(weapon.cells)
                     ? [
-                          { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
-                          { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
-                      ]
+                        { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
+                        { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
+                    ]
                     : [{ key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells }]
                 : [];
             return {
@@ -782,6 +796,7 @@ const LoadoutScreen = () => {
                     label: entry.name,
                     icon: entry.icon,
                     group: entry.type,
+                    behemoth: entry.behemoth ?? null,
                     hint: entry.elemental ?? undefined,
                     meta: String(entry.power.powerSurged ?? entry.power.base),
                     color: entry.elemental ? elementColor(entry.elemental) : undefined,
@@ -798,25 +813,28 @@ const LoadoutScreen = () => {
         }
 
         if (target.kind === "armour") {
+            const slotName = target.slot[0].toUpperCase() + target.slot.slice(1);
             const items: PickerItem[] = Object.values(gameData.armours)
-                .filter(entry => entry.type === target.slot[0].toUpperCase() + target.slot.slice(1))
+                .filter(entry => entry.type === slotName)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(entry => ({
                     value: entry.name,
                     label: entry.name,
                     icon: entry.icon,
-                    group: entry.behemoth ?? "Generic",
+                    group: `${slotName} Armour`,
+                    behemoth: entry.behemoth ?? null,
+                    strength: entry.strength ?? null,
                     hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
                     meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
                     color: entry.strength ? elementColor(entry.strength) : undefined,
                 }));
             return {
-                title: `${target.slot[0].toUpperCase() + target.slot.slice(1)} Armour`,
+                title: `${slotName} Armour`,
                 items,
                 selected: draft[`${target.slot}Name` as "headName"],
                 filterLabel: "Strength",
                 filterValues: ["Blaze", "Frost", "Shock", "Terra", "Radiant", "Umbral"],
-                filterOf: () => "",
+                filterOf: (item: PickerItem) => item.strength ?? "",
                 apply: (value: string | null) => set(`${target.slot}Name` as "headName", value),
             };
         }
@@ -955,6 +973,7 @@ const LoadoutScreen = () => {
                     label: candidate.name,
                     icon: candidate.icon,
                     group: "Bondable Weapons",
+                    behemoth: candidate.behemoth ?? null,
                     hint:
                         candidate.perks
                             ?.filter(perk => !(perk.powerSurged ?? false))
@@ -1022,10 +1041,6 @@ const LoadoutScreen = () => {
             </div>
 
             {/* left column */}
-            <div className="absolute left-[40px] top-[24px]">
-                <LoadoutTabsStub />
-            </div>
-
             <div className="absolute left-[40px] top-[128px] grid grid-cols-2 gap-[14px]">
                 <WeaponCard
                     weapon={weapon}
@@ -1106,11 +1121,11 @@ const LoadoutScreen = () => {
                                         ? partKey === "weaponPart1"
                                             ? "chambers"
                                             : partKey === "weaponPart2"
-                                              ? "grips"
-                                              : "mods"
+                                                ? "grips"
+                                                : "mods"
                                         : partKey === "weaponPart1"
-                                          ? "specials"
-                                          : "mods";
+                                            ? "specials"
+                                            : "mods";
                                 setPickerTarget({ kind: "part", partKey, bucket });
                             }}
                             onBondClick={() => setPickerTarget({ kind: "bond" })}
@@ -1171,6 +1186,12 @@ const LoadoutScreen = () => {
                     filterLabel={picker.filterLabel}
                     filterValues={picker.filterValues}
                     filterOf={picker.filterOf}
+                    armourSlot={pickerTarget.kind === "armour" ? pickerTarget.slot : undefined}
+                    onSwitchArmourSlot={(slot) => {
+                        setSelectedSlot(slot);
+                        setPickerTarget({ kind: "armour", slot });
+                    }}
+                    pickerKind={pickerTarget.kind}
                 />
             )}
 

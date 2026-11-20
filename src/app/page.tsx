@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import BuildSuggestions from "@/components/build-suggestions";
 import DatabaseBrowser from "@/components/browse-database";
 import LoadoutScreen from "@/components/loadout/loadout-screen";
 import { Footer } from "@/components/site-footer";
@@ -19,6 +20,8 @@ interface HomeProps {
 const Home = async ({ searchParams }: HomeProps) => {
     const { tab } = await searchParams;
     const isDatabase = tab === "database";
+    const isSuggestions = tab === "suggestions";
+    const isLiked = tab === "liked";
 
     return (
         <main className="flex w-full flex-1 flex-col">
@@ -41,6 +44,13 @@ const Home = async ({ searchParams }: HomeProps) => {
                             <DatabaseBrowser />
                         </div>
                     </section>
+                    <Footer />
+                </>
+            ) : (isSuggestions || isLiked) ? (
+                <>
+                    <Suspense fallback={null}>
+                        <BuildSuggestions defaultLikedOnly={isLiked} />
+                    </Suspense>
                     <Footer />
                 </>
             ) : (
