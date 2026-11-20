@@ -687,15 +687,19 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
 
         if (selectedSlot === "weapon") {
             const parts = model.parts;
-            const partRows: { label: string; part: Part | null }[] = [];
-            if (weapon && parts) {
+            const partRows: {
+                label: string;
+                part: Part | null;
+                partKey: "weaponPart1" | "weaponPart2" | "weaponPart3";
+            }[] = [];
+            if (weapon) {
                 if (weapon.type === "Repeater") {
-                    partRows.push({ label: "Chamber", part: parts.chamber });
-                    partRows.push({ label: "Grip", part: parts.grip });
-                    partRows.push({ label: "Mod", part: parts.mod });
+                    partRows.push({ label: "Chamber", part: parts?.chamber ?? null, partKey: "weaponPart1" });
+                    partRows.push({ label: "Grip", part: parts?.grip ?? null, partKey: "weaponPart2" });
+                    partRows.push({ label: "Mod", part: parts?.mod ?? null, partKey: "weaponPart3" });
                 } else {
-                    partRows.push({ label: "Special", part: parts.special });
-                    partRows.push({ label: "Mod", part: parts.mod });
+                    partRows.push({ label: "Special", part: parts?.special ?? null, partKey: "weaponPart1" });
+                    partRows.push({ label: "Mod", part: parts?.mod ?? null, partKey: "weaponPart2" });
                 }
             }
             const cellSlots = weapon?.cells
@@ -938,13 +942,24 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             const bucket = category?.[target.bucket] ?? {};
             const items: PickerItem[] = Object.values(bucket)
                 .sort((a, b) => a.name.localeCompare(b.name))
-                .map(part => ({
-                    value: part.name,
-                    label: part.name,
-                    icon: part.icon,
-                    group: target.bucket[0].toUpperCase() + target.bucket.slice(1),
-                    hint: (part.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
-                }));
+                .map(part => {
+                    const desc =
+                        part.description ??
+                        (Array.isArray(part.part_effect)
+                            ? part.part_effect
+                                  .map((effect: string) => interpolate(effect, part.values))
+                                  .join(" ")
+                            : "");
+                    return {
+                        value: part.name,
+                        label: part.name,
+                        icon: part.icon,
+                        group: target.bucket[0].toUpperCase() + target.bucket.slice(1),
+                        hint: (part.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
+                        description: desc,
+                        kind: "part",
+                    };
+                });
             const labelByBucket: Record<string, string> = {
                 specials: "Weapon Special",
                 mods: "Weapon Mod",

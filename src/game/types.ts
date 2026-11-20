@@ -118,11 +118,13 @@ export interface Consumable {
 
 export interface Part {
     name: string;
-    description: string;
+    description?: string;
     icon: string;
-    type: string;
+    type?: string;
     perks?: PerkValue[];
     unique_effects?: { name?: string; description: string }[];
+    part_effect?: string[];
+    values?: Record<string, number | string>;
 }
 
 export interface RegularWeaponParts {

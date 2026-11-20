@@ -188,7 +188,11 @@ export interface ItemDetailData {
     lantern?: Lantern | null;
     omnicell?: Omnicell | null;
     consumable?: Consumable | null;
-    parts?: { label: string; part: Part | null }[];
+    parts?: {
+        label: string;
+        part: Part | null;
+        partKey?: "weaponPart1" | "weaponPart2" | "weaponPart3";
+    }[];
     bond?: { name: string; icon: string } | null;
 }
 
@@ -228,17 +232,25 @@ const PartSlotRow = ({
         type="button"
         onClick={onClick}
         aria-label={part ? `${label}: ${part.name}. Click to change.` : `Choose ${label}`}
-        className="lo-card flex h-[58px] w-full cursor-pointer items-center gap-3 px-[14px] text-left outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+        className="lo-card flex h-[58px] w-full cursor-pointer items-center justify-between px-[14px] text-left outline-none transition-colors hover:border-[#e0a33e]/60 focus-visible:shadow-[0_0_0_1px_#e0a33e]"
     >
-        <span className="lo-sublabel !text-[10.5px] w-[74px] shrink-0">{label.toUpperCase()}</span>
-        {part ? (
-            <>
-                <ItemIcon icon={part.icon} alt={part.name} size={38} />
-                <span className="truncate text-[14px] font-semibold text-[#e8e4da]">{part.name}</span>
-            </>
-        ) : (
-            <span className="text-[13px] text-[#7c828c]">{emptyLabel}</span>
-        )}
+        <div className="flex min-w-0 items-center gap-3">
+            <span className="lo-sublabel !text-[10.5px] w-[74px] shrink-0">{label.toUpperCase()}</span>
+            {part ? (
+                <>
+                    <ItemIcon icon={part.icon} alt={part.name} size={38} />
+                    <span className="truncate text-[14px] font-semibold text-[#e8e4da]">{part.name}</span>
+                </>
+            ) : (
+                <div className="flex items-center gap-2 text-[13px] text-[#8e939e]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded border border-dashed border-[#5a606d] text-xs text-[#a0a5b0]">+</span>
+                    <span>{emptyLabel}</span>
+                </div>
+            )}
+        </div>
+        <span className="text-[11px] font-semibold tracking-wider text-[#7c828c]">
+            {part ? "CHANGE" : "CHOOSE"}
+        </span>
     </button>
 );
 
@@ -295,26 +307,28 @@ export const ItemDetailPanel = ({
             {/* weapon parts */}
             {data.parts && data.parts.length > 0 && (
                 <div className="flex flex-col gap-[8px]">
-                    {data.parts.map(partRow =>
-                        partRow.part ? (
+                    {data.parts.map(partRow => {
+                        const partKey =
+                            partRow.partKey ??
+                            (partRow.label === "Chamber"
+                                ? "weaponPart1"
+                                : partRow.label === "Grip"
+                                  ? "weaponPart2"
+                                  : partRow.label === "Special"
+                                    ? "weaponPart1"
+                                    : data.weapon?.type === "Repeater"
+                                      ? "weaponPart3"
+                                      : "weaponPart2");
+                        return (
                             <PartSlotRow
                                 key={partRow.label}
                                 label={partRow.label}
                                 part={partRow.part}
-                                onClick={() =>
-                                    onPartClick(
-                                        partRow.label === "Chamber"
-                                            ? "weaponPart1"
-                                            : partRow.label === "Grip"
-                                              ? "weaponPart2"
-                                              : partRow.label === "Special"
-                                                ? "weaponPart1"
-                                                : "weaponPart2",
-                                    )
-                                }
+                                emptyLabel={`Select ${partRow.label}`}
+                                onClick={() => onPartClick(partKey)}
                             />
-                        ) : null,
-                    )}
+                        );
+                    })}
                 </div>
             )}
 
