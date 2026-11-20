@@ -33,7 +33,7 @@ import type {
     PerkValue,
     WeaponType,
 } from "@/game/types";
-import { cellTypeLabel, extractBuildId, localBuildPath } from "@/lib/site";
+import { cellTypeColor, cellTypeLabel, elementColor, extractBuildId, localBuildPath } from "@/lib/site";
 
 import { LoadoutStage } from "./loadout-stage";
 import {
@@ -337,7 +337,7 @@ const LoadoutScreen = () => {
                 if (key === nameKey) {
                     const piece = findArmourByName((next[nameKey] as string | null) ?? "");
                     if (!doesCellFitIntoSlot(piece?.cells ?? null, next[cellKey] as string | null)) {
-                        next[cellKey] = null;
+                        (next as Record<string, unknown>)[cellKey] = null;
                     }
                 }
             }
@@ -575,13 +575,18 @@ const LoadoutScreen = () => {
 
         if (detailSlot === "lantern") {
             const cells = cellRow(draft.lanternCell);
-            const ability = lantern?.lantern_ability;
+            const ability = (lantern as any)?.lantern_ability;
             const effects: string[] = [];
             if (ability?.hold) {
-                effects.push(interpolate(ability.hold, lantern?.values));
+                effects.push(interpolate(ability.hold, (lantern as any)?.values));
             }
             if (ability?.instant) {
-                effects.push(interpolate(ability.instant, lantern?.values));
+                effects.push(interpolate(ability.instant, (lantern as any)?.values));
+            }
+            if (lantern?.unique_effects) {
+                for (const ue of lantern.unique_effects) {
+                    effects.push(ue.description);
+                }
             }
             return {
                 item: lantern ? { name: lantern.name } : null,
@@ -597,10 +602,10 @@ const LoadoutScreen = () => {
         if (detailSlot === "omnicell") {
             const effects: string[] = [];
             if (omnicell?.passive) {
-                effects.push(interpolate(omnicell.passive, omnicell.passive_values));
+                effects.push(interpolate(omnicell.passive, (omnicell as any)?.passive_values));
             }
             if (omnicell?.active) {
-                effects.push(interpolate(omnicell.active, omnicell.active_values));
+                effects.push(interpolate(omnicell.active, (omnicell as any)?.active_values));
             }
             return {
                 item: omnicell ? { name: omnicell.name } : null,
@@ -779,6 +784,7 @@ const LoadoutScreen = () => {
                     group: entry.type,
                     hint: entry.elemental ?? undefined,
                     meta: String(entry.power.powerSurged ?? entry.power.base),
+                    color: entry.elemental ? elementColor(entry.elemental) : undefined,
                 }));
             return {
                 title: "Weapons",
@@ -802,6 +808,7 @@ const LoadoutScreen = () => {
                     group: entry.behemoth ?? "Generic",
                     hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
                     meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
+                    color: entry.strength ? elementColor(entry.strength) : undefined,
                 }));
             return {
                 title: `${target.slot[0].toUpperCase() + target.slot.slice(1)} Armour`,
@@ -823,6 +830,7 @@ const LoadoutScreen = () => {
                     icon: entry.icon,
                     group: "Lanterns",
                     hint: entry.cells ? `${cellTypeLabel(entry.cells)} cell` : undefined,
+                    color: "#e0a33e",
                 }));
             return {
                 title: "Lanterns",
@@ -840,6 +848,7 @@ const LoadoutScreen = () => {
                     label: entry.name,
                     icon: entry.icon,
                     group: "Omnicells",
+                    color: "#c58bea",
                 }));
             return {
                 title: "Omnicells",
@@ -880,6 +889,7 @@ const LoadoutScreen = () => {
                         icon: `/assets/icons/perks/${cell.slot}.png`,
                         group: cellTypeLabel(cell.slot),
                         hint: perks.map(([name, value]) => `${name} +${value}`).join(", "),
+                        color: cellTypeColor(cell.slot),
                     });
                 }
             }
@@ -983,9 +993,9 @@ const LoadoutScreen = () => {
     return (
         <LoadoutStage>
             {/* backdrop */}
-            <span className="lo-light-shaft" style={{ left: 700 }} aria-hidden />
-            <span className="lo-light-shaft" style={{ left: 1050 }} aria-hidden />
-            <span className="lo-pedestal" style={{ left: 690, top: 540, width: 540, height: 190 }} aria-hidden />
+            <span className="lo-light-shaft" style={{ left: "calc(50% - 260px)" }} aria-hidden />
+            <span className="lo-light-shaft" style={{ left: "calc(50% + 90px)" }} aria-hidden />
+            <span className="lo-pedestal absolute left-1/2 -translate-x-1/2" style={{ top: 540, width: 540, height: 190 }} aria-hidden />
             <span
                 className="pointer-events-none absolute inset-0"
                 style={{ background: "radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(4,5,7,0.55) 100%)" }}
@@ -993,7 +1003,7 @@ const LoadoutScreen = () => {
             />
 
             {/* reserved slayer slot hook - intentionally empty for now */}
-            <span data-slayer-slot="" aria-hidden />
+            <span data-slayer-slot="" className="absolute left-1/2 -translate-x-1/2" aria-hidden />
 
             {/* nameplate */}
             <div className="absolute left-1/2 top-[46px] -translate-x-1/2 text-center">
@@ -1067,13 +1077,13 @@ const LoadoutScreen = () => {
 
             {/* center detail card */}
             {(
-                <div className="absolute left-[585px] top-[610px] h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
+                <div className="absolute left-1/2 top-[610px] -translate-x-1/2 h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
                     <DetailCard data={detailData} />
                 </div>
             )}
 
             {/* right panel */}
-            <div className="absolute left-[1440px] top-[64px] w-[440px]">
+            <div className="absolute right-[40px] top-[64px] w-[440px]">
                 <CrestHeader power={totalPower} resistance={totalResistance} />
                 <FlourishHeader
                     title={rightPanel ? rightPanel.slotLabel : "Perk Summary"}

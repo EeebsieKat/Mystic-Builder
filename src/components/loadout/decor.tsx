@@ -7,6 +7,7 @@
  */
 
 import { useState } from "react";
+import { cellTypeIcon } from "@/lib/site";
 
 /* ------------------------------------------------------------------ */
 /* Diamonds & flourishes                                               */
@@ -57,8 +58,23 @@ export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; clas
 /* ------------------------------------------------------------------ */
 
 /** White hexagonal ring used for cell slots (filled & empty states). */
-export const CellHexIcon = ({ size = 56, dim = false }: { size?: number; dim?: boolean }) => (
-    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/perks/NoCell.png"></img>
+export const CellHexIcon = ({
+    size = 36,
+    slot,
+    dim = false,
+}: {
+    size?: number;
+    slot?: string | null;
+    dim?: boolean;
+}) => (
+    <img
+        alt={slot ? `${slot} Cell` : "Cell Slot"}
+        width={size}
+        height={size}
+        src={cellTypeIcon(slot)}
+        className={`object-contain ${dim ? "opacity-40" : ""}`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+    />
 );
 
 /* ------------------------------------------------------------------ */

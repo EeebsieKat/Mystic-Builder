@@ -9,7 +9,7 @@
  */
 
 import type { Armour, Weapon } from "@/game/types";
-import { elementColor } from "@/lib/site";
+import { elementColor, getTextGlowStyle } from "@/lib/site";
 
 import { DiamondPip, ItemIcon } from "./decor";
 import { interpolate, type PerkRow } from "./loadout-types";
@@ -81,7 +81,16 @@ const DetailHeader = ({
                 )}
                 <span className="text-[15px] italic text-[#9a9a94]">Appearance: {appearance}</span>
             </span>
-            <span className="lo-serif text-[27px] font-semibold leading-none tracking-[0.03em] text-[#f5f1e8]">
+            <span
+                className="lo-serif text-[27px] font-semibold leading-none tracking-[0.03em]"
+                style={getTextGlowStyle(
+                    weapon?.elemental
+                        ? elementColor(weapon.elemental)
+                        : armour?.strength
+                          ? elementColor(armour.strength)
+                          : "#f5f1e8",
+                )}
+            >
                 {item.name}
             </span>
             <span className="lo-gold-rule mt-[3px] block w-[290px]" aria-hidden />
@@ -93,8 +102,8 @@ const DetailHeader = ({
                 </div>
                 {armour && (
                     <div className="flex flex-col justify-center gap-[3px]">
-                        <ElementLine label="vs attacks" element={armour.strength} value={25} />
-                        <ElementLine label="vs attacks" element={armour.weakness} value={-25} />
+                        {armour.strength && <ElementLine label="vs attacks" element={armour.strength} value={25} />}
+                        {armour.weakness && <ElementLine label="vs attacks" element={armour.weakness} value={-25} />}
                     </div>
                 )}
                 {weapon && weapon.elemental && (

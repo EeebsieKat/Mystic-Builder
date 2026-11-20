@@ -275,7 +275,7 @@ body::before {
 
 .lo-stage {
   position: relative;
-  width: 1920px;
+  width: 100%;
   height: 1080px;
   overflow: hidden;
   color: var(--lo-text);
@@ -556,5 +556,21 @@ body::before {
   .lo-overlay-in {
     animation: none;
   }
+  .card-focus-grid:has(> *:hover) > *:not(:hover) {
+    transform: none;
+  }
+}
+
+/* ---- card focus spotlight effect ------------------------------------- */
+
+.card-focus-grid {
+  /* container for card hover spotlight */
+}
+
+.card-focus-grid:has(> *:hover) > *:not(:hover),
+.card-focus-grid:has(> *:focus-visible) > *:not(:focus-visible) {
+  opacity: 0.42;
+  transform: scale(0.985);
+  filter: brightness(0.88);
 }
 

@@ -1,6 +1,7 @@
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
-import { cellTypeColor, cellTypeLabel, elementColor } from "@/lib/site";
+import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor } from "@/lib/site";
 
 /*
  * Shared, site-wide chip components.
@@ -46,39 +47,104 @@ export const PerkChip = ({
     value: number;
     surged?: boolean;
 }) => (
-    <Badge
-        variant="outline"
-        className={`${CHIP_BASE} border-primary/45 bg-primary/10 text-primary ${surged ? "shadow-[0_1px_2px_oklch(0_0_0/0.3),0_0_8px_oklch(0.82_0.135_85/0.25)]" : ""}`}
-    >
+    <span className="inline-flex items-center text-[11px] font-medium text-primary">
         {name} {value > 0 ? `+${value}` : value}
         {surged ? " (surged)" : ""}
-    </Badge>
+    </span>
 );
+
+export const PerkList = ({
+    perks,
+    className = "",
+}: {
+    perks: { name: string; value: number; powerSurged?: boolean }[] | null | undefined;
+    className?: string;
+}) => {
+    if (!perks || perks.length === 0) return null;
+    return (
+        <div className={`flex flex-col gap-1 text-[11px] font-medium text-primary ${className}`}>
+            {perks.map((perk, index) => (
+                <div key={`p${index}`} className="flex items-center gap-1.5 leading-none">
+                    <span className="text-primary/70 select-none text-[10px] leading-none" aria-hidden>
+                        •
+                    </span>
+                    <PerkChip name={perk.name} value={perk.value} surged={perk.powerSurged} />
+                </div>
+            ))}
+        </div>
+    );
+};
 
 export const CellChip = ({
     slot,
     cellName,
+    count = 1,
 }: {
     slot: string | null;
     cellName?: string | null;
+    count?: number;
 }) => (
     <Badge
         variant="outline"
-        className={CHIP_BASE}
+        className={`${CHIP_BASE} inline-flex items-center gap-1.5`}
         style={{ borderColor: cellTypeColor(slot) }}
     >
-        <span
-            className="inline-block h-2 w-2 rounded-full"
-            style={{ backgroundColor: cellTypeColor(slot) }}
+        <Image
+            src={cellTypeIcon(slot)}
+            alt=""
+            width={18}
+            height={18}
+            className="h-4.5 w-4.5 shrink-0 object-contain"
             aria-hidden
         />
-        {cellName ? cellName : `${cellTypeLabel(slot)} cell`}
+        <span className="leading-none">
+            {count > 1 ? `${count}x ` : ""}
+            {cellName ? cellName : `${cellTypeLabel(slot)} cell`}
+        </span>
     </Badge>
 );
 
+export const groupCellSlots = (
+    cells: string | string[] | null | undefined,
+): { slot: string; count: number }[] => {
+    if (!cells) return [];
+    const list = Array.isArray(cells) ? cells : [cells];
+    const map = new Map<string, number>();
+    for (const slot of list) {
+        if (!slot) continue;
+        map.set(slot, (map.get(slot) ?? 0) + 1);
+    }
+    return Array.from(map.entries()).map(([slot, count]) => ({ slot, count }));
+};
+
+export const CellSlotChips = ({
+    cells,
+}: {
+    cells: string | string[] | null | undefined;
+}) => {
+    if (cells === null || cells === undefined) return <NoSlotsChip />;
+    const grouped = groupCellSlots(cells);
+    if (grouped.length === 0) return <NoSlotsChip />;
+    return (
+        <>
+            {grouped.map(({ slot, count }, index) => (
+                <CellChip key={`c${index}`} slot={slot} count={count} />
+            ))}
+        </>
+    );
+};
+
 export const NoSlotsChip = () => (
-    <Badge variant="outline" className={`${CHIP_BASE} text-muted-foreground`}>
-        No cell slots
+    <Badge variant="outline" className={`${CHIP_BASE} text-muted-foreground inline-flex items-center gap-1.5`}>
+        <Image
+            src={cellTypeIcon(null)}
+            alt=""
+            width={18}
+            height={18}
+            className="h-4.5 w-4.5 shrink-0 object-contain opacity-60"
+            aria-hidden
+        />
+        <span className="leading-none">No cell slots</span>
     </Badge>
 );
 
@@ -89,9 +155,12 @@ export const WeaknessChip = ({ element }: { element: string }) => (
 );
 
 export const CellDot = ({ slot }: { slot: string | null | undefined }) => (
-    <span
-        className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-        style={{ backgroundColor: cellTypeColor(slot) }}
+    <Image
+        src={cellTypeIcon(slot)}
+        alt=""
+        width={18}
+        height={18}
+        className="inline-block h-4.5 w-4.5 shrink-0 object-contain align-middle"
         aria-hidden
     />
 );

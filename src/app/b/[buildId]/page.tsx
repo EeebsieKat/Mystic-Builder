@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { BuildDisplay } from "@/components/build-display";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { ViewCounter } from "@/components/view-counter";
+import { Footer } from "@/components/site-footer";
 import { buildSummary, buildTitle, parseBuildId } from "@/game/build-view";
 import { elementColor, localEditPath, SITE_NAME } from "@/lib/site";
 
@@ -78,63 +79,66 @@ const BuildPage = async ({ params }: BuildPageProps) => {
     const { view } = parsed;
 
     return (
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-            <div className="mb-6 flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                    <Button asChild variant="ghost" size="sm">
-                        <Link href="/">
-                            <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden />
-                            Builder
-                        </Link>
-                    </Button>
-                    <Badge variant="outline">Dauntless {view.gameVersion}</Badge>
-                    {view.upgraded ? (
-                        <Badge variant="outline" className="border-sky-600/50 text-sky-400">
-                            Upgraded from an older build format
-                        </Badge>
-                    ) : null}
-                    {view.invalid ? (
-                        <Badge variant="outline" className="border-red-500/50 text-red-400">
-                            Possibly invalid
-                        </Badge>
-                    ) : null}
-                    <ViewCounter buildId={view.buildId} />
-                </div>
-
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <div>
-                        <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
-                            <Hammer className="h-6 w-6 shrink-0 text-primary" aria-hidden />
-                            {buildTitle(view)}
-                        </h1>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            Shared build{" "}
-                            <code className="text-xs">{view.buildId.slice(0, 24)}…</code>
-                        </p>
-                    </div>
+        <>
+            <main className="w-full flex-1 px-6 lg:px-10 py-8">
+                <div className="mb-6 flex flex-col gap-4">
                     <div className="flex flex-wrap items-center gap-2">
-                        <CopyLinkButton path={`/b/${view.buildId}`} />
-                        <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-                            <Link href={localEditPath(view.buildId)}>
-                                <Pencil className="mr-2 h-4 w-4" aria-hidden />
-                                Edit this build
+                        <Button asChild variant="ghost" size="sm">
+                            <Link href="/">
+                                <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden />
+                                Builder
                             </Link>
                         </Button>
+                        <Badge variant="outline">Dauntless {view.gameVersion}</Badge>
+                        {view.upgraded ? (
+                            <Badge variant="outline" className="border-sky-600/50 text-sky-400">
+                                Upgraded from an older build format
+                            </Badge>
+                        ) : null}
+                        {view.invalid ? (
+                            <Badge variant="outline" className="border-red-500/50 text-red-400">
+                                Possibly invalid
+                            </Badge>
+                        ) : null}
+                        <ViewCounter buildId={view.buildId} />
+                    </div>
+
+                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                        <div>
+                            <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
+                                <Hammer className="h-6 w-6 shrink-0 text-primary" aria-hidden />
+                                {buildTitle(view)}
+                            </h1>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Shared build{" "}
+                                <code className="text-xs">{view.buildId.slice(0, 24)}…</code>
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <CopyLinkButton path={`/b/${view.buildId}`} />
+                            <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+                                <Link href={localEditPath(view.buildId)}>
+                                    <Pencil className="mr-2 h-4 w-4" aria-hidden />
+                                    Edit this build
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {view.invalid ? (
-                <Card className="mb-4 border-destructive/40 bg-destructive/5">
-                    <CardContent className="p-4 text-sm text-destructive">
-                        This build decoded, but some items or cells don&apos;t fit together. It might use content from a
-                        newer Dauntless patch than the builder&apos;s dataset. Displaying it as-is.
-                    </CardContent>
-                </Card>
-            ) : null}
+                {view.invalid ? (
+                    <Card className="mb-4 border-destructive/40 bg-destructive/5">
+                        <CardContent className="p-4 text-sm text-destructive">
+                            This build decoded, but some items or cells don&apos;t fit together. It might use content from a
+                            newer Dauntless patch than the builder&apos;s dataset. Displaying it as-is.
+                        </CardContent>
+                    </Card>
+                ) : null}
 
-            <BuildDisplay view={view} />
-        </main>
+                <BuildDisplay view={view} />
+            </main>
+            <Footer />
+        </>
     );
 };
 
