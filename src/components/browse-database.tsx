@@ -261,7 +261,8 @@ const SearchInput = ({
 );
 
 const Grid = ({ children }: { children: React.ReactNode }) => (
-    <div className="mt-3 grid max-h-[70vh] items-start gap-3 overflow-y-auto pr-1 md:grid-cols-2">
+    /* Scrolling is owned by the page-level scroll region, not the grid. */
+    <div className="mt-3 grid items-start gap-3 md:grid-cols-2">
         {children}
     </div>
 );

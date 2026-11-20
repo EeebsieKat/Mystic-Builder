@@ -35,7 +35,7 @@ export const LoadoutStage = ({ children, className = "" }: { children: React.Rea
         <div
             ref={wrapperRef}
             className={`lo-stage-wrapper relative w-full overflow-hidden ${className}`}
-            style={{ height: "calc(100vh - 102px)", minHeight: 520 }}
+            style={{ height: "100dvh", minHeight: 520 }}
         >
             {/* 1. Renders right above .lo-stage-wrapper's background */}
             <BottomParticles />

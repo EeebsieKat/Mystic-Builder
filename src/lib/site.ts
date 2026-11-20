@@ -51,7 +51,7 @@ export const builderLinkFor = (buildId: string): string => `${BUILDER_ORIGIN}/b/
 export const localBuildPath = (buildId: string): string => `/b/${buildId}`;
 
 /** Local editor link that opens a build in the Mystic Builder editor. */
-export const localEditPath = (buildId: string): string => `/?b=${buildId}`;
+export const localEditPath = (buildId: string): string => `/builder?b=${buildId}`;
 
 export const elementColor = (elemental: string | null | undefined): string =>
     ({

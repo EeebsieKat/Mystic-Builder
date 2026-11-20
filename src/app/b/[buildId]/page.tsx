@@ -58,7 +58,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
 
     if (!parsed) {
         return (
-            <main className="mx-auto flex min-h-[60vh] w-full max-w-2xl flex-col items-center justify-center gap-6 px-4 text-center">
+            <main className="flex h-dvh min-h-0 flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
                 <TriangleAlert className="h-14 w-14 text-primary" aria-hidden />
                 <h1 className="text-2xl font-bold">This build link could not be decoded</h1>
                 <p className="text-muted-foreground">
@@ -66,7 +66,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
                     along the way. Double-check that the whole <code>/b/...</code> part is intact.
                 </p>
                 <Button asChild>
-                    <Link href="/">
+                    <Link href="/builder">
                         <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
                         Back to the builder
                     </Link>
@@ -78,62 +78,68 @@ const BuildPage = async ({ params }: BuildPageProps) => {
     const { view } = parsed;
 
     return (
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-            <div className="mb-6 flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                    <Button asChild variant="ghost" size="sm">
-                        <Link href="/">
-                            <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden />
-                            Builder
-                        </Link>
-                    </Button>
-                    <Badge variant="outline">Dauntless {view.gameVersion}</Badge>
-                    {view.upgraded ? (
-                        <Badge variant="outline" className="border-sky-600/50 text-sky-400">
-                            Upgraded from an older build format
-                        </Badge>
-                    ) : null}
-                    {view.invalid ? (
-                        <Badge variant="outline" className="border-red-500/50 text-red-400">
-                            Possibly invalid
-                        </Badge>
-                    ) : null}
-                    <ViewCounter buildId={view.buildId} />
-                </div>
+        /* Share pages are documents-in-a-shell: the page never scrolls,
+           the inner region does - the sticky header stays visible. */
+        <main className="flex h-dvh min-h-0 flex-1 flex-col">
+            <div className="min-h-0 flex-1 overflow-y-auto">
+                <div className="mx-auto w-full max-w-6xl px-4 pb-10 pt-6">
+                    <div className="mb-6 flex flex-col gap-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Button asChild variant="ghost" size="sm">
+                                <Link href="/builder">
+                                    <ArrowLeft className="mr-1.5 h-4 w-4" aria-hidden />
+                                    Builder
+                                </Link>
+                            </Button>
+                            <Badge variant="outline">Dauntless {view.gameVersion}</Badge>
+                            {view.upgraded ? (
+                                <Badge variant="outline" className="border-sky-600/50 text-sky-400">
+                                    Upgraded from an older build format
+                                </Badge>
+                            ) : null}
+                            {view.invalid ? (
+                                <Badge variant="outline" className="border-red-500/50 text-red-400">
+                                    Possibly invalid
+                                </Badge>
+                            ) : null}
+                            <ViewCounter buildId={view.buildId} />
+                        </div>
 
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                    <div>
-                        <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
-                            <Hammer className="h-6 w-6 shrink-0 text-primary" aria-hidden />
-                            {buildTitle(view)}
-                        </h1>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            Shared build{" "}
-                            <code className="text-xs">{view.buildId.slice(0, 24)}…</code>
-                        </p>
+                        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                            <div>
+                                <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
+                                    <Hammer className="h-6 w-6 shrink-0 text-primary" aria-hidden />
+                                    {buildTitle(view)}
+                                </h1>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    Shared build{" "}
+                                    <code className="text-xs">{view.buildId.slice(0, 24)}…</code>
+                                </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <CopyLinkButton path={`/b/${view.buildId}`} />
+                                <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+                                    <Link href={localEditPath(view.buildId)}>
+                                        <Pencil className="mr-2 h-4 w-4" aria-hidden />
+                                        Edit this build
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                        <CopyLinkButton path={`/b/${view.buildId}`} />
-                        <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-                            <Link href={localEditPath(view.buildId)}>
-                                <Pencil className="mr-2 h-4 w-4" aria-hidden />
-                                Edit this build
-                            </Link>
-                        </Button>
-                    </div>
+
+                    {view.invalid ? (
+                        <Card className="mb-4 border-destructive/40 bg-destructive/5">
+                            <CardContent className="p-4 text-sm text-destructive">
+                                This build decoded, but some items or cells don&apos;t fit together. It might use content from a
+                                newer Dauntless patch than the builder&apos;s dataset. Displaying it as-is.
+                            </CardContent>
+                        </Card>
+                    ) : null}
+
+                    <BuildDisplay view={view} />
                 </div>
             </div>
-
-            {view.invalid ? (
-                <Card className="mb-4 border-destructive/40 bg-destructive/5">
-                    <CardContent className="p-4 text-sm text-destructive">
-                        This build decoded, but some items or cells don&apos;t fit together. It might use content from a
-                        newer Dauntless patch than the builder&apos;s dataset. Displaying it as-is.
-                    </CardContent>
-                </Card>
-            ) : null}
-
-            <BuildDisplay view={view} />
         </main>
     );
 };

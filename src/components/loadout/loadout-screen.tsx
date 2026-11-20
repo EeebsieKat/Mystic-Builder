@@ -8,7 +8,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Check, Copy, Dices, Eraser, Link2 } from "lucide-react";
+import { Check, Copy, Database, Dices, Eraser, Home, Link2 } from "lucide-react";
+import Link from "next/link";
 
 import { useToast } from "@/hooks/use-toast";
 import { gameData } from "@/game/data";
@@ -34,6 +35,7 @@ import type {
     WeaponType,
 } from "@/game/types";
 import { cellTypeLabel, extractBuildId, localBuildPath } from "@/lib/site";
+import { SiteInfoCompact, VERSION_LABEL } from "@/components/menu-ui";
 
 import { LoadoutStage } from "./loadout-stage";
 import {
@@ -274,7 +276,7 @@ const LoadoutScreen = () => {
         if (!buildId) {
             return;
         }
-        const url = hasAnyItem(draft) ? `/?b=${buildId}` : "/";
+        const url = hasAnyItem(draft) ? `/builder?b=${buildId}` : "/builder";
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
 
@@ -1111,43 +1113,58 @@ const LoadoutScreen = () => {
                 </div>
             </div>
 
-            {/* bottom bar */}
-            <div className="absolute inset-x-0 bottom-0 flex h-[75px] items-center border-t border-[#3a3f47]/60 bg-gradient-to-t from-[rgba(6,7,8,0.9)] to-transparent px-[60px]">
-                <div className="flex items-center gap-[56px]">
-                    <button
-                        type="button"
-                        onClick={copyShareLink}
-                        disabled={!buildId || !hasAnyItem(draft)}
-                        className="lo-button-text flex items-center gap-2"
-                    >
-                        {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
-                        COPY
-                    </button>
-                    <button type="button" onClick={randomize} className="lo-button-text flex items-center gap-2">
-                        <Dices className="h-4 w-4" aria-hidden />
-                        RANDOMIZE
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setDraft(previous => ({ ...EMPTY_DRAFT, buildName: previous.buildName }));
-                            selectSlot("weapon");
-                        }}
-                        disabled={!hasAnyItem(draft)}
-                        className="lo-button-text flex items-center gap-2"
-                    >
-                        <Eraser className="h-4 w-4" aria-hidden />
-                        RESET
-                    </button>
+            {/* bottom bar - version banner, nav and site info folded in
+                here after the removal of the site header and footer */}
+            <div className="absolute inset-x-0 bottom-0 flex h-[75px] flex-col justify-center gap-[4px] border-t border-[#3a3f47]/60 bg-gradient-to-t from-[rgba(6,7,8,0.92)] to-transparent px-[60px] pb-[7px] pt-[9px]">
+                <div className="relative flex items-center">
+                    <div className="flex items-center gap-[56px]">
+                        <button
+                            type="button"
+                            onClick={copyShareLink}
+                            disabled={!buildId || !hasAnyItem(draft)}
+                            className="lo-button-text flex items-center gap-2"
+                        >
+                            {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                            COPY
+                        </button>
+                        <button type="button" onClick={randomize} className="lo-button-text flex items-center gap-2">
+                            <Dices className="h-4 w-4" aria-hidden />
+                            RANDOMIZE
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setDraft(previous => ({ ...EMPTY_DRAFT, buildName: previous.buildName }));
+                                selectSlot("weapon");
+                            }}
+                            disabled={!hasAnyItem(draft)}
+                            className="lo-button-text flex items-center gap-2"
+                        >
+                            <Eraser className="h-4 w-4" aria-hidden />
+                            RESET
+                        </button>
+                    </div>
+                    <p className="mk-version-label absolute left-1/2 -translate-x-1/2">{VERSION_LABEL}</p>
+                    <div className="ml-auto flex items-center gap-[40px]">
+                        <button
+                            type="button"
+                            onClick={() => setImportOpen(true)}
+                            className="lo-button-text flex items-center gap-2"
+                        >
+                            <Link2 className="h-4 w-4" aria-hidden />
+                            IMPORT
+                        </button>
+                        <Link href="/database" className="lo-button-text flex items-center gap-2">
+                            <Database className="h-4 w-4" aria-hidden />
+                            DATABASE
+                        </Link>
+                        <Link href="/" className="lo-button-text flex items-center gap-2">
+                            <Home className="h-4 w-4" aria-hidden />
+                            MENU
+                        </Link>
+                    </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => setImportOpen(true)}
-                    className="lo-button-text ml-auto flex items-center gap-2"
-                >
-                    <Link2 className="h-4 w-4" aria-hidden />
-                    IMPORT
-                </button>
+                <SiteInfoCompact />
             </div>
 
             {/* picker overlay */}
