@@ -7,7 +7,6 @@
  */
 
 import { useState } from "react";
-import { cellTypeIcon } from "@/lib/site";
 
 /* ------------------------------------------------------------------ */
 /* Diamonds & flourishes                                               */
@@ -36,8 +35,56 @@ export const FlourishHeader = ({ title, className = "" }: { title: string; class
 /* Winged crest emblem                                                 */
 /* ------------------------------------------------------------------ */
 
+const GoldGradient = ({ id }: { id: string }) => (
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#f0c25e" />
+        <stop offset="55%" stopColor="#e0a33e" />
+        <stop offset="100%" stopColor="#b07c33" />
+    </linearGradient>
+);
+
+const ShieldGradient = ({ id }: { id: string }) => (
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#a83232" />
+        <stop offset="100%" stopColor="#5d161a" />
+    </linearGradient>
+);
+
+const Wing = ({ side }: { side: "l" | "r" }) => {
+    const flip = side === "l";
+    return (
+        <g transform={flip ? "translate(200,0) scale(-1,1)" : undefined}>
+            {/* three layered feathers */}
+            <path
+                d="M100 62 C 64 30, 30 22, 6 30 C 26 40, 34 48, 38 56 C 22 56, 12 60, 4 66 C 26 70, 36 74, 44 80 C 30 84, 22 90, 16 98 C 42 96, 58 90, 68 84 Z"
+                fill="url(#crest-gold)"
+                stroke="#8a6428"
+                strokeWidth="1.2"
+            />
+            <path
+                d="M100 66 C 72 44, 48 40, 28 46 C 44 54, 52 60, 58 68 C 46 70, 38 74, 32 80 C 52 80, 66 78, 76 76 Z"
+                fill="url(#crest-gold-soft)"
+                opacity="0.92"
+            />
+        </g>
+    );
+};
+
+const Star = ({ x, y, size, fill = "#f0c25e" }: { x: number; y: number; size: number; fill?: string }) => {
+    const pts = Array.from({ length: 10 }, (_, i) => {
+        const r = i % 2 === 0 ? size : size * 0.42;
+        const a = (Math.PI / 5) * i - Math.PI / 2;
+        return `${(x + r * Math.cos(a)).toFixed(2)},${(y + r * Math.sin(a)).toFixed(2)}`;
+    }).join(" ");
+    return <polygon points={pts} fill={fill} stroke="#8a6428" strokeWidth="0.6" />;
+};
+
+/**
+ * The winged crest from the Awakening loadout header: spread gold wings,
+ * maroon heraldic shield, star on top and a three-star rank banner.
+ */
 export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Loadout Crest" width="180" src="/assets/awakening-ui/loadout/loadoutlevel10.png">
+    <img alt="Loadout Crest" width="180" src="assets/awakening-ui/loadout/loadoutlevel10.png">
     </img>
 );
 
@@ -58,23 +105,8 @@ export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; clas
 /* ------------------------------------------------------------------ */
 
 /** White hexagonal ring used for cell slots (filled & empty states). */
-export const CellHexIcon = ({
-    size = 36,
-    slot,
-    dim = false,
-}: {
-    size?: number;
-    slot?: string | null;
-    dim?: boolean;
-}) => (
-    <img
-        alt={slot ? `${slot} Cell` : "Cell Slot"}
-        width={size}
-        height={size}
-        src={cellTypeIcon(slot)}
-        className={`object-contain ${dim ? "opacity-40" : ""}`}
-        style={{ width: `${size}px`, height: `${size}px` }}
-    />
+export const CellHexIcon = ({ size = 56, dim = false }: { size?: number; dim?: boolean }) => (
+    <img alt="Weapon Level" width="20" height="20" src="/assets/icons/perks/NoCell.png"></img>
 );
 
 /* ------------------------------------------------------------------ */
@@ -153,10 +185,10 @@ export const CornerFrame = ({ size = 22, color = "#c8955a" }: { size?: number; c
 
 export const ShowcaseCorners = () => (
     <>
-        <span className="absolute left-[4px] top-[4px]"><CornerFrame /></span>
-        <span className="absolute right-[4px] top-[4px] rotate-90"><CornerFrame /></span>
-        <span className="absolute right-[4px] bottom-[4px] rotate-180"><CornerFrame /></span>
-        <span className="absolute left-[4px] bottom-[4px] -rotate-90"><CornerFrame /></span>
+        <span className="absolute left-[6px] top-[6px]"><CornerFrame /></span>
+        <span className="absolute right-[6px] top-[6px] rotate-90"><CornerFrame /></span>
+        <span className="absolute right-[6px] bottom-[6px] rotate-180"><CornerFrame /></span>
+        <span className="absolute left-[6px] bottom-[6px] -rotate-90"><CornerFrame /></span>
     </>
 );
 

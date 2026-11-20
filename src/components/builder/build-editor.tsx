@@ -331,7 +331,7 @@ const SurgedToggle = ({
 /** Gold-framed section icon used in every card title for a cohesive look. */
 const SectionIcon = ({ icon: Icon }: { icon: typeof Sword }) => (
     <span
-        className="flex h-6 w-6 shrink-0 rotate-45 items-center justify-center rounded-[5px] border border-primary/40 bg-primary/12 text-primary shadow-[0_0_10px_rgba(91,163,255,0.2)]"
+        className="flex h-6 w-6 shrink-0 rotate-45 items-center justify-center rounded-[5px] border border-primary/40 bg-primary/12 text-primary shadow-[0_0_10px_oklch(0.82_0.135_85/0.2)]"
         aria-hidden
     >
         <Icon className="h-3.5 w-3.5 -rotate-45" />
@@ -346,7 +346,7 @@ const CellFillDots = ({ filled }: { filled: number }) => (
                 key={index}
                 className={`h-1.5 w-4 rounded-full transition-colors duration-300 ${
                     index < filled
-                        ? "bg-primary shadow-[0_0_6px_rgba(91,163,255,0.6)]"
+                        ? "bg-primary shadow-[0_0_6px_oklch(0.82_0.135_85/0.6)]"
                         : "bg-muted-foreground/25"
                 }`}
             />

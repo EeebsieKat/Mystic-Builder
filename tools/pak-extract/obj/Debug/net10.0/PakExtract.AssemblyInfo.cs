@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PakExtract")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0536d14e5b8ed145dd81e1b112cf36a2ad80446c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a71495eff091866a2cfba2503974b268abe96bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("PakExtract")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PakExtract")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

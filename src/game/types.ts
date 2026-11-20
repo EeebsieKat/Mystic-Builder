@@ -89,11 +89,6 @@ export interface Lantern {
     cells: CellType | CellType[] | null;
     perks?: PerkValue[];
     unique_effects?: { name?: string; description: string }[];
-    lantern_ability?: {
-        hold?: string | null;
-        instant?: string | null;
-    };
-    values?: Record<string, string | number>;
 }
 
 export interface Omnicell {
@@ -102,9 +97,7 @@ export interface Omnicell {
     icon: string;
     ability_icon?: string;
     active?: string;
-    active_values?: Record<string, string | number>;
     passive?: string;
-    passive_values?: Record<string, string | number>;
     unique_effects?: { name?: string; description: string; values?: Record<string, string | number>; powerSurged?: boolean }[];
 }
 
@@ -155,19 +148,7 @@ export interface GameData {
         repeater: RepeaterParts;
         warpike: RegularWeaponParts;
     };
-    perks: {
-        [name: string]: {
-            name: string;
-            description: string;
-            type: CellType;
-            effects?: {
-                [rank: string]: {
-                    description: string;
-                    values?: Record<string, string | number>;
-                };
-            };
-        };
-    };
+    perks: { [name: string]: { name: string; description: string; type: CellType } };
     weapons: { [name: string]: Weapon };
 }
 

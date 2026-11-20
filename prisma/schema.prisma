@@ -30,26 +30,3 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-model BuildLike {
-  id          String   @id @default(cuid())
-  buildId     String
-  clientId    String
-  fingerprint String
-  ip          String?
-  userAgent   String?
-  createdAt   DateTime @default(now())
-
-  @@unique([buildId, fingerprint])
-  @@index([buildId])
-  @@index([clientId])
-  @@index([fingerprint])
-  @@index([ip])
-}
-
-model BuildStat {
-  buildId   String   @id
-  likes     Int      @default(0)
-  views     Int      @default(0)
-  updatedAt DateTime @updatedAt
-}

@@ -1,37 +1,25 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CellChip, CellDot, ElementChip, PerkChip, PerkList } from "@/components/chips";
+import { CellChip, CellDot, ElementChip, PerkChip } from "@/components/chips";
 import { Separator } from "@/components/ui/separator";
 import type { BuildView, CellSlotView, ArmourPieceView } from "@/game/build-view";
 import { cellTypeLabel, elementColor } from "@/lib/site";
 
-const CellChips = ({ cells }: { cells: CellSlotView[] }) => {
-    const map = new Map<string, { slot: string | null; cellName: string; count: number }>();
-    for (const cell of cells) {
-        if (!cell.cellName) continue;
-        const name = cell.perks.map(perk => `${perk.name} ${perk.value}`).join(" / ") || cell.cellName;
-        const key = `${cell.slot}__${name}`;
-        const existing = map.get(key);
-        if (existing) {
-            existing.count += 1;
-        } else {
-            map.set(key, { slot: cell.slot, cellName: name, count: 1 });
-        }
-    }
-    const grouped = Array.from(map.values());
-    return (
-        <div className="flex flex-wrap gap-1.5">
-            {grouped.map((cell, index) => (
+const CellChips = ({ cells }: { cells: CellSlotView[] }) => (
+    <div className="flex flex-wrap gap-1.5">
+        {cells
+            .filter(cell => cell.cellName !== null)
+            .map((cell, index) => (
                 <CellChip
                     key={index}
                     slot={cell.slot}
-                    cellName={cell.cellName}
-                    count={cell.count}
+                    cellName={
+                        cell.perks.map(perk => `${perk.name} ${perk.value}`).join(" / ") || cell.cellName
+                    }
                 />
             ))}
-        </div>
-    );
-};
+    </div>
+);
 
 const PieceCard = ({
     label,
@@ -60,7 +48,7 @@ const PieceCard = ({
         <Card className="group">
             <CardContent className="flex flex-col gap-2 p-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_rgba(91,163,255,0.25)]">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 p-1 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-[0_0_14px_oklch(0.82_0.135_85/0.25)]">
                         <Image
                             src={piece.icon}
                             alt={piece.name}
@@ -77,7 +65,13 @@ const PieceCard = ({
                         <p className="truncate text-sm font-semibold">{piece.name}</p>
                     </div>
                 </div>
-                <PerkList perks={piece.perks} />
+                {piece.perks.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                        {piece.perks.map((perk, index) => (
+                            <PerkChip key={index} name={perk.name} value={perk.value} />
+                        ))}
+                    </div>
+                ) : null}
                 <CellChips cells={piece.cells} />
             </CardContent>
         </Card>
