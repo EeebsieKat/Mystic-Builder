@@ -52,3 +52,10 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Local tools & patches
+tools/**/obj/
+tools/**/bin/
+*.patch
+*.db
+notes.md

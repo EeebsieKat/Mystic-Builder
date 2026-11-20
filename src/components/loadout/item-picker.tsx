@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 import { ConsumableGlyph, DiamondPip, ItemIcon } from "./decor";
+import { getTextGlowStyle } from "@/lib/site";
 
 export interface PickerItem {
     value: string;
@@ -21,6 +22,7 @@ export interface PickerItem {
     meta?: string;
     description?: string;
     consumableType?: "flask" | "tonic" | "pylon";
+    color?: string;
 }
 
 export interface ItemPickerProps {
@@ -248,8 +250,12 @@ export const ItemPickerOverlay = ({
                                             ) : (
                                                 <ItemIcon icon={item.icon} alt={item.label} size={78} />
                                             )}
-                                            <span className="flex w-full flex-col gap-[2px]">
-                                                <span className="truncate text-[13.5px] font-semibold text-[#e8e4da]" title={item.label}>
+                                            <span className="flex w-full flex-col gap-[2px] overflow-visible">
+                                                <span
+                                                    className="text-[13.5px] font-semibold overflow-visible"
+                                                    style={item.color ? getTextGlowStyle(item.color) : { color: "#e8e4da" }}
+                                                    title={item.label}
+                                                >
                                                     {item.label}
                                                 </span>
                                                 {item.hint && (

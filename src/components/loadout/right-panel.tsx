@@ -8,7 +8,7 @@
  */
 
 import type { Armour, Cell, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "@/game/types";
-import { cellTypeColor, cellTypeLabel } from "@/lib/site";
+import { cellTypeColor, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
 import { findCellByVariantName } from "@/game/build-model";
 
 import { CellHexIcon, CrestEmblem, DiamondPip, ItemIcon, ShowcaseCorners, ShieldGlyph, SwordGlyph, ConsumableGlyph } from "./decor";
@@ -136,6 +136,7 @@ export const CellSlotBox = ({
 }) => {
     const cell: Cell | null = variantName ? findCellByVariantName(variantName) : null;
     const slotLabel = Array.isArray(allowed) ? allowed.join(" / ") : allowed;
+    const slotType = cell ? cell.slot : (Array.isArray(allowed) ? allowed[0] : allowed);
     const tint = cell ? cellTypeColor(cell.slot) : cellTypeColor(Array.isArray(allowed) ? allowed[0] : allowed);
 
     return (
@@ -154,7 +155,7 @@ export const CellSlotBox = ({
             } ${allowed === null ? "cursor-default opacity-50" : ""}`}
             style={variantName && !selected ? { boxShadow: `inset 0 0 0 1px ${tint}33` } : undefined}
         >
-            <CellHexIcon size={46} dim={!variantName} />
+            <CellHexIcon size={38} slot={slotType} dim={!variantName} />
             <span
                 className={`max-w-[85%] truncate text-center text-[13px] font-semibold tracking-[0.02em] ${
                     variantName ? "text-[#e8e4da]" : "text-[#7c828c]"
@@ -272,7 +273,20 @@ export const ItemDetailPanel = ({
                     fallback={consumable ? <ConsumableGlyph type={consumable.type} size={104} /> : undefined}
                     className="max-h-[130px]"
                 />
-                <span className="lo-serif text-center text-[20px] font-semibold tracking-[0.06em] text-[#f2efe7]">
+                <span
+                    className="lo-serif text-center text-[20px] font-semibold tracking-[0.06em]"
+                    style={getTextGlowStyle(
+                        data.weapon?.elemental
+                            ? elementColor(data.weapon.elemental)
+                            : data.armour?.strength
+                              ? elementColor(data.armour.strength)
+                              : data.lantern
+                                ? "#e0a33e"
+                                : data.omnicell
+                                  ? "#c58bea"
+                                  : "#f2efe7",
+                    )}
+                >
                     {data.name}
                 </span>
                 <DiamondPip size={7} color="#c8955a" />
