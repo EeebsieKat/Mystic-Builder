@@ -14,7 +14,9 @@ import { useToast } from "@/hooks/use-toast";
 import { gameData } from "@/game/data";
 import {
     BuildModel,
+    dedicatedCellType,
     doesCellFitIntoSlot,
+    doesCellFitIntoDedicatedSlot,
     findArmourByName,
     findCellByVariantName,
     findLanternByName,
@@ -333,10 +335,11 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     }
                 }
                 const allowed = nextWeapon?.cells ?? null;
-                if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
+                // Each weapon socket is dedicated to one cell type.
+                if (!doesCellFitIntoDedicatedSlot(allowed, 0, next.weaponCell1)) {
                     next.weaponCell1 = null;
                 }
-                if (!doesCellFitIntoSlot(allowed, next.weaponCell2)) {
+                if (!doesCellFitIntoDedicatedSlot(allowed, 1, next.weaponCell2)) {
                     next.weaponCell2 = null;
                 }
             }
@@ -382,14 +385,14 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
         } as const)[weapon.type];
         const category = gameData.parts[partsKey] as unknown as Record<string, Record<string, Part>>;
 
-        const pickFittingCell = (allowed: CellType | CellType[] | null): string | null => {
+        const pickFittingCell = (allowed: CellType | CellType[] | null, socketIndex = 0): string | null => {
             if (allowed === null) {
                 return null;
             }
             const fitting: string[] = [];
             for (const cell of Object.values(gameData.cells)) {
                 for (const variantName of Object.keys(cell.variants)) {
-                    if (doesCellFitIntoSlot(allowed, variantName)) {
+                    if (doesCellFitIntoDedicatedSlot(allowed, socketIndex, variantName)) {
                         fitting.push(variantName);
                     }
                 }
@@ -440,8 +443,8 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                         : null,
             weaponPart3: weapon.type === "Repeater" && category?.mods ? randomOf(Object.keys(category.mods)) : null,
             bondWeapon: bondPool.length > 0 && Math.random() < 0.3 ? randomOf(bondPool).name : null,
-            weaponCell1: pickFittingCell(weapon.cells),
-            weaponCell2: pickFittingCell(weapon.cells),
+            weaponCell1: pickFittingCell(weapon.cells, 0),
+            weaponCell2: pickFittingCell(weapon.cells, 1),
             headName: head.name,
             headSurged: Math.random() >= 0.5,
             headCell: pickFittingCell(head.cells),
@@ -705,8 +708,8 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             const cellSlots = weapon?.cells
                 ? Array.isArray(weapon.cells)
                     ? [
-                        { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells as CellType[] },
-                        { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: weapon.cells as CellType[] },
+                        { key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells[0] as CellType },
+                        { key: "weaponCell2" as CellSlotKey, variantName: draft.weaponCell2, allowed: (weapon.cells[1] ?? weapon.cells[0]) as CellType },
                     ]
                     : [{ key: "weaponCell1" as CellSlotKey, variantName: draft.weaponCell1, allowed: weapon.cells }]
                 : [];
@@ -898,10 +901,13 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                         return lantern?.cells ?? null;
                 }
             })();
+            /* Sockets are dedicated: socket 1 -> first cell type, socket 2 -> second. */
+            const socketIndex = target.cellKey === "weaponCell2" ? 1 : 0;
+            const dedicated = dedicatedCellType(allowed, socketIndex);
             const items: PickerItem[] = [];
             for (const cell of Object.values(gameData.cells)) {
                 for (const variantName of Object.keys(cell.variants)) {
-                    if (!doesCellFitIntoSlot(allowed, variantName)) {
+                    if (!doesCellFitIntoDedicatedSlot(allowed, socketIndex, variantName)) {
                         continue;
                     }
                     const perks = Object.entries(cell.variants[variantName].perks);
@@ -917,7 +923,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             }
             items.sort((a, b) => a.group.localeCompare(b.group) || a.label.localeCompare(b.label));
             return {
-                title: "Cells",
+                title: dedicated ? `${dedicated} Cell` : "Cells",
                 items,
                 selected: draft[target.cellKey],
                 apply: (value: string | null) => set(target.cellKey, value),

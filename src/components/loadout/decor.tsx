@@ -46,11 +46,25 @@ export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; cla
 /* ------------------------------------------------------------------ */
 
 export const SwordGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="26" height="26" src="/assets/awakening-ui/loadout/power.png"></img>
+    <img
+        alt="Weapon Level"
+        width={size}
+        height={size}
+        src="/assets/awakening-ui/loadout/power.png"
+        className={`object-contain ${className}`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+    />
 );
 
 export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="26" height="26" src="/assets/awakening-ui/loadout/resistance.png"></img>
+    <img
+        alt="Resistance Level"
+        width={size}
+        height={size}
+        src="/assets/awakening-ui/loadout/resistance.png"
+        className={`object-contain ${className}`}
+        style={{ width: `${size}px`, height: `${size}px` }}
+    />
 );
 
 /* ------------------------------------------------------------------ */

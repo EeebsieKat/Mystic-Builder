@@ -31,15 +31,15 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
             {/* Soft dark halo behind Power glyph */}
             <span
                 aria-hidden
-                className="pointer-events-none absolute -left-[36px] -top-[9px] z-10 h-[64px] w-[64px] rounded-full blur-md"
+                className="pointer-events-none absolute -left-[40px] -top-[14px] z-10 h-[76px] w-[76px] rounded-full blur-md"
                 style={{
                     background:
                         "radial-gradient(circle at center, rgba(9, 12, 17, 0.92) 0%, rgba(9, 12, 17, 0.65) 55%, rgba(9, 12, 17, 0) 78%)",
                 }}
             />
 
-            <span className="pointer-events-none absolute -left-[26px] top-[0px] z-20 flex h-[42px] w-[42px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                <SwordGlyph size={38} />
+            <span className="pointer-events-none absolute -left-[28px] top-[-2px] z-20 flex h-[50px] w-[50px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                <SwordGlyph size={46} />
             </span>
 
             {/* Soft dark halo behind Power readout */}
@@ -53,9 +53,9 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
             />
 
             <span
-                className="pointer-events-none absolute inset-0 z-20 flex -translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
+                className="pointer-events-none absolute inset-0 z-20 flex -translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/55 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.30)), url(/assets/awakening-ui/text-gradients/damage_wound.png)`,
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), url(/assets/awakening-ui/text-gradients/damage_wound.png)`,
                 }}
             >
                 {power}
@@ -73,15 +73,15 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
             {/* Soft dark halo behind Resistance glyph */}
             <span
                 aria-hidden
-                className="pointer-events-none absolute -right-[36px] -top-[9px] z-10 h-[64px] w-[64px] rounded-full blur-md"
+                className="pointer-events-none absolute -right-[40px] -top-[14px] z-10 h-[76px] w-[76px] rounded-full blur-md"
                 style={{
                     background:
                         "radial-gradient(circle at center, rgba(9, 12, 17, 0.92) 0%, rgba(9, 12, 17, 0.65) 55%, rgba(9, 12, 17, 0) 78%)",
                 }}
             />
 
-            <span className="pointer-events-none absolute -right-[26px] top-[0px] z-20 flex h-[42px] w-[42px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                <ShieldGlyph size={38} />
+            <span className="pointer-events-none absolute -right-[28px] top-[-2px] z-20 flex h-[50px] w-[50px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                <ShieldGlyph size={46} />
             </span>
 
             {/* Soft dark halo behind Resistance readout */}
@@ -95,9 +95,9 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
             />
 
             <span
-                className="pointer-events-none absolute inset-0 z-20 flex translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
+                className="pointer-events-none absolute inset-0 z-20 flex translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/55 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.30)), url(/assets/awakening-ui/text-gradients/damage_stagger.png)`,
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)), url(/assets/awakening-ui/text-gradients/damage_stagger.png)`,
                 }}
             >
                 {resistance}

@@ -41,6 +41,8 @@ import { gameData } from "@/game/data";
 import {
     BuildModel,
     doesCellFitIntoSlot,
+    doesCellFitIntoDedicatedSlot,
+    dedicatedCellType,
     findArmourByName,
     findCellByVariantName,
     findLanternByName,
@@ -199,11 +201,12 @@ const omnicellOptions: SelectOption[] = Object.values(gameData.omnicells)
         icon: omnicell.icon,
     }));
 
-const cellVariantOptions = (allowed: CellType | CellType[] | null): SelectOption[] => {
+const cellVariantOptions = (allowed: CellType | CellType[] | null, socketIndex = 0): SelectOption[] => {
     const result: SelectOption[] = [];
     for (const cell of Object.values(gameData.cells)) {
         for (const variantName of Object.keys(cell.variants)) {
-            if (!doesCellFitIntoSlot(allowed, variantName)) {
+            // Sockets are dedicated: socket 0 -> first type, socket 1 -> second.
+            if (!doesCellFitIntoDedicatedSlot(allowed, socketIndex, variantName)) {
                 continue;
             }
             const perks = Object.entries(cell.variants[variantName].perks).map(([name, value]) => ({
@@ -287,8 +290,16 @@ const CellSlotRow = ({
     onChange: (value: string | null) => void;
     disabled?: boolean;
 }) => {
-    const options = useMemo(() => cellVariantOptions(allowed), [allowed]);
-    const slotLabel = allowed === null ? "No cell slot" : (Array.isArray(allowed) ? allowed.join(" / ") : allowed);
+    const options = useMemo(() => cellVariantOptions(allowed, index - 1), [allowed, index]);
+    const dedicated = dedicatedCellType(allowed, index - 1);
+    const slotLabel =
+        allowed === null
+            ? "No cell slot"
+            : dedicated
+                ? dedicated
+                : Array.isArray(allowed)
+                    ? allowed.join(" / ")
+                    : allowed;
     const cell = value ? findCellByVariantName(value) : null;
 
     return (
@@ -427,10 +438,11 @@ const BuildEditor = () => {
                     }
                 }
                 const allowed = nextWeapon?.cells ?? null;
-                if (!doesCellFitIntoSlot(allowed, next.weaponCell1)) {
+                // Each weapon socket is dedicated to one cell type.
+                if (!doesCellFitIntoDedicatedSlot(allowed, 0, next.weaponCell1)) {
                     next.weaponCell1 = null;
                 }
-                if (!doesCellFitIntoSlot(allowed, next.weaponCell2)) {
+                if (!doesCellFitIntoDedicatedSlot(allowed, 1, next.weaponCell2)) {
                     next.weaponCell2 = null;
                 }
             }
@@ -465,14 +477,14 @@ const BuildEditor = () => {
             ? (gameData.parts[partsKey] as unknown as Record<string, Record<string, Part>>)
             : null;
 
-        const pickFittingCell = (allowed: CellType | CellType[] | null): string | null => {
+        const pickFittingCell = (allowed: CellType | CellType[] | null, socketIndex = 0): string | null => {
             if (allowed === null) {
                 return null;
             }
             const fitting: string[] = [];
             for (const cell of Object.values(gameData.cells)) {
                 for (const variantName of Object.keys(cell.variants)) {
-                    if (doesCellFitIntoSlot(allowed, variantName)) {
+                    if (doesCellFitIntoDedicatedSlot(allowed, socketIndex, variantName)) {
                         fitting.push(variantName);
                     }
                 }
@@ -506,8 +518,8 @@ const BuildEditor = () => {
             weaponPart3:
                 weapon.type === "Repeater" && category?.mods ? randomOf(Object.keys(category.mods)) : null,
             bondWeapon: bondPool.length > 0 && Math.random() < 0.3 ? randomOf(bondPool).value : null,
-            weaponCell1: pickFittingCell(weapon.cells),
-            weaponCell2: pickFittingCell(weapon.cells),
+            weaponCell1: pickFittingCell(weapon.cells, 0),
+            weaponCell2: pickFittingCell(weapon.cells, 1),
             headName: head.name,
             headSurged: Math.random() >= 0.5,
             headCell: pickFittingCell(head.cells),

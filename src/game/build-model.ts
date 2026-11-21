@@ -395,3 +395,48 @@ export const doesCellFitIntoSlot = (
     const cell = findCellByVariantName(variantName);
     return cell !== null && slots.includes(cell.slot);
 };
+
+/**
+ * Dedicated cell type for one physical socket of a gear piece.
+ * Each socket is locked to a single cell type: socket 0 uses the first type
+ * in the piece's cell list, socket 1 the second. Prismatic sockets accept
+ * any cell type (returns null = unrestricted).
+ */
+export const dedicatedCellType = (
+    cellSlot: CellType | CellType[] | null,
+    socketIndex: number,
+): CellType | null => {
+    if (cellSlot === null) {
+        return null;
+    }
+    if (Array.isArray(cellSlot)) {
+        const type = cellSlot[socketIndex] ?? cellSlot[0] ?? null;
+        return type === "Prismatic" ? null : type;
+    }
+    return cellSlot === "Prismatic" ? null : cellSlot;
+};
+
+/**
+ * Like doesCellFitIntoSlot, but locked to the dedicated type of a single
+ * socket. A slot never accepts two cell types: with a ["Finesse","Fortitude"]
+ * weapon, socket 0 only takes Finesse cells and socket 1 only Fortitude cells.
+ */
+export const doesCellFitIntoDedicatedSlot = (
+    cellSlot: CellType | CellType[] | null,
+    socketIndex: number,
+    variantName: string | null,
+): boolean => {
+    if (cellSlot === null) {
+        return variantName === null;
+    }
+    if (variantName === null) {
+        return true;
+    }
+    const dedicated = dedicatedCellType(cellSlot, socketIndex);
+    if (dedicated === null) {
+        // Prismatic socket: any cell type fits.
+        return doesCellFitIntoSlot(cellSlot, variantName);
+    }
+    const cell = findCellByVariantName(variantName);
+    return cell !== null && cell.slot === dedicated;
+};
