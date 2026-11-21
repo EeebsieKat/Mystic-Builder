@@ -7,7 +7,6 @@ import {
     FileText,
     Github,
     Globe,
-    Layers,
     Palette,
     Scale,
     ShieldAlert,
@@ -49,84 +48,6 @@ const LICENSES = [
             "Raw game dataset (weapons, armours, cells, perks, unique effects) and legacy calculation models are adapted from the open-source dauntless-builder-reforged project created by Christopher Kaster (atomicptr).",
         url: "https://github.com/atomicptr/dauntless-builder-reforged",
         badge: "AGPL-3.0 / Public Domain",
-    },
-];
-
-const SERVICES_AND_TECH = [
-    {
-        category: "Cloud & Deployment",
-        items: [
-            {
-                name: "GitHub",
-                description: "Source code repository hosting, version control, and collaborative development.",
-                url: "https://github.com/EeebsieKat/Mystic-Builder",
-                license: "Service",
-            },
-            {
-                name: "Netlify",
-                description: "Global edge CDN deployment, serverless functions, and Netlify Blobs for dynamic Open Graph social cards.",
-                url: "https://www.netlify.com",
-                license: "Service",
-            },
-            {
-                name: "SQLite",
-                description: "Self-contained, serverless embedded database engine for build persistence and view counters.",
-                url: "https://www.sqlite.org",
-                license: "Public Domain",
-            },
-        ],
-    },
-    {
-        category: "Frontend Framework & Libraries",
-        items: [
-            {
-                name: "Next.js 16 & React 19",
-                description: "Full-stack React framework utilizing the modern App Router, React Server Components, and streaming.",
-                url: "https://nextjs.org",
-                license: "MIT License",
-            },
-            {
-                name: "Tailwind CSS 4",
-                description: "Utility-first CSS framework providing modern color spaces (OKLCH), layout composition, and responsive styling.",
-                url: "https://tailwindcss.com",
-                license: "MIT License",
-            },
-            {
-                name: "shadcn/ui & Radix UI",
-                description: "Accessible, unstyled UI primitives powering modals, tabs, dialogs, drawers, and input controls.",
-                url: "https://ui.shadcn.com",
-                license: "MIT License",
-            },
-            {
-                name: "Prisma ORM",
-                description: "Next-generation TypeScript ORM used for type-safe database migrations and SQLite querying.",
-                url: "https://www.prisma.io",
-                license: "Apache 2.0",
-            },
-            {
-                name: "Lucide Icons",
-                description: "Beautiful and consistent open-source iconography used throughout the interface.",
-                url: "https://lucide.dev",
-                license: "ISC License",
-            },
-        ],
-    },
-    {
-        category: "Game Assets & Extraction Tools",
-        items: [
-            {
-                name: "CUE4Parse",
-                description: "High-performance .NET Unreal Engine 4 package parser used in tools/pak-extract to parse game PAK files and extract consumable icons.",
-                url: "https://github.com/FabianFG/CUE4Parse",
-                license: "Apache 2.0",
-            },
-            {
-                name: "Google Fonts (Cinzel & Source Sans 3)",
-                description: "Trajan-style classical serif for Awakening loadout titles alongside clean sans-serif for numbers and descriptions.",
-                url: "https://fonts.google.com",
-                license: "SIL Open Font License",
-            },
-        ],
     },
 ];
 
@@ -224,59 +145,6 @@ export default function AboutPage() {
                                         </a>
                                     </CardContent>
                                 </Card>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Services & Technology Stack */}
-                    <div className="flex flex-col gap-6">
-                        <div className="flex items-center gap-2">
-                            <Layers className="h-5 w-5 text-primary" />
-                            <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                                Services & Technology Stack
-                            </h2>
-                        </div>
-
-                        <div className="flex flex-col gap-8">
-                            {SERVICES_AND_TECH.map(section => (
-                                <div key={section.category} className="flex flex-col gap-3">
-                                    <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                                        {section.category}
-                                    </h3>
-                                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                        {section.items.map(item => (
-                                            <div
-                                                key={item.name}
-                                                className="flex flex-col justify-between rounded-xl border border-border/60 bg-muted/15 p-4 transition-colors hover:border-primary/40 hover:bg-muted/25"
-                                            >
-                                                <div className="flex flex-col gap-1.5">
-                                                    <div className="flex items-center justify-between gap-2">
-                                                        <span className="font-semibold text-sm text-foreground">
-                                                            {item.name}
-                                                        </span>
-                                                        <span className="rounded-md border border-border/60 bg-background/50 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                                                            {item.license}
-                                                        </span>
-                                                    </div>
-                                                    <p className="text-xs leading-relaxed text-muted-foreground">
-                                                        {item.description}
-                                                    </p>
-                                                </div>
-                                                <div className="pt-3">
-                                                    <a
-                                                        href={item.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-                                                    >
-                                                        Official Website
-                                                        <ExternalLink className="h-3 w-3 opacity-70" />
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
                             ))}
                         </div>
                     </div>

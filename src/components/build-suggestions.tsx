@@ -91,9 +91,6 @@ const CATEGORY_ORDER = [
     "Bastion",
     "Artificer",
     "Iceborne",
-    "Escalations",
-    "Exotics",
-    "Catalyst",
 ];
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -103,9 +100,6 @@ const CATEGORY_ICONS: Record<string, string> = {
     Bastion: "/assets/icons/omnicells/Bastion.png",
     Artificer: "/assets/icons/omnicells/Artificer.png",
     Iceborne: "/assets/icons/omnicells/Iceborne.png",
-    Escalations: "/assets/icons/generic/Weapon.png",
-    Exotics: "/assets/icons/generic/nope.png",
-    Catalyst: "/assets/icons/perks/Insight.png",
 };
 
 const ELEMENT_CONFIGS: { element: string; label: string; icon: string; color: string }[] = [
@@ -823,7 +817,11 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
             });
         }
     }, [likedBuilds]);
-    const allBuilds = metaBuildsData.builds as IndexedMetaBuild[];
+    const allBuilds = useMemo(() => {
+        return (metaBuildsData.builds as IndexedMetaBuild[]).filter(
+            b => CATEGORY_ORDER.includes(b.category) && Boolean(b.weaponName),
+        );
+    }, []);
     const categoryDescriptions = metaBuildsData.categories as { name: string; description: string }[];
 
     const [inspectingBuild, setInspectingBuild] = useState<IndexedMetaBuild | null>(null);
@@ -871,8 +869,8 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
     const currentCategoryInfo = useMemo(() => {
         if (selectedCategory === "all") {
             return {
-                name: "All Archetypes",
-                description: "Displaying top meta builds across all combat archetypes and omnicells.",
+                name: "All Omnicells",
+                description: "Displaying top meta builds across all omnicell archetypes.",
             };
         }
         return (
@@ -1060,17 +1058,12 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                         <p className="max-w-md text-sm text-[#b8c7db] leading-relaxed mb-6">
                             You haven't liked any builds yet. Click the heart icon on any build card while exploring to save it to your personal liked collection.
                         </p>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setShowLikedOnly(false);
-                                window.history.replaceState(null, "", "/?tab=suggestions");
-                            }}
+                        <Link
+                            href="/?tab=suggestions"
                             className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-all cursor-pointer"
                         >
-                            <Sparkles className="h-4 w-4" />
                             <span>Browse Suggestions</span>
-                        </button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6">
@@ -1173,10 +1166,10 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                             </div>
                         </div>
 
-                        {/* 2. Category / Omnicell Navigation */}
+                        {/* 2. Omnicell Navigation */}
                         <div className="flex flex-col gap-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-[#d6e0ee]">
-                                Archetype / Omnicell Category
+                                Omnicell
                             </span>
                             <div className="flex flex-wrap items-center gap-2">
                                 <button
@@ -1190,7 +1183,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                             : "border-[var(--line-2)] bg-[rgba(10,19,32,0.65)] text-[#e2e8f0] hover:border-primary/60 hover:text-white hover:bg-[rgba(15,26,44,0.85)] shadow-xs"
                                         }`}
                                 >
-                                    <span>All Archetypes</span>
+                                    <span>All Omnicells</span>
                                     <span
                                         className={`rounded-full px-1.5 py-0.1 text-[10px] ${selectedCategory === "all"
                                                 ? "bg-primary/30 text-primary font-bold"

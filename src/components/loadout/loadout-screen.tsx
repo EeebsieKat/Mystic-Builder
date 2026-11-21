@@ -947,8 +947,8 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                         part.description ??
                         (Array.isArray(part.part_effect)
                             ? part.part_effect
-                                  .map((effect: string) => interpolate(effect, part.values))
-                                  .join(" ")
+                                .map((effect: string) => interpolate(effect, part.values))
+                                .join(" ")
                             : "");
                     return {
                         value: part.name,
@@ -1237,7 +1237,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                                     setImportOpen(false);
                                 }
                             }}
-                            placeholder="https://dauntlessbuilderembeds.netlify.app/b/…"
+                            placeholder="https://builder.mysticparadox.com/b/…"
                             className="lo-card mt-5 h-[46px] w-full px-4 text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
                             aria-label="Build link or id"
                         />
