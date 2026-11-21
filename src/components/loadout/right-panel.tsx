@@ -3,8 +3,7 @@
 /**
  * Right panel of the Awakening loadout screen: the winged crest header with
  * power/resistance plaques, plus the contextual panel - PERK SUMMARY when
- * nothing is selected, or the item showcase + cell slots + dye & transmog
- * chrome when a gear card is selected.
+ * nothing is selected, or the item showcase + cell slots when a gear card is selected.
  */
 
 import type { Armour, Cell, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "@/game/types";
@@ -196,27 +195,6 @@ export interface ItemDetailData {
     bond?: { name: string; icon: string } | null;
 }
 
-const DyeTransmogChrome = () => (
-    <div className="flex flex-col gap-[10px]" aria-hidden>
-        <button
-            type="button"
-            disabled
-            title="Dye & transmog arrive in a later update."
-            className="lo-card flex h-[46px] w-full cursor-not-allowed items-center justify-center gap-2 opacity-60"
-        >
-            <span className="lo-serif text-[15px] tracking-[0.22em] text-[#dcd8cc]">DYE &amp; TRANSMOG</span>
-        </button>
-        <label className="flex h-[38px] w-full cursor-not-allowed items-center justify-center gap-2 opacity-60" title="Coming later.">
-            <span className="flex h-[17px] w-[17px] items-center justify-center border border-[#c8cdd6]">
-                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
-                    <path d="M2 6 L5 9 L10 3" fill="none" stroke="#9fd8cb" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-            </span>
-            <span className="lo-serif text-[13px] tracking-[0.18em] text-[#dcd8cc]">ENABLE TRANSMOG</span>
-        </label>
-    </div>
-);
-
 const PartSlotRow = ({
     label,
     part,
@@ -270,7 +248,6 @@ export const ItemDetailPanel = ({
     onBondClick: () => void;
 }) => {
     const showCells = cellSlots.length > 0;
-    const showDye = Boolean(data.armour || data.weapon);
     const consumable = data.consumable;
 
     return (
@@ -364,8 +341,6 @@ export const ItemDetailPanel = ({
                     <p className="text-[14.5px] leading-relaxed text-[#cfcfc9]">{consumable.description}</p>
                 </div>
             )}
-
-            {showDye && <DyeTransmogChrome />}
         </div>
     );
 };

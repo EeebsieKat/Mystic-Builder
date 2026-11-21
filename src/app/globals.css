@@ -675,8 +675,8 @@ body::before {
 
 .card-focus-grid:has(> *:hover) > *:not(:hover),
 .card-focus-grid:has(> *:focus-visible) > *:not(:focus-visible) {
-  opacity: 0.42;
-  transform: scale(0.985);
-  filter: brightness(0.88);
+  opacity: 0.70;
+  transform: scale(0.99);
+  filter: brightness(0.94);
 }
 
