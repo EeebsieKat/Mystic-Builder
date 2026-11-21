@@ -8,6 +8,7 @@ import { ViewCounter } from "@/components/view-counter";
 import { LoadoutScreen } from "@/components/loadout/loadout-screen";
 import { buildSummary, buildTitle, parseBuildId } from "@/game/build-view";
 import { elementColor, SITE_NAME } from "@/lib/site";
+import { OG_GOLD } from "@/lib/og-theme";
 
 export const revalidate = 86400;
 
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: BuildPageProps): Promise<Meta
 
     const title = buildTitle(parsed.view);
     const description = buildSummary(parsed.view);
-    const themeColor = parsed.view.weapon ? elementColor(parsed.view.weapon.elemental) : "#f0b232";
+    const themeColor = parsed.view.weapon ? elementColor(parsed.view.weapon.elemental) : OG_GOLD;
 
     return {
         title,

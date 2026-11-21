@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildSummary, buildTitle, parseBuildId } from "@/game/build-view";
-import { elementColor } from "@/lib/site";
+import { elementColor, GAME_EDITION } from "@/lib/site";
+import { OG_GOLD } from "@/lib/og-theme";
 
 export const revalidate = 86400;
 
@@ -23,8 +24,9 @@ export async function GET(_request: Request, { params }: RouteContext) {
         invalidBuild: view.invalid,
         title: buildTitle(view),
         description: buildSummary(view),
-        themeColor: view.weapon ? elementColor(view.weapon.elemental) : "#f0b232",
+        themeColor: view.weapon ? elementColor(view.weapon.elemental) : OG_GOLD,
         gameVersion: view.gameVersion,
+        gameEdition: GAME_EDITION,
         weaponName: view.weapon?.name ?? null,
     });
 }

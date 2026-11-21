@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Loader2, Send } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { SITE_NAME, localBuildPath } from "@/lib/site";
 
@@ -13,11 +13,14 @@ interface PreviewData {
     description?: string;
     themeColor?: string;
     gameVersion?: string;
+    gameEdition?: string;
 }
 
 /**
  * Renders a mock Discord message for a build id, using the same data Discord
- * sees from the /b/<id> Open Graph tags + OG image.
+ * sees from the /b/<id> Open Graph tags + OG image. Discord chrome colors
+ * (#313338 / #2b2d31 / #5865f2 / #00a8fc) are Discord's own, kept faithful
+ * so the mock reads exactly like the real embed.
  */
 const DiscordPreview = ({ buildId }: { buildId: string }) => {
     const [data, setData] = useState<PreviewData | null>(null);
@@ -74,21 +77,33 @@ const DiscordPreview = ({ buildId }: { buildId: string }) => {
     }
 
     const descriptionLines = (data.description ?? "").split("\n").filter(Boolean);
+    const footer = [SITE_NAME, `Dauntless ${data.gameVersion ?? ""}`.trim(), data.gameEdition]
+        .filter(Boolean)
+        .join(" · ");
 
     return (
         <div className="flex gap-3 rounded-lg bg-[#313338] p-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Send className="h-5 w-5" aria-hidden />
+            {/* Bot avatar: the Mystic Paradox mark, like the deployed bot would show */}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#1e293b]">
+                <img
+                    src="/assets/awakening-ui/logo/icon.png"
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 object-cover"
+                />
             </div>
             <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2">
                     <span className="text-sm font-semibold text-white">{SITE_NAME}</span>
-                    <span className="rounded bg-[#5865f2] px-1 text-[10px] font-semibold text-white">APP</span>
+                    <span className="rounded bg-[#5865f2] px-1 text-[10px] font-semibold leading-4 text-white">
+                        APP
+                    </span>
                     <span className="text-[11px] text-[#949ba4]">Today at 4:20 PM</span>
                 </div>
                 <div
-                    className="mt-1 max-w-2xl overflow-hidden rounded border-l-4 bg-[#2b2d31]"
-                    style={{ borderLeftColor: data.themeColor ?? "#f0b232" }}
+                    className="mt-1 max-w-2xl overflow-hidden rounded-lg bg-[#2b2d31]"
+                    style={{ borderLeft: `4px solid ${data.themeColor ?? "#e0c287"}` }}
                 >
                     <div className="px-4 py-3">
                         <Link
@@ -107,11 +122,18 @@ const DiscordPreview = ({ buildId }: { buildId: string }) => {
                         <img
                             src={localBuildPath(buildId) + "/opengraph-image"}
                             alt="Discord embed preview card for this build"
-                            className="mt-3 max-h-64 w-full rounded object-cover object-top"
+                            className="mt-3 w-full rounded-lg"
                             loading="lazy"
                         />
-                        <div className="mt-2 text-[11px] text-[#949ba4]">
-                            {SITE_NAME} - Dauntless {data.gameVersion}
+                        <div className="mt-2 flex items-center gap-1.5 text-[11px] text-[#949ba4]">
+                            <img
+                                src="/assets/awakening-ui/logo/icon.png"
+                                alt=""
+                                width={16}
+                                height={16}
+                                className="h-4 w-4 rounded-sm object-cover"
+                            />
+                            {footer}
                         </div>
                     </div>
                 </div>

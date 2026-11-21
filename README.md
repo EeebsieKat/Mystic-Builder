@@ -72,9 +72,12 @@ The full 1.14.7 item database (231 weapons, 139 armour pieces, 81 cells, 81 perk
 
 ## 7. Dynamic Open Graph / Discord Preview Cards
 - Auto-generated 1200x630 PNG preview for every build link (next/og on the Node runtime, 24h revalidation).
-- Card art mirrors the build: weapon row with element + cell chips, all four armour rows, lantern & omnicell rows, perk chips in cell-type colors, ripped item icons inlined as data URLs, and DejaVu fonts bundled for serverless rendering.
-- Dedicated fallback card for invalid or corrupted build links.
-- Extra /api/builds/[buildId]/preview JSON endpoint (valid, title, description, themeColor, weaponName, gameVersion) powering an in-app mock Discord message preview.
+- Card art is drawn entirely from the Mystic Paradox Launcher Theme design tokens: night-glass `#050a12` backdrop with the aether radial glow and vignette, glass panels (22px radius, hairline border, top sheen), the gold rule divider, and doc-spec chips (tone at 13% fill / 32% border / text mixed 55% with white).
+- Branding strip on every card: ripped Mystic Paradox logo tile, gold "DAUNTLESS · MYSTIC PARADOX 1.14.7" eyebrow, Cinzel-700 headline in near-white with the soft aether glow, and an element-tinted weapon crest.
+- Card art mirrors the build: element / weapon-class / surge / validity chips, four armour rows plus a lantern & omnicell row, perk rows with cell-type colored dots and gold values, ripped item icons inlined as data URLs.
+- Site typography on the card: bundled Cinzel 700 display + Inter 400-700 UI fonts (OFL, via fontsource), matching `--font-display` / `--font-body`.
+- Dedicated fallback card for invalid or corrupted build links, in the same night-glass language.
+- Extra /api/builds/[buildId]/preview JSON endpoint (valid, title, description, themeColor, weaponName, gameVersion, gameEdition) powering an in-app mock Discord message preview with faithful Discord chrome.
 
 ## 8. Build View Counters
 - POST increments and GET reads per-build views, validated against a strict build-id pattern.
