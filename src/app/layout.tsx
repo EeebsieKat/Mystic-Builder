@@ -6,7 +6,6 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
 import NavLinks from "@/components/site-nav-links";
-import { CurvedPageTransition } from "@/components/ui/curved-page-transition";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -86,13 +85,11 @@ export default function RootLayout({
     return (
         <html lang="en" className={`dark ${cinzel.variable} ${inter.variable}`} suppressHydrationWarning>
             <body className="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
-                <CurvedPageTransition>
-                    <Header />
-                    <div className="relative flex flex-1 flex-col">
-                        {children}
-                    </div>
-                    <Toaster />
-                </CurvedPageTransition>
+                <Header />
+                <div className="relative flex flex-1 flex-col">
+                    {children}
+                </div>
+                <Toaster />
             </body>
         </html>
     );

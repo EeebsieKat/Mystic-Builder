@@ -1058,12 +1058,16 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                         <p className="max-w-md text-sm text-[#b8c7db] leading-relaxed mb-6">
                             You haven't liked any builds yet. Click the heart icon on any build card while exploring to save it to your personal liked collection.
                         </p>
-                        <Link
-                            href="/?tab=suggestions"
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowLikedOnly(false);
+                                window.history.replaceState(null, "", "/?tab=suggestions");
+                            }}
                             className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-all cursor-pointer"
                         >
                             <span>Browse Suggestions</span>
-                        </Link>
+                        </button>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6">
