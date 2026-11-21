@@ -15,13 +15,20 @@ export const getSiteUrl = (): string => {
     if (process.env.NEXT_PUBLIC_SITE_URL) {
         return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
     }
+    if (process.env.SITE_URL) {
+        return process.env.SITE_URL.replace(/\/$/, "");
+    }
+    if (process.env.APP_URL) {
+        return process.env.APP_URL.replace(/\/$/, "");
+    }
     if (process.env.URL) {
         return process.env.URL.replace(/\/$/, "");
     }
     if (process.env.DEPLOY_PRIME_URL) {
         return process.env.DEPLOY_PRIME_URL.replace(/\/$/, "");
     }
-    return "http://localhost:3000";
+    const port = process.env.PORT || process.env.SERVER_PORT || "3000";
+    return `http://localhost:${port}`;
 };
 
 /** Extract a raw build id from a pasted URL or a raw id. */
