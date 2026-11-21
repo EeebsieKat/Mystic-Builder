@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/eeebsie/Dauntless/mystic-builder/tools/pak-extract/PakExtract.csproj": {}
+    "/home/eeebsie/Dauntless/Mystic-Builder/tools/pak-extract/PakExtract.csproj": {}
   },
   "projects": {
-    "/home/eeebsie/Dauntless/mystic-builder/tools/pak-extract/PakExtract.csproj": {
+    "/home/eeebsie/Dauntless/Mystic-Builder/tools/pak-extract/PakExtract.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/eeebsie/Dauntless/mystic-builder/tools/pak-extract/PakExtract.csproj",
+        "projectUniqueName": "/home/eeebsie/Dauntless/Mystic-Builder/tools/pak-extract/PakExtract.csproj",
         "projectName": "PakExtract",
-        "projectPath": "/home/eeebsie/Dauntless/mystic-builder/tools/pak-extract/PakExtract.csproj",
+        "projectPath": "/home/eeebsie/Dauntless/Mystic-Builder/tools/pak-extract/PakExtract.csproj",
         "packagesPath": "/home/eeebsie/.nuget/packages/",
-        "outputPath": "/home/eeebsie/Dauntless/mystic-builder/tools/pak-extract/obj/",
+        "outputPath": "/home/eeebsie/Dauntless/Mystic-Builder/tools/pak-extract/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/eeebsie/.nuget/NuGet/NuGet.Config"
