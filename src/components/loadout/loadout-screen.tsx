@@ -1217,8 +1217,9 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     role="dialog"
                     aria-modal="true"
                     aria-label="Import a build"
+                    onPointerDown={() => setImportOpen(false)}
                 >
-                    <div className="lo-panel lo-fade-in w-[640px] p-[28px]">
+                    <div className="lo-panel lo-fade-in w-[640px] p-[28px]" onPointerDown={event => event.stopPropagation()}>
                         <FlourishHeader title="Import Build" />
                         <p className="mt-4 text-[14px] leading-relaxed text-[#9a9a94]">
                             Paste a Mystic Builder link ({"« /b/… »"}) or a raw build id. Links from the original

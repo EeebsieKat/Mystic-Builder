@@ -19,16 +19,44 @@ import type { PerkTotal as ViewPerkTotal } from "@/game/build-view";
 /* ------------------------------------------------------------------ */
 
 export const CrestHeader = ({ power, resistance }: { power: number; resistance: number }) => (
-    <div className="relative flex h-[152px] items-center justify-between" aria-label="Loadout ratings">
+    <div className="relative -mt-3 flex h-[176px] -translate-y-2 items-center justify-between" aria-label="Loadout ratings">
         {/* Power / Weapon Section (Left) */}
         <div className="relative flex h-[133px] w-[214px] items-center justify-center">
-            <img alt="Power Plaque - Weapon" className="w-full h-full object-contain" src="/assets/awakening-ui/loadout/PowerPlaque.png" />
-            <span className="absolute -left-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
-                <SwordGlyph size={26} />
+            <img
+                alt="Power Plaque - Weapon"
+                className="pointer-events-none absolute -left-[310px] top-1/2 z-10 h-[416px] w-[760px] max-w-none -translate-y-[45.5%] object-contain drop-shadow-[0_0_8px_rgba(224,163,62,0.32)]"
+                src="/assets/awakening-ui/loadout/Wing1Gold.png"
+            />
+
+            {/* Soft dark halo behind Power glyph */}
+            <span
+                aria-hidden
+                className="pointer-events-none absolute -left-[36px] -top-[9px] z-10 h-[64px] w-[64px] rounded-full blur-md"
+                style={{
+                    background:
+                        "radial-gradient(circle at center, rgba(9, 12, 17, 0.92) 0%, rgba(9, 12, 17, 0.65) 55%, rgba(9, 12, 17, 0) 78%)",
+                }}
+            />
+
+            <span className="pointer-events-none absolute -left-[26px] top-[0px] z-20 flex h-[42px] w-[42px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                <SwordGlyph size={38} />
             </span>
-            <span 
-                className="absolute inset-0 flex items-center justify-center -translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
-                style={{ backgroundImage: `url(/assets/awakening-ui/text-gradients/damage_wound.png)` }}
+
+            {/* Soft dark halo behind Power readout */}
+            <span
+                aria-hidden
+                className="pointer-events-none absolute z-20 h-[78px] w-[148px] -translate-x-9 -translate-y-2 rounded-full blur-md"
+                style={{
+                    background:
+                        "radial-gradient(ellipse at center, rgba(9, 12, 17, 0.88) 0%, rgba(9, 12, 17, 0.62) 55%, rgba(9, 12, 17, 0) 78%)",
+                }}
+            />
+
+            <span
+                className="pointer-events-none absolute inset-0 z-20 flex -translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.30)), url(/assets/awakening-ui/text-gradients/damage_wound.png)`,
+                }}
             >
                 {power}
             </span>
@@ -36,20 +64,48 @@ export const CrestHeader = ({ power, resistance }: { power: number; resistance: 
 
         {/* Armor / Resistance Section (Right) */}
         <div className="relative flex h-[133px] w-[214px] items-center justify-center">
-            <img alt="Power Plaque - Armor" className="w-full h-full object-contain scale-x-[-1]" src="/assets/awakening-ui/loadout/PowerPlaque.png" />
-            <span className="absolute -right-[8px] -top-[4px] flex h-[40px] w-[40px] items-center justify-center rounded-[5px] border border-[#e0a33e]/60 bg-[#101318]">
-                <ShieldGlyph size={26} />
+            <img
+                alt="Power Plaque - Armor"
+                className="pointer-events-none absolute -right-[310px] top-1/2 z-10 h-[416px] w-[760px] max-w-none -translate-y-[45.5%] -scale-x-100 object-contain drop-shadow-[0_0_8px_rgba(224,163,62,0.32)]"
+                src="/assets/awakening-ui/loadout/Wing1Gold.png"
+            />
+
+            {/* Soft dark halo behind Resistance glyph */}
+            <span
+                aria-hidden
+                className="pointer-events-none absolute -right-[36px] -top-[9px] z-10 h-[64px] w-[64px] rounded-full blur-md"
+                style={{
+                    background:
+                        "radial-gradient(circle at center, rgba(9, 12, 17, 0.92) 0%, rgba(9, 12, 17, 0.65) 55%, rgba(9, 12, 17, 0) 78%)",
+                }}
+            />
+
+            <span className="pointer-events-none absolute -right-[26px] top-[0px] z-20 flex h-[42px] w-[42px] items-center justify-center drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                <ShieldGlyph size={38} />
             </span>
-            <span 
-                className="absolute inset-0 flex items-center justify-center translate-x-4 -translate-y-2 lo-serif text-[40px] font-semibold leading-none bg-clip-text text-transparent bg-cover bg-center"
-                style={{ backgroundImage: `url(/assets/awakening-ui/text-gradients/damage_stagger.png)` }}
+
+            {/* Soft dark halo behind Resistance readout */}
+            <span
+                aria-hidden
+                className="pointer-events-none absolute z-20 h-[78px] w-[148px] translate-x-9 -translate-y-2 rounded-full blur-md"
+                style={{
+                    background:
+                        "radial-gradient(ellipse at center, rgba(9, 12, 17, 0.88) 0%, rgba(9, 12, 17, 0.62) 55%, rgba(9, 12, 17, 0) 78%)",
+                }}
+            />
+
+            <span
+                className="pointer-events-none absolute inset-0 z-20 flex translate-x-9 -translate-y-2 items-center justify-center bg-cover bg-center bg-clip-text text-[48px] font-bold leading-none tracking-tight text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] lo-serif"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.30)), url(/assets/awakening-ui/text-gradients/damage_stagger.png)`,
+                }}
             >
                 {resistance}
             </span>
         </div>
 
         {/* Center Emblem */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-[58%] drop-shadow-[0_4px_14px_rgba(0,0,0,0.75)]">
             <CrestEmblem size={148} />
         </div>
     </div>

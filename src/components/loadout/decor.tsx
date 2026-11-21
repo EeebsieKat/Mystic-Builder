@@ -37,7 +37,7 @@ export const FlourishHeader = ({ title, className = "" }: { title: string; class
 /* ------------------------------------------------------------------ */
 
 export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Loadout Crest" width="180" src="/assets/awakening-ui/loadout/loadoutlevel10.png">
+    <img alt="Loadout Crest" width="180" src="/assets/awakening-ui/loadout/GildWingsGold.png">
     </img>
 );
 
@@ -46,11 +46,11 @@ export const CrestEmblem = ({ size = 150, className = "" }: { size?: number; cla
 /* ------------------------------------------------------------------ */
 
 export const SwordGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="30" height="30" src="/assets/icons/generic/Weapon.png"></img>
+    <img alt="Weapon Level" width="26" height="26" src="/assets/awakening-ui/loadout/power.png"></img>
 );
 
 export const ShieldGlyph = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
-    <img alt="Weapon Level" width="30" height="30" src="/assets/icons/generic/Head.png"></img>
+    <img alt="Weapon Level" width="26" height="26" src="/assets/awakening-ui/loadout/resistance.png"></img>
 );
 
 /* ------------------------------------------------------------------ */
