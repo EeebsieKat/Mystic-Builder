@@ -198,132 +198,92 @@ export default function LandingPage() {
             <div className="gold-rule mx-auto max-w-6xl w-full" aria-hidden="true" />
 
             {/* THREE CORE PILLARS / BENTO SHOWCASE */}
-            <section className="relative px-6 py-16 lg:px-12 lg:py-24">
+            <section className="relative px-6 py-14 lg:px-12 lg:py-20">
                 <div className="mx-auto max-w-6xl">
-                    <div className="flex flex-col items-center text-center">
-                        <p className="panel-label">Core Capabilities</p>
-                        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                    <div className="flex flex-col items-start text-left max-w-2xl">
+                        <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
+                            Core Capabilities
+                        </p>
+                        <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
                             Everything You Need to Master the Hunt
                         </h2>
-                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
+                        <p className="mt-2 text-xs leading-relaxed text-[var(--ink-2)] sm:text-sm">
                             Built from official 1.14.7 game extracts with authentic visual assets, calculation engines, and instant URL sharing.
                         </p>
                     </div>
 
-                    <div className="mt-12 grid gap-6 md:grid-cols-3">
+                    <div className="mt-8 grid gap-4 md:grid-cols-3">
                         {/* 1. Awakening Loadout Planner */}
-                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-7 shadow-lg transition-all duration-300 hover:border-[var(--aether-line)] hover:shadow-[0_0_30px_rgba(91,163,255,0.15)]">
-                            <div className="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[var(--aether)]/10 blur-2xl transition-all group-hover:bg-[var(--aether)]/20" />
+                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-5 shadow-md transition-all duration-300 hover:border-[var(--aether-line)] hover:shadow-[0_0_25px_rgba(91,163,255,0.12)]">
+                            <div className="absolute top-0 right-0 h-28 w-28 translate-x-8 -translate-y-8 rounded-full bg-[var(--aether)]/10 blur-xl transition-all group-hover:bg-[var(--aether)]/20" />
                             <div>
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--aether-line)] bg-[var(--aether-a10)] text-[var(--aether-hi)]">
-                                    <Hammer className="h-6 w-6" />
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--aether-line)] bg-[var(--aether-a10)] text-[var(--aether-hi)]">
+                                    <Hammer className="h-5 w-5" />
                                 </div>
-                                <h3 className="mt-5 font-display text-xl font-bold text-white">
+                                <h3 className="mt-3.5 font-display text-base font-bold text-white">
                                     Awakening Loadout Planner
                                 </h3>
-                                <p className="mt-2.5 text-sm leading-relaxed text-[var(--ink-2)]">
-                                    Faithfully recreated from the in-game UI. Equip weapons, armor, lanterns, omnicells, and consumables with live Power Surge scaling and perk thresholds (1-6).
+                                <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-2)]">
+                                    Equip weapons, armor, lanterns, and omnicells with live Power Surge scaling and cell threshold validation.
                                 </p>
-                                <ul className="mt-4 space-y-2 text-xs text-[var(--ink-3)]">
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--aether)]" />
-                                        <span>Full Power Surge toggle on all gear</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--aether)]" />
-                                        <span>Legendary weapon bonding &amp; parts</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--aether)]" />
-                                        <span>Automatic cell slot type validation</span>
-                                    </li>
-                                </ul>
                             </div>
-                            <div className="mt-6 pt-4 border-t border-[var(--line)]">
+                            <div className="mt-4 pt-3 border-t border-[var(--line)]">
                                 <Link
                                     href="/?tab=builder"
-                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--aether-hi)] transition-colors hover:text-white"
+                                    className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--aether-hi)] transition-colors hover:text-white"
                                 >
                                     <span>Open Build Planner</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                                 </Link>
                             </div>
                         </div>
 
                         {/* 2. 517 Meta Builds Index */}
-                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-7 shadow-lg transition-all duration-300 hover:border-[var(--gold)]/40 hover:shadow-[0_0_30px_rgba(224,194,135,0.15)]">
-                            <div className="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-[var(--gold)]/10 blur-2xl transition-all group-hover:bg-[var(--gold)]/20" />
+                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-5 shadow-md transition-all duration-300 hover:border-[var(--gold)]/40 hover:shadow-[0_0_25px_rgba(224,194,135,0.12)]">
+                            <div className="absolute top-0 right-0 h-28 w-28 translate-x-8 -translate-y-8 rounded-full bg-[var(--gold)]/10 blur-xl transition-all group-hover:bg-[var(--gold)]/20" />
                             <div>
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold)]">
-                                    <Lightbulb className="h-6 w-6" />
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold)]">
+                                    <Lightbulb className="h-5 w-5" />
                                 </div>
-                                <h3 className="mt-5 font-display text-xl font-bold text-white">
+                                <h3 className="mt-3.5 font-display text-base font-bold text-white">
                                     517 Meta Guides Index
                                 </h3>
-                                <p className="mt-2.5 text-sm leading-relaxed text-[var(--ink-2)]">
-                                    Explore curated community meta builds from the official Reforged index. Filter by weapon class, combat archetype, perks, or elemental matchup.
+                                <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-2)]">
+                                    Explore curated community meta builds from the Reforged index. Filter by weapon, perks, or elemental matchup.
                                 </p>
-                                <ul className="mt-4 space-y-2 text-xs text-[var(--ink-3)]">
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold)]" />
-                                        <span>Instant multi-perk combination search</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold)]" />
-                                        <span>1-click import into live loadout stage</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold)]" />
-                                        <span>Anonymous favorites &amp; like counters</span>
-                                    </li>
-                                </ul>
                             </div>
-                            <div className="mt-6 pt-4 border-t border-[var(--line)]">
+                            <div className="mt-4 pt-3 border-t border-[var(--line)]">
                                 <Link
                                     href="/?tab=suggestions"
-                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--gold)] transition-colors hover:text-[var(--gold-bright)]"
+                                    className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--gold)] transition-colors hover:text-[var(--gold-bright)]"
                                 >
                                     <span>Browse Meta Builds</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                                 </Link>
                             </div>
                         </div>
 
                         {/* 3. 1.14.7 Armory Database */}
-                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-7 shadow-lg transition-all duration-300 hover:border-cyan-500/40 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-                            <div className="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-cyan-500/10 blur-2xl transition-all group-hover:bg-cyan-500/20" />
+                        <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 p-5 shadow-md transition-all duration-300 hover:border-cyan-500/40 hover:shadow-[0_0_25px_rgba(6,182,212,0.12)]">
+                            <div className="absolute top-0 right-0 h-28 w-28 translate-x-8 -translate-y-8 rounded-full bg-cyan-500/10 blur-xl transition-all group-hover:bg-cyan-500/20" />
                             <div>
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-500/40 bg-cyan-500/10 text-cyan-400">
-                                    <Database className="h-6 w-6" />
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-cyan-500/40 bg-cyan-500/10 text-cyan-400">
+                                    <Database className="h-5 w-5" />
                                 </div>
-                                <h3 className="mt-5 font-display text-xl font-bold text-white">
+                                <h3 className="mt-3.5 font-display text-base font-bold text-white">
                                     Complete Item Armory
                                 </h3>
-                                <p className="mt-2.5 text-sm leading-relaxed text-[var(--ink-2)]">
-                                    Search every weapon, armour piece, cell, and unique effect from Dauntless 1.14.7. Inspect crafting requirements, power curves, and perk values.
+                                <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-2)]">
+                                    Search every weapon, armour piece, cell, and unique passive effect extracted from Dauntless 1.14.7.
                                 </p>
-                                <ul className="mt-4 space-y-2 text-xs text-[var(--ink-3)]">
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                                        <span>231 weapons with unique passives</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                                        <span>139 armour pieces with elemental ratings</span>
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                                        <span>81 cells with tier 1-6 stat tables</span>
-                                    </li>
-                                </ul>
                             </div>
-                            <div className="mt-6 pt-4 border-t border-[var(--line)]">
+                            <div className="mt-4 pt-3 border-t border-[var(--line)]">
                                 <Link
                                     href="/?tab=database"
-                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 transition-colors hover:text-cyan-200"
+                                    className="inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-400 transition-colors hover:text-cyan-200"
                                 >
                                     <span>Explore Armory</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                                 </Link>
                             </div>
                         </div>
