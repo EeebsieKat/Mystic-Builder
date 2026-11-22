@@ -226,6 +226,75 @@ const EffectList = ({
     );
 };
 
+const InherentPerkRows = ({
+    perks,
+}: {
+    perks: { name: string; value: number; powerSurged?: boolean }[] | null | undefined;
+}) => {
+    if (!perks || perks.length === 0) return null;
+
+    return (
+        <div className="flex flex-col gap-2">
+            {perks.map((perk, index) => {
+                const perkDef = (gameData.perks as Record<string, PerkData>)[perk.name];
+                const type = perkDef?.type || "Prismatic";
+                const eff = perkDef?.effects?.[String(perk.value)];
+                const formattedEffect = eff
+                    ? cleanText(formatPerkEffect(eff))
+                    : perkDef?.description
+                        ? cleanText(perkDef.description)
+                        : null;
+                const slotColor = cellTypeColor(type);
+
+                return (
+                    <div
+                        key={`${perk.name}-${index}`}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border/50 bg-background/50 p-3 hover:bg-muted/20 transition-colors"
+                    >
+                        <div className="flex items-start sm:items-center gap-3 min-w-0 sm:w-[220px] shrink-0">
+                            <div
+                                className="relative h-9 w-9 shrink-0 rounded-lg border bg-muted/40 p-1 flex items-center justify-center"
+                                style={{
+                                    borderColor: `${slotColor}60`,
+                                    backgroundColor: `${slotColor}15`,
+                                }}
+                            >
+                                <Image
+                                    src={`/assets/icons/perks/${type}.png`}
+                                    alt={perk.name}
+                                    width={26}
+                                    height={26}
+                                    className="object-contain"
+                                />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                                <span className="text-sm font-bold text-foreground truncate">
+                                    {perk.name}
+                                    {perk.powerSurged ? " (Surged)" : ""}
+                                </span>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    PERK POINTS: {perk.value}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-1 flex-col gap-0.5 min-w-0 sm:pl-2">
+                            {formattedEffect ? (
+                                <p className="text-xs sm:text-[13px] leading-relaxed text-foreground/90 font-medium">
+                                    {highlightGameText(formattedEffect)}
+                                </p>
+                            ) : null}
+                            <span className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                                ACTIVATES AT: {perk.value} PERK POINT{perk.value === 1 ? "" : "S"}
+                            </span>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
 const ChipRow = ({ children }: { children: React.ReactNode }) => {
     const items = Array.isArray(children) ? children : [children];
     if (items.filter(Boolean).length === 0) {
@@ -441,45 +510,51 @@ const PerkRow = ({ perk, onSelect }: { perk: PerkData; onSelect: () => void }) =
     </ItemCard>
 );
 
-const CellRow = ({ cell, onSelect }: { cell: Cell; onSelect: () => void }) => (
-    <ItemCard
-        icon={`/assets/icons/perks/${cell.slot}.png`}
-        name={cell.name}
-        titleColor={cellTypeColor(cell.slot)}
-        subtitle={`${cellTypeLabel(cell.slot)} Cell`}
-        cellType={cell.slot}
-        onClick={onSelect}
-        badge={
-            <span
-                className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border"
-                style={{
-                    borderColor: `${cellTypeColor(cell.slot)}40`,
-                    backgroundColor: `${cellTypeColor(cell.slot)}15`,
-                    color: cellTypeColor(cell.slot),
-                }}
-            >
-                <Image
-                    src={cellTypeIcon(cell.slot)}
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="h-4 w-4 shrink-0 object-contain"
-                    aria-hidden
-                />
-                <span className="leading-none">{cellTypeLabel(cell.slot)}</span>
-            </span>
-        }
-    >
-        <p className="text-xs text-muted-foreground">
-            Fits {cellTypeLabel(cell.slot)} sockets
-        </p>
-        <div className="flex flex-wrap items-center gap-1.5">
-            <span className="rounded-md border border-border/60 bg-muted/30 px-2 py-0.5 text-[11px] text-muted-foreground">+1</span>
-            <span className="rounded-md border border-sky-500/30 bg-sky-500/10 px-2 py-0.5 text-[11px] text-sky-300 font-medium">+2 Rare</span>
-            <span className="rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[11px] text-purple-300 font-medium">+3 Epic</span>
-        </div>
-    </ItemCard>
-);
+const CellRow = ({ cell, onSelect }: { cell: Cell; onSelect: () => void }) => {
+    const firstVariant = Object.values(cell.variants)[0];
+    const perkName = firstVariant ? Object.keys(firstVariant.perks)[0] : null;
+    const perk = perkName ? ((gameData.perks as Record<string, PerkData>)[perkName] ?? null) : null;
+
+    return (
+        <ItemCard
+            icon={`/assets/icons/perks/${cell.slot}.png`}
+            name={cell.name}
+            titleColor={cellTypeColor(cell.slot)}
+            subtitle={`${cellTypeLabel(cell.slot)} Cell`}
+            cellType={cell.slot}
+            onClick={onSelect}
+            badge={
+                <span
+                    className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border"
+                    style={{
+                        borderColor: `${cellTypeColor(cell.slot)}40`,
+                        backgroundColor: `${cellTypeColor(cell.slot)}15`,
+                        color: cellTypeColor(cell.slot),
+                    }}
+                >
+                    <Image
+                        src={cellTypeIcon(cell.slot)}
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="h-4 w-4 shrink-0 object-contain"
+                        aria-hidden
+                    />
+                    <span className="leading-none">{cellTypeLabel(cell.slot)}</span>
+                </span>
+            }
+        >
+            <p className="text-xs text-muted-foreground line-clamp-2">
+                {perk?.description ? cleanText(perk.description) : `Fits ${cellTypeLabel(cell.slot)} sockets`}
+            </p>
+            <div className="flex flex-wrap items-center gap-1.5">
+                <span className="rounded-md border border-border/60 bg-muted/30 px-2 py-0.5 text-[11px] text-muted-foreground">+1</span>
+                <span className="rounded-md border border-sky-500/30 bg-sky-500/10 px-2 py-0.5 text-[11px] text-sky-300 font-medium">+2 Rare</span>
+                <span className="rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-0.5 text-[11px] text-purple-300 font-medium">+3 Epic</span>
+            </div>
+        </ItemCard>
+    );
+};
 
 const LanternRow = ({ lantern, onSelect }: { lantern: LanternItem; onSelect: () => void }) => (
     <ItemCard
@@ -686,9 +761,9 @@ const ItemDetailDialog = ({
                                             </ChipRow>
                                         </div>
                                         {(weapon.perks && weapon.perks.length > 0) ? (
-                                            <div className="border-t border-border/40 pt-2">
-                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-1">Inherent Perks</span>
-                                                <PerkList perks={weapon.perks} className="text-xs" />
+                                            <div className="border-t border-border/40 pt-2.5">
+                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                                <InherentPerkRows perks={weapon.perks} />
                                             </div>
                                         ) : null}
                                     </div>
@@ -806,9 +881,9 @@ const ItemDetailDialog = ({
                                             </ChipRow>
                                         </div>
                                         {(armour.perks && armour.perks.length > 0) ? (
-                                            <div className="border-t border-border/40 pt-2">
-                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-1">Inherent Perks</span>
-                                                <PerkList perks={armour.perks} className="text-xs" />
+                                            <div className="border-t border-border/40 pt-2.5">
+                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                                <InherentPerkRows perks={armour.perks} />
                                             </div>
                                         ) : null}
                                     </div>
@@ -930,6 +1005,9 @@ const ItemDetailDialog = ({
 
             case "cell": {
                 const cell = item.data;
+                const firstVariant = Object.values(cell.variants)[0];
+                const perkName = firstVariant ? Object.keys(firstVariant.perks)[0] : null;
+                const perk = perkName ? ((gameData.perks as Record<string, PerkData>)[perkName] ?? null) : null;
 
                 return (
                     <>
@@ -976,6 +1054,17 @@ const ItemDetailDialog = ({
                         </DialogHeader>
 
                         <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
+                            {perk?.description ? (
+                                <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-foreground/90">
+                                    <span className="font-semibold text-primary block mb-1">
+                                        {perk.name} Effect Overview
+                                    </span>
+                                    <p className="text-foreground/90 leading-relaxed">
+                                        {cleanText(perk.description)}
+                                    </p>
+                                </div>
+                            ) : null}
+
                             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
                                 Fits into any equipment with a{" "}
                                 <span className="font-semibold text-foreground">{cellTypeLabel(cell.slot)}</span> or{" "}
@@ -988,31 +1077,45 @@ const ItemDetailDialog = ({
                                 </h4>
                                 <div className="flex flex-col gap-2.5">
                                     {Object.entries(cell.variants).map(([variantName, variant]) => {
-                                        const perkText = Object.entries(variant.perks)
-                                            .map(([perk, value]) => `${perk} +${value}`)
+                                        const perkEntries = Object.entries(variant.perks);
+                                        const perkText = perkEntries
+                                            .map(([pName, value]) => `${pName} +${value}`)
                                             .join(", ");
                                         const tier = variantName.startsWith("+1") ? "+1" : variantName.startsWith("+2") ? "+2" : "+3";
                                         const isEpic = tier === "+3";
                                         const isRare = tier === "+2";
 
+                                        const effectDescs = perkEntries
+                                            .map(([pName, value]) => {
+                                                const p = (gameData.perks as Record<string, PerkData>)[pName];
+                                                const eff = p?.effects?.[String(value)];
+                                                return eff ? cleanText(formatPerkEffect(eff)) : null;
+                                            })
+                                            .filter(Boolean);
+
                                         return (
                                             <div
                                                 key={variantName}
-                                                className={`flex items-center justify-between rounded-lg border p-3 text-xs ${isEpic
+                                                className={`flex items-start justify-between gap-3 rounded-lg border p-3 text-xs ${isEpic
                                                         ? "border-purple-500/40 bg-purple-500/10 text-purple-300"
                                                         : isRare
                                                             ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
                                                             : "border-border/60 bg-muted/20 text-muted-foreground"
                                                     }`}
                                             >
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-base font-bold">{tier}</span>
-                                                    <div className="flex flex-col">
+                                                <div className="flex items-start gap-3 min-w-0 flex-1">
+                                                    <span className="text-base font-bold shrink-0 mt-0.5">{tier}</span>
+                                                    <div className="flex flex-col min-w-0 flex-1">
                                                         <span className="font-semibold text-foreground">{variantName}</span>
                                                         <span className="text-[11px] capitalize opacity-80">{variant.rarity} Rarity</span>
+                                                        {effectDescs.length > 0 ? (
+                                                            <p className="mt-1.5 text-xs leading-relaxed text-foreground/90 font-medium">
+                                                                {effectDescs.join(" • ")}
+                                                            </p>
+                                                        ) : null}
                                                     </div>
                                                 </div>
-                                                <div className="rounded-md border border-border/50 bg-background/50 px-3 py-1 font-semibold text-foreground">
+                                                <div className="shrink-0 rounded-md border border-border/50 bg-background/50 px-3 py-1 font-semibold text-foreground">
                                                     {perkText}
                                                 </div>
                                             </div>
@@ -1063,11 +1166,16 @@ const ItemDetailDialog = ({
                                 <h4 className="text-xs font-bold uppercase tracking-wider text-primary">
                                     Cell Sockets & Inherent Perks
                                 </h4>
-                                <div className="rounded-lg border border-border/60 bg-muted/20 p-3">
+                                <div className="rounded-lg border border-border/60 bg-muted/20 p-3 flex flex-col gap-2.5">
                                     <ChipRow>
                                         <CellSlotChips cells={lantern.cells} />
                                     </ChipRow>
-                                    <PerkList perks={lantern.perks} className="mt-2 text-xs" />
+                                    {(lantern.perks && lantern.perks.length > 0) ? (
+                                        <div className="border-t border-border/40 pt-2.5">
+                                            <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                            <InherentPerkRows perks={lantern.perks} />
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
 

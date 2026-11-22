@@ -46,6 +46,7 @@ import {
     WeaponCard,
 } from "./gear-grid";
 import { CrestHeader, ItemDetailPanel, PerkSummaryPanel } from "./right-panel";
+import { PerkSummaryDialog } from "./perk-summary-dialog";
 import { DetailCard, type DetailCardData } from "./detail-card";
 import { ItemPickerOverlay, type PickerItem } from "./item-picker";
 import { DiamondPip, FlourishHeader, ItemIcon } from "./decor";
@@ -341,6 +342,7 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
     const [importOpen, setImportOpen] = useState(false);
     const [importValue, setImportValue] = useState("");
     const [copied, setCopied] = useState(false);
+    const [perkSummaryOpen, setPerkSummaryOpen] = useState(false);
 
     const model = useMemo(() => draftToModel(draft), [draft]);
     const buildId = useMemo(() => {
@@ -1028,12 +1030,20 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
                         continue;
                     }
                     const perks = Object.entries(cell.variants[variantName].perks);
+                    const firstPerk = perks[0];
+                    const perkDef = firstPerk ? (gameData.perks as Record<string, { description?: string; effects?: Record<string, { description: string; values?: Record<string, string | number> }> }>)[firstPerk[0]] : null;
+                    const effectDef = firstPerk && perkDef?.effects?.[String(firstPerk[1])];
+                    const effectDesc = effectDef
+                        ? interpolate(effectDef.description, effectDef.values)
+                        : perkDef?.description;
+
                     items.push({
                         value: variantName,
                         label: variantName,
                         icon: `/assets/icons/perks/${cell.slot}.png`,
                         group: cellTypeLabel(cell.slot),
                         hint: perks.map(([name, value]) => `${name} +${value}`).join(", "),
+                        description: effectDesc ? effectDesc.replace(/<[^>]*>/g, "").trim() : undefined,
                         color: cellTypeColor(cell.slot),
                     });
                 }
@@ -1267,6 +1277,7 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
                                 setPickerTarget({ kind: "part", partKey, bucket });
                             }}
                             onBondClick={() => setPickerTarget({ kind: "bond" })}
+                            onOpenPerkSummary={() => setPerkSummaryOpen(true)}
                         />
                     ) : (
                         <PerkSummaryPanel perkTotals={view?.perkTotals ?? []} />
@@ -1387,6 +1398,13 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
                     </div>
                 </div>
             )}
+
+            {/* Full build perk summary modal matching Image 1 */}
+            <PerkSummaryDialog
+                open={perkSummaryOpen}
+                onOpenChange={setPerkSummaryOpen}
+                perkTotals={view?.perkTotals ?? []}
+            />
         </LoadoutStage>
     );
 };

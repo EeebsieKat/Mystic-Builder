@@ -1,4 +1,3 @@
-# Pull Request: UI Polish, Dedicated Builder Route, SSR Default Build & Omnicell Enhancements
 
 **Branch:** `feature/ui-polish-and-omnicell-fixes`  
 **Target:** `origin/main`  
@@ -58,6 +57,17 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 - Fixed an issue where legacy 12-hour localStorage suppression (`mystic-builder-ads-suppressed-until`) prevented promotional dialogs from showing.
 - Lowered initial popup trigger delay to 2 seconds and verified active promo cards.
 
+### 6. Item Database & Slotted Cell Perk Breakdown
+- **Perk Effect Overview**: Cell modals in the Item Database browser now display the underlying perk's effect overview and description directly.
+- **Tier-Specific Breakdown**: Available Cell Tiers (+1, +2, +3) in the database modal now display the exact interpolated perk values (e.g. `+5 stamina regeneration`, `+10 stamina regeneration`, `+15 stamina regeneration`) alongside the rarity and rank.
+- **Inherent Perks with Activation Stats**: Weapons, armours, and lanterns in the database browser now render full perk detail rows with the slot icon, perk points, exact effect description, and activation threshold (`ACTIVATES AT: X PERK POINTS`), matching the in-game detail card reference.
+- **Meta Builds Slotted Cells & Tooltips**: The Meta Builds inspection dialog now renders slotted cells as full detail cards displaying slot icon, cell name, perk points (`PERK POINTS: 3`), exact interpolated tier bonus description, and activation threshold (`ACTIVATES AT: 3 PERK POINTS`). Weapon and armour hover cards also display slotted cell effects.
+
+### 7. Full Build Perk Summary Modal & +1 to +6 Tier Hover Cards
+- **Perk Summary Trigger Button**: Added a dedicated **View Build Perk Summary** action directly below equipment cell slots in the loadout right panel.
+- **In-Game Faithful Perk Summary Modal**: Clicking the trigger opens a full build perk modal with the authentic silver banner header and tech corner brackets (`PERK SUMMARY`) showing all active build perks.
+- **Interactive +1 to +6 Tier Tooltips**: Hovering over any perk card in the modal (or the loadout right panel) pops up a detailed tier breakdown displaying all 6 ranks (+1 to +6) with the build's currently active tier highlighted with glowing accents and status badges.
+
 ---
 
 ## 🛠️ Modified Files Summary
@@ -68,7 +78,11 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 | `src/app/b/[buildId]/page.tsx` | Added `searchParams` parsing for custom build name sharing and dynamic OpenGraph titles. |
 | `src/app/layout.tsx` | Updated OpenGraph site name / title to `Mystic Builder`, wrapped children in `PageTransition`. |
 | `src/app/page.tsx` | Added redirects to `/builder`, updated OpenGraph metadata, and passed through build name params. |
-| `src/components/loadout/loadout-screen.tsx` | Clean `/builder` URL sync, custom name URL sharing, fixed Randomize/Reset handlers, and name generators. |
+| `src/components/browse-database.tsx` | Added cell perk overview and tier-by-tier effect descriptions to database cards, detail dialogs, and inherent perk rows. |
+| `src/components/build-suggestions.tsx` | Slotted cells in Meta Builds modal now display full perk points, interpolated tier stats, and activation thresholds. |
+| `src/components/loadout/perk-summary-dialog.tsx` | In-game faithful Perk Summary popup dialog with interactive +1 to +6 tier hover cards. |
+| `src/components/loadout/right-panel.tsx` | Added "View Build Perk Summary" button below cell slots and tier hover tooltips to perk summary rows. |
+| `src/components/loadout/loadout-screen.tsx` | Integrated `PerkSummaryDialog` state and trigger handling in loadout screen. |
 | `src/components/loadout/loadout-stage.tsx` | Initialized SSR stage scale to `1` to eliminate empty loadout container during server rendering. |
 | `src/components/site-nav-links.tsx` | Added `Main Website` navigation pill linking to `https://mysticparadox.com`. |
 | `src/components/page-transition.tsx` | Added smooth fade-out and fade-in page transitions. |
@@ -84,6 +98,7 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 - [x] **URL Cleanliness**: Visiting `/builder` displays the default build with URL bar cleanly remaining `http://localhost:3000/builder`.
 - [x] **URL Name Sharing**: Editing nameplate to a custom name updates URL to `?name=...`. Loading `/b/<id>?name=CustomName` sets the nameplate and page title.
 - [x] **Randomize & Reset**: Clicking `RANDOMIZE` updates all slots and generates a new name without snapping back to default. Clicking `RESET` clears all gear and resets name to `"SLAYER"`.
+- [x] **Cell & Inherent Perk Details**: Database modal and Meta Builds slotted cells display full perk points, interpolated tier stats, and activation thresholds matching the Awakening detail card.
 - [x] **OpenGraph Image Generation**: `GET /b/<id>/opengraph-image` returns HTTP 200 `image/png` with valid dimensions (1200x630) and rich gear/perk cards.
 - [x] **Social Link Previews**: Checked Discord embed compatibility with `og:image`, `og:title`, and `og:description`.
 - [x] **Browser Tab Synchronization**: Browser tab immediately updates to `${buildName} - Mystic Builder` on SSR load, input edits, randomize, and reset.

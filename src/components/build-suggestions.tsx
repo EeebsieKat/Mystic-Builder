@@ -45,6 +45,7 @@ import type { CellType } from "@/game/types";
 import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
 import { highlightGameText } from "@/lib/game-text-highlighter";
 import { getClientId, getClientFingerprint } from "@/lib/client-id";
+import { PerkTierHoverTooltip } from "@/components/loadout/perk-summary-dialog";
 
 /* ------------------------------------------------------------------ */
 /* Types & Configurations                                             */
@@ -139,6 +140,15 @@ const interpolate = (
         .replace(/<[^>]+>/g, "")
         .replace(/\s*\n\s*/g, " ")
         .trim();
+
+const formatPerkEffect = (eff?: { description: string | (string | null)[]; values?: Record<string, string | number> }): string => {
+    if (!eff) return "";
+    const descs = Array.isArray(eff.description) ? eff.description.filter(Boolean) : [eff.description];
+    return descs
+        .map(str => interpolate(str as string, eff.values))
+        .filter(Boolean)
+        .join(", ");
+};
 
 interface OmnicellHoverTooltipProps {
     name?: string | null;
@@ -324,10 +334,11 @@ const PerkHoverTooltip = ({ name, rank = 6, children }: PerkHoverTooltipProps) =
 interface WeaponHoverTooltipProps {
     name?: string | null;
     isBond?: boolean;
+    slottedCells?: { cellName?: string | null; slot?: string | null }[] | null;
     children: React.ReactNode;
 }
 
-const WeaponHoverTooltip = ({ name, isBond = false, children }: WeaponHoverTooltipProps) => {
+const WeaponHoverTooltip = ({ name, isBond = false, slottedCells, children }: WeaponHoverTooltipProps) => {
     if (!name) return <>{children}</>;
 
     const weapon =
@@ -473,6 +484,55 @@ const WeaponHoverTooltip = ({ name, isBond = false, children }: WeaponHoverToolt
                                     {highlightGameText(perkEffect)}
                                 </p>
                             )}
+                        </div>
+                    )}
+
+                    {/* Slotted Cells info if present */}
+                    {slottedCells && slottedCells.length > 0 && (
+                        <div className="rounded-lg border border-border/60 bg-muted/20 p-2.5 flex flex-col gap-2">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                                Slotted Cells
+                            </span>
+                            <div className="flex flex-col gap-2">
+                                {slottedCells.map((sc, idx) => {
+                                    if (!sc.cellName) return null;
+                                    const pName = sc.cellName.replace(/\s+Cell$/i, "");
+                                    const pDef = (gameData.perks as Record<string, any>)[pName];
+                                    const cellEff = pDef?.effects?.["3"];
+                                    const cellDesc = cellEff ? formatPerkEffect(cellEff) : pDef?.description;
+
+                                    return (
+                                        <div key={idx} className="flex flex-col gap-1">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    {sc.slot ? (
+                                                        <div className="relative h-4 w-4 flex-shrink-0">
+                                                            <Image
+                                                                src={cellTypeIcon(sc.slot)}
+                                                                alt={sc.slot}
+                                                                fill
+                                                                sizes="16px"
+                                                                className="object-contain"
+                                                            />
+                                                        </div>
+                                                    ) : null}
+                                                    <span className="text-xs font-semibold text-foreground truncate">
+                                                        {sc.cellName}
+                                                    </span>
+                                                </div>
+                                                <Badge variant="outline" className="text-[9px] text-muted-foreground border-border/50">
+                                                    {sc.slot} (+3)
+                                                </Badge>
+                                            </div>
+                                            {cellDesc && (
+                                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                                    {highlightGameText(cellDesc)}
+                                                </p>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
                     )}
 
@@ -628,32 +688,46 @@ const ArmourHoverTooltip = ({ name, piece, slottedCell, children }: ArmourHoverT
                     )}
 
                     {/* Slotted Cell info if present */}
-                    {slottedCell && (
-                        <div className="rounded-lg border border-border/60 bg-muted/20 p-2.5 flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 min-w-0">
-                                <div className="relative h-4 w-4 flex-shrink-0">
-                                    <Image
-                                        src={cellTypeIcon(slottedCell.slot)}
-                                        alt={slottedCell.slot}
-                                        fill
-                                        sizes="16px"
-                                        className="object-contain"
-                                    />
+                    {slottedCell && (() => {
+                        const pName = slottedCell.cellName.replace(/\s+Cell$/i, "");
+                        const pDef = (gameData.perks as Record<string, any>)[pName];
+                        const cellEff = pDef?.effects?.["3"];
+                        const cellDesc = cellEff ? formatPerkEffect(cellEff) : pDef?.description;
+
+                        return (
+                            <div className="rounded-lg border border-border/60 bg-muted/20 p-2.5 flex flex-col gap-1.5">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="relative h-4 w-4 flex-shrink-0">
+                                            <Image
+                                                src={cellTypeIcon(slottedCell.slot)}
+                                                alt={slottedCell.slot}
+                                                fill
+                                                sizes="16px"
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="text-[9px] uppercase font-bold text-muted-foreground block leading-tight">
+                                                Slotted Cell
+                                            </span>
+                                            <span className="text-xs font-semibold text-foreground truncate block">
+                                                {slottedCell.cellName}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-[9px] text-muted-foreground border-border/50">
+                                        {slottedCell.slot} (+3)
+                                    </Badge>
                                 </div>
-                                <div className="min-w-0">
-                                    <span className="text-[9px] uppercase font-bold text-muted-foreground block leading-tight">
-                                        Slotted Cell
-                                    </span>
-                                    <span className="text-xs font-semibold text-foreground truncate block">
-                                        {slottedCell.cellName}
-                                    </span>
-                                </div>
+                                {cellDesc && (
+                                    <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
+                                        {highlightGameText(cellDesc)}
+                                    </p>
+                                )}
                             </div>
-                            <Badge variant="outline" className="text-[9px] text-muted-foreground border-border/50">
-                                {slottedCell.slot}
-                            </Badge>
-                        </div>
-                    )}
+                        );
+                    })()}
 
                     {/* Unique Effect if present (Exotic gear) */}
                     {uniqueEffectText && (
@@ -1834,7 +1908,10 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                         </span>
                                     </div>
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                        <WeaponHoverTooltip name={inspectingBuild.weaponName}>
+                                        <WeaponHoverTooltip
+                                            name={inspectingBuild.weaponName}
+                                            slottedCells={inspectingParsedBuild?.view.weapon?.cells}
+                                        >
                                             <div className="flex items-center gap-3 rounded-lg p-1.5 hover:bg-muted/30 transition-colors">
                                                 <div className="relative h-11 w-11 flex-shrink-0 rounded-lg border border-border/60 bg-muted/40 p-1">
                                                     <Image
@@ -2080,7 +2157,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                             const rank = Math.min(6, perk.value);
                                             const isMax = rank >= 6;
                                             return (
-                                                <PerkHoverTooltip key={perk.name} name={perk.name} rank={rank}>
+                                                <PerkTierHoverTooltip key={perk.name} name={perk.name} value={rank} inline>
                                                     <div
                                                         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold hover:scale-105 transition-transform ${isMax
                                                             ? "border-amber-400/50 bg-amber-400/15 text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.15)]"
@@ -2090,7 +2167,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                                         <span>+{rank}</span>
                                                         <span>{perk.name}</span>
                                                     </div>
-                                                </PerkHoverTooltip>
+                                                </PerkTierHoverTooltip>
                                             );
                                         })}
                                     </div>
@@ -2098,30 +2175,65 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
 
                                 {/* Slotted Cells */}
                                 {inspectingBuild.cells && inspectingBuild.cells.length > 0 && (
-                                    <div className="flex flex-col gap-2">
-                                        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                                            Slotted Cells
-                                        </span>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                            {inspectingBuild.cells.map((cell, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/20 px-2.5 py-1.5"
-                                                >
-                                                    <div className="relative h-4 w-4 flex-shrink-0">
-                                                        <Image
-                                                            src={cellTypeIcon(cell.slot)}
-                                                            alt={cell.slot}
-                                                            fill
-                                                            sizes="16px"
-                                                            className="object-contain"
-                                                        />
+                                    <div className="flex flex-col gap-2 mt-1">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
+                                                Slotted Cells & Perk Stats
+                                            </span>
+                                            <span className="text-[10px] text-muted-foreground font-medium">
+                                                {inspectingBuild.cells.length} cells slotted (+3 each)
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col divide-y divide-border/30 rounded-xl border border-border/60 bg-muted/20 overflow-hidden">
+                                            {inspectingBuild.cells.map((cell, idx) => {
+                                                const perkName = cell.cellName.replace(/\s+Cell$/i, "");
+                                                const perkDef = (gameData.perks as Record<string, any>)[perkName];
+                                                const eff = perkDef?.effects?.["3"];
+                                                const effDesc = eff ? formatPerkEffect(eff) : perkDef?.description || "Empowers your Slayer with specialized combat abilities.";
+                                                const slotColor = cellTypeColor(cell.slot);
+
+                                                return (
+                                                    <div
+                                                        key={idx}
+                                                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 hover:bg-muted/30 transition-colors"
+                                                    >
+                                                        <div className="flex items-start sm:items-center gap-3 min-w-0 sm:w-[220px] shrink-0">
+                                                            <div
+                                                                className="relative h-9 w-9 shrink-0 rounded-lg border bg-muted/40 p-1 flex items-center justify-center"
+                                                                style={{
+                                                                    borderColor: `${slotColor}60`,
+                                                                    backgroundColor: `${slotColor}15`,
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    src={`/assets/icons/perks/${cell.slot}.png`}
+                                                                    alt={cell.slot}
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className="object-contain"
+                                                                />
+                                                            </div>
+                                                            <div className="flex flex-col min-w-0">
+                                                                <span className="text-sm font-bold text-foreground truncate">
+                                                                    {cell.cellName}
+                                                                </span>
+                                                                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                                                    PERK POINTS: 3
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex flex-1 flex-col gap-0.5 min-w-0 sm:pl-2">
+                                                            <p className="text-xs sm:text-[13px] leading-relaxed text-foreground/90 font-medium">
+                                                                {highlightGameText(effDesc)}
+                                                            </p>
+                                                            <span className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                                                                ACTIVATES AT: 3 PERK POINTS
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <span className="text-xs font-medium text-foreground truncate">
-                                                        {cell.cellName}
-                                                    </span>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 )}
