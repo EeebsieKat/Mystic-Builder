@@ -630,7 +630,7 @@ export default function LandingPage() {
                                         </span>
                                     </div>
                                     <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 group-hover:text-white transition-colors">
-                                        In Progress →
+                                        In Progress
                                     </span>
                                 </div>
                             </div>
@@ -669,7 +669,7 @@ export default function LandingPage() {
 
                                     <div className="mt-2.5 flex items-center justify-between text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-purple-400 transition-colors group-hover:text-white">
                                         <span>Perk Forge Engine</span>
-                                        <span>Coming Soon →</span>
+                                        <span>Coming Soon  </span>
                                     </div>
                                 </div>
                             </div>
@@ -705,7 +705,7 @@ export default function LandingPage() {
 
                                     <div className="mt-2.5 flex items-center justify-between text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-amber-400 transition-colors group-hover:text-white">
                                         <span>Weapon Arsenal Lab</span>
-                                        <span>In Design →</span>
+                                        <span>In Design  </span>
                                     </div>
                                 </div>
                             </div>
@@ -733,7 +733,7 @@ export default function LandingPage() {
                             <Button
                                 asChild
                                 size="lg"
-                                className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
+                                className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black opacity-85 shadow-[0_0_20px_rgba(91,163,255,0.3)] transition-all hover:scale-105 hover:opacity-100 hover:shadow-[0_0_35px_rgba(91,163,255,0.55)] cursor-pointer"
                             >
                                 <Link href="/builder" className="inline-flex items-center gap-2">
                                     <Hammer className="h-4 w-4" />
