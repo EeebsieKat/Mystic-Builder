@@ -9,10 +9,12 @@
 import type { Armour, Cell, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "@/game/types";
 import { cellTypeColor, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
 import { findCellByVariantName } from "@/game/build-model";
+import { Sparkles } from "lucide-react";
 
 import { CellHexIcon, CrestEmblem, DiamondPip, ItemIcon, ShowcaseCorners, ShieldGlyph, SwordGlyph, ConsumableGlyph } from "./decor";
 import type { CellSlotKey } from "./loadout-types";
 import type { PerkTotal as ViewPerkTotal } from "@/game/build-view";
+import { PerkTierHoverTooltip } from "./perk-summary-dialog";
 
 /* ------------------------------------------------------------------ */
 /* Crest header                                                        */
@@ -143,31 +145,37 @@ export const PerkSummaryPanel = ({ perkTotals }: { perkTotals: ViewPerkTotal[] }
             {perkTotals.map(perk => {
                 const maxed = perk.value >= 6;
                 return (
-                    <div
+                    <PerkTierHoverTooltip
                         key={perk.name}
-                        role="listitem"
-                        className={`lo-perk-row flex items-center gap-3 px-[12px] py-[9px] ${maxed ? "" : "lo-perk-row-inactive"}`}
+                        name={perk.name}
+                        value={perk.value}
+                        type={perk.type}
                     >
-                        <ItemIcon icon={PERK_TYPE_ICON(perk.type)} alt="" size={34} className="shrink-0" />
-                        <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
-                            <span
-                                className={`truncate text-[16px] font-bold uppercase tracking-[0.04em] ${
-                                    maxed ? "text-[#e8e4da]" : "text-[#8f949c]"
-                                }`}
-                            >
-                                {perk.name}
-                            </span>
-                            {maxed ? (
-                                <span className="text-[11.5px] font-semibold tracking-[0.08em] text-[#9a9a94]">
-                                    PERK POINTS {perk.value}/6
+                        <div
+                            role="listitem"
+                            className={`lo-perk-row flex items-center gap-3 px-[12px] py-[9px] cursor-pointer hover:border-[#5ba3ff]/70 transition-colors ${maxed ? "" : "lo-perk-row-inactive"}`}
+                        >
+                            <ItemIcon icon={PERK_TYPE_ICON(perk.type)} alt="" size={34} className="shrink-0" />
+                            <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
+                                <span
+                                    className={`truncate text-[16px] font-bold uppercase tracking-[0.04em] ${
+                                        maxed ? "text-[#e8e4da]" : "text-[#8f949c]"
+                                    }`}
+                                >
+                                    {perk.name}
                                 </span>
-                            ) : (
-                                <span className="text-[11.5px] font-semibold tracking-[0.08em] text-[var(--lo-perk-red)]">
-                                    PERK POINTS REQUIRED {perk.value}/6
-                                </span>
-                            )}
+                                {maxed ? (
+                                    <span className="text-[11.5px] font-semibold tracking-[0.08em] text-[#9a9a94]">
+                                        PERK POINTS {perk.value}/6
+                                    </span>
+                                ) : (
+                                    <span className="text-[11.5px] font-semibold tracking-[0.08em] text-[var(--lo-perk-red)]">
+                                        PERK POINTS REQUIRED {perk.value}/6
+                                    </span>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    </PerkTierHoverTooltip>
                 );
             })}
         </div>
@@ -295,6 +303,7 @@ export const ItemDetailPanel = ({
     onCellClick,
     onPartClick,
     onBondClick,
+    onOpenPerkSummary,
 }: {
     data: ItemDetailData;
     cellSlots: { key: CellSlotKey; variantName: string | null; allowed: CellType | CellType[] | null }[];
@@ -302,6 +311,7 @@ export const ItemDetailPanel = ({
     onCellClick: (key: CellSlotKey) => void;
     onPartClick: (partKey: "weaponPart1" | "weaponPart2" | "weaponPart3") => void;
     onBondClick: () => void;
+    onOpenPerkSummary?: () => void;
 }) => {
     const showCells = cellSlots.length > 0;
     const consumable = data.consumable;
@@ -377,17 +387,45 @@ export const ItemDetailPanel = ({
 
             {/* cell slots */}
             {showCells && (
-                <div className={`flex gap-[10px] ${cellSlots.length === 1 ? "" : ""}`}>
-                    {cellSlots.map(slot => (
-                        <CellSlotBox
-                            key={slot.key}
-                            variantName={slot.variantName}
-                            allowed={slot.allowed}
-                            selected={selectedCellKey === slot.key}
-                            onClick={() => onCellClick(slot.key)}
-                        />
-                    ))}
+                <div className="flex flex-col gap-[10px]">
+                    <div className={`flex gap-[10px] ${cellSlots.length === 1 ? "" : ""}`}>
+                        {cellSlots.map(slot => (
+                            <CellSlotBox
+                                key={slot.key}
+                                variantName={slot.variantName}
+                                allowed={slot.allowed}
+                                selected={selectedCellKey === slot.key}
+                                onClick={() => onCellClick(slot.key)}
+                            />
+                        ))}
+                    </div>
+
+                    {onOpenPerkSummary && (
+                        <button
+                            type="button"
+                            onClick={onOpenPerkSummary}
+                            className="lo-card group flex w-full cursor-pointer items-center justify-center gap-2.5 py-3 px-4 outline-none transition-all hover:border-[#5ba3ff]/80 hover:bg-[#5ba3ff]/10 hover:shadow-[0_0_12px_rgba(91,163,255,0.2)] focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                        >
+                            <Sparkles className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
+                            <span className="text-[12.5px] font-bold tracking-[0.06em] text-[#e8e4da] uppercase">
+                                View Build Perk Summary
+                            </span>
+                        </button>
+                    )}
                 </div>
+            )}
+
+            {!showCells && onOpenPerkSummary && !consumable && (
+                <button
+                    type="button"
+                    onClick={onOpenPerkSummary}
+                    className="lo-card group flex w-full cursor-pointer items-center justify-center gap-2.5 py-3 px-4 outline-none transition-all hover:border-[#5ba3ff]/80 hover:bg-[#5ba3ff]/10 hover:shadow-[0_0_12px_rgba(91,163,255,0.2)] focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                >
+                    <Sparkles className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
+                    <span className="text-[12.5px] font-bold tracking-[0.06em] text-[#e8e4da] uppercase">
+                        View Build Perk Summary
+                    </span>
+                </button>
             )}
 
             {/* consumable description */}

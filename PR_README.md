@@ -63,6 +63,11 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 - **Inherent Perks with Activation Stats**: Weapons, armours, and lanterns in the database browser now render full perk detail rows with the slot icon, perk points, exact effect description, and activation threshold (`ACTIVATES AT: X PERK POINTS`), matching the in-game detail card reference.
 - **Meta Builds Slotted Cells & Tooltips**: The Meta Builds inspection dialog now renders slotted cells as full detail cards displaying slot icon, cell name, perk points (`PERK POINTS: 3`), exact interpolated tier bonus description, and activation threshold (`ACTIVATES AT: 3 PERK POINTS`). Weapon and armour hover cards also display slotted cell effects.
 
+### 7. Full Build Perk Summary Modal & +1 to +6 Tier Hover Cards
+- **Perk Summary Trigger Button**: Added a dedicated **View Build Perk Summary** action directly below equipment cell slots in the loadout right panel.
+- **In-Game Faithful Perk Summary Modal**: Clicking the trigger opens a full build perk modal with the authentic silver banner header and tech corner brackets (`PERK SUMMARY`) showing all active build perks.
+- **Interactive +1 to +6 Tier Tooltips**: Hovering over any perk card in the modal (or the loadout right panel) pops up a detailed tier breakdown displaying all 6 ranks (+1 to +6) with the build's currently active tier highlighted with glowing accents and status badges.
+
 ---
 
 ## 🛠️ Modified Files Summary
@@ -75,7 +80,9 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 | `src/app/page.tsx` | Added redirects to `/builder`, updated OpenGraph metadata, and passed through build name params. |
 | `src/components/browse-database.tsx` | Added cell perk overview and tier-by-tier effect descriptions to database cards, detail dialogs, and inherent perk rows. |
 | `src/components/build-suggestions.tsx` | Slotted cells in Meta Builds modal now display full perk points, interpolated tier stats, and activation thresholds. |
-| `src/components/loadout/loadout-screen.tsx` | Clean `/builder` URL sync, custom name URL sharing, fixed Randomize/Reset handlers, cell picker descriptions. |
+| `src/components/loadout/perk-summary-dialog.tsx` | In-game faithful Perk Summary popup dialog with interactive +1 to +6 tier hover cards. |
+| `src/components/loadout/right-panel.tsx` | Added "View Build Perk Summary" button below cell slots and tier hover tooltips to perk summary rows. |
+| `src/components/loadout/loadout-screen.tsx` | Integrated `PerkSummaryDialog` state and trigger handling in loadout screen. |
 | `src/components/loadout/loadout-stage.tsx` | Initialized SSR stage scale to `1` to eliminate empty loadout container during server rendering. |
 | `src/components/site-nav-links.tsx` | Added `Main Website` navigation pill linking to `https://mysticparadox.com`. |
 | `src/components/page-transition.tsx` | Added smooth fade-out and fade-in page transitions. |

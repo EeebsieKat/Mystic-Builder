@@ -81,3 +81,13 @@ export const interpolate = (text: string | null | undefined, values?: Record<str
         .replace(/<[^>]+>/g, "")
         .replace(/\s*\n\s*/g, " ")
         .trim();
+
+/** Formats perk effect descriptions, supporting both single strings and string arrays. */
+export const formatPerkEffect = (eff?: { description: string | (string | null)[]; values?: Record<string, string | number> } | null): string => {
+    if (!eff) return "";
+    const descs = Array.isArray(eff.description) ? eff.description.filter(Boolean) : [eff.description];
+    return descs
+        .map(str => interpolate(str as string, eff.values))
+        .filter(Boolean)
+        .join(", ");
+};
