@@ -2157,7 +2157,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                             const rank = Math.min(6, perk.value);
                                             const isMax = rank >= 6;
                                             return (
-                                                <PerkTierHoverTooltip key={perk.name} name={perk.name} value={rank}>
+                                                <PerkTierHoverTooltip key={perk.name} name={perk.name} value={rank} inline>
                                                     <div
                                                         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold hover:scale-105 transition-transform ${isMax
                                                             ? "border-amber-400/50 bg-amber-400/15 text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.15)]"

@@ -12,6 +12,7 @@ import { cellTypeColor, cellTypeLabel } from "@/lib/site";
 import { highlightGameText } from "@/lib/game-text-highlighter";
 import { formatPerkEffect, getTierBreakdown } from "./loadout-types";
 import { ItemIcon } from "./decor";
+import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /* Perk icon helper                                                    */
@@ -29,6 +30,9 @@ interface PerkTierHoverTooltipProps {
     value: number;
     type?: CellType | null;
     children: React.ReactNode;
+    className?: string;
+    inline?: boolean;
+    side?: "top" | "bottom" | "left" | "right";
 }
 
 export const PerkTierHoverTooltip = ({
@@ -36,6 +40,9 @@ export const PerkTierHoverTooltip = ({
     value,
     type,
     children,
+    className,
+    inline = false,
+    side,
 }: PerkTierHoverTooltipProps) => {
     const perk = (gameData.perks as Record<string, any>)[name];
     if (!perk) return <>{children}</>;
@@ -49,10 +56,12 @@ export const PerkTierHoverTooltip = ({
     return (
         <HoverCard openDelay={60} closeDelay={80}>
             <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help w-full">{children}</div>
+                <div className={cn("cursor-help", inline ? "inline-flex" : "w-full", className)}>
+                    {children}
+                </div>
             </HoverCardTrigger>
             <HoverCardContent
-                side="left"
+                side={side || (inline ? "top" : "left")}
                 align="center"
                 sideOffset={14}
                 className="z-[100] w-[340px] sm:w-[400px] max-h-[82vh] overflow-y-auto rounded-xl border border-border/80 bg-[#070c14]/98 p-4 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-2xl"
