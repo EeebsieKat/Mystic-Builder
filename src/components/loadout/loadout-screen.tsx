@@ -1185,15 +1185,15 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                         <Eraser className="h-4 w-4" aria-hidden />
                         RESET
                     </button>
+                    <button
+                        type="button"
+                        onClick={() => setImportOpen(true)}
+                        className="lo-button-text flex items-center gap-2"
+                    >
+                        <Link2 className="h-4 w-4" aria-hidden />
+                        IMPORT
+                    </button>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => setImportOpen(true)}
-                    className="lo-button-text ml-auto flex items-center gap-2"
-                >
-                    <Link2 className="h-4 w-4" aria-hidden />
-                    IMPORT
-                </button>
             </div>
 
             {/* picker overlay */}
