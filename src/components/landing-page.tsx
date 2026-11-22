@@ -155,7 +155,7 @@ const MAIN_NAV_ITEMS = [
 export default function LandingPage() {
     const router = useRouter();
 
-    /* Keyboard navigation shortcut matching in-game Dauntless hotkeys */
+    /* Keyboard navigation shortcut matching in-game Dauntless hotkeys (Commented out with menu below)
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -168,6 +168,7 @@ export default function LandingPage() {
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [router]);
+    */
 
     return (
         <div className="relative flex w-full flex-col overflow-hidden bg-[var(--bg)] text-foreground">
@@ -185,23 +186,51 @@ export default function LandingPage() {
             />
 
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
-            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-12 pb-16 lg:pt-16 lg:pb-20">
+            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-16 pb-16 lg:pt-20 lg:pb-20">
 
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-                        {/* Left Column: Headlines & Dauntless Menu */}
+                        {/* Left Column: Headlines & Actions */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
                             {/* Main Headline */}
-                            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[50px] leading-tight">
+                            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[52px] leading-tight">
                                 Forge Your Ultimate <span className="text-gold-gradient">Slayer Loadout</span>
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-3 max-w-lg text-xs leading-relaxed text-[var(--ink-2)] sm:text-sm">
-                                The premier build calculator and meta armory for Dauntless 1.14.7.
+                            <p className="mt-5 max-w-lg text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
+                                The premier build calculator and meta armory for Dauntless 1.14.7. Plan gear, cell thresholds, and share builds instantly.
                             </p>
 
-                            {/* Dauntless Sleek Transparent Navigation Menu */}
+                            {/* Action Buttons (2 buttons only) */}
+                            <div className="mt-8 flex flex-wrap items-center gap-4">
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:from-[#7cb8ff] hover:to-[#56caff] hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
+                                >
+                                    <Link href="/builder" className="inline-flex items-center gap-2">
+                                        <Hammer className="h-4 w-4" />
+                                        <span>Launch Build Planner</span>
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="lg"
+                                    className="h-12 rounded-xl border-[var(--gold)]/40 bg-[var(--bg-raise)]/80 px-7 text-sm font-semibold text-[var(--gold)] backdrop-blur-md transition-all hover:border-[var(--gold)] hover:bg-[var(--gold)]/10 hover:text-[var(--gold-bright)] cursor-pointer"
+                                >
+                                    <Link href="/?tab=suggestions" className="inline-flex items-center gap-2">
+                                        <Lightbulb className="h-4 w-4" />
+                                        <span>Explore</span>
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/*
+                            PRESERVED: Dauntless Navigation Menu (Uncomment to re-enable)
                             <nav aria-label="Main Navigation" className="mt-8 flex w-full max-w-[420px] flex-col divide-y divide-white/[0.08] border-y border-white/[0.08]">
                                 {MAIN_NAV_ITEMS.map((item) => {
                                     const Icon = item.icon;
@@ -211,11 +240,9 @@ export default function LandingPage() {
                                             href={item.href}
                                             className="group relative flex items-center justify-between py-3 px-2 rounded-sm transition-all duration-200 hover:bg-white/[0.035] hover:pl-3"
                                         >
-                                            {/* Left glowing accent line on hover */}
                                             <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-[2.5px] rounded-r bg-[var(--aether-hi)] transition-all duration-200 group-hover:h-3/5 shadow-[0_0_10px_rgba(91,163,255,0.9)]" />
 
                                             <div className="flex items-center gap-3.5">
-                                                {/* Circular Icon Medallion */}
                                                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] text-[var(--aether-hi)] shadow-sm transition-all duration-200 group-hover:border-[var(--aether-line)] group-hover:bg-[var(--aether-a10)] group-hover:text-white group-hover:shadow-[0_0_14px_rgba(91,163,255,0.5)]">
                                                     <Icon className="h-4 w-4" />
                                                 </div>
@@ -240,6 +267,7 @@ export default function LandingPage() {
                                     );
                                 })}
                             </nav>
+                            */}
                         </div>
 
                         {/* Right Column: ASCII Mystic Crest */}
