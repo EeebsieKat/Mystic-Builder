@@ -94,24 +94,24 @@ const ELEMENTS = [
     { name: "Umbral", color: "#8A5FE8", icon: "/assets/icons/elements/Umbral.png", vs: "Radiant" },
 ];
 
-const AXE_ASCII = `                                           _.gd8888888bp._
-                                        .g88888888888888888p.
-                                      .d8888P""       ""Y8888b.
-                                      "Y8P"               "Y8P'
+const AXE_ASCII = `                      ✦                    _.gd8888888bp._       *
+                                        .g88888888888888888p.  . '
+                                      .d8888P""   ⚡   ""Y8888b.
+                                      "Y8P"   ◈       ◈   "Y8P'
                                          \`.               ,'
                                            \\     .-.     /
-                                            \\   (___)   /
- .------------------._______________________:__________j
-/                   |                      |           |\`-.,_
+                                            \\   ( ✦ )   /
+ .-----[⚡]----------._______________________:____[===]___j
+/  MYSTIC SLAYER    | ══ ◈ ══ ᛟ ══ ᚱ ══ ◈ ══ |           |\`-.,_
 \\###################|######################|###########|,-'\`
- \`------------------'                       :    ___   l
-                                            /   (   )   \\
+ \`-----[⚡]----------'                       :    ___   l
+                                            /   ( ✦ )   \\
                                    fsc     /     \`-'     \\
-                                         ,'               \`.
+                                         ,'       ◈       \`.
                                       .d8b.               .d8b.
-                                      "Y8888p..       ,.d8888P"
-                                        "Y88888888888888888P"
-                                           ""YY8888888PP""`;
+                                      "Y8888p..   ⚡   ,.d8888P"
+                                   . '  "Y88888888888888888P"
+                      ✦                    ""YY8888888PP""       *`;
 
 export default function LandingPage() {
     return (
@@ -183,7 +183,7 @@ export default function LandingPage() {
 
                                 <pre
                                     aria-label="Dauntless Battleaxe ASCII Art"
-                                    className="relative font-mono text-[7.5px] xs:text-[8.5px] sm:text-[10px] md:text-[11px] lg:text-[10.5px] xl:text-[12px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-transform duration-500 hover:scale-105"
+                                    className="animate-axe-rotate relative font-mono text-[7px] xs:text-[8px] sm:text-[9.5px] md:text-[10.5px] lg:text-[10px] xl:text-[11.5px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_28px_rgba(91,163,255,0.45)] transition-all duration-300"
                                 >
                                     {AXE_ASCII}
                                 </pre>
