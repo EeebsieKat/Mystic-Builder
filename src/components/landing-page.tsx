@@ -487,10 +487,10 @@ export default function LandingPage() {
                                 <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[var(--gold)] uppercase border border-[var(--gold)]/30 bg-[var(--gold)]/10 rounded-sm">
-                                            517 META BUILDS
+                                            Builds
                                         </div>
                                         <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--gold-bright)]">
-                                            517 Meta Guides Index
+                                            Meta Builds
                                         </h3>
                                         <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-1">
                                             Curated community meta builds from the Reforged index. Filter by weapon, perks, elemental matchup, or game mode.
@@ -524,10 +524,10 @@ export default function LandingPage() {
                                 <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-cyan-400 uppercase border border-cyan-500/30 bg-cyan-500/10 rounded-sm">
-                                            1.14.7 ITEM DATABASE
+                                            1.14.7 ITEMS
                                         </div>
                                         <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-cyan-200">
-                                            Complete Item Armory
+                                            ITEMS DATABSE
                                         </h3>
                                         <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-1">
                                             Every weapon, armour piece, cell, and unique passive effect extracted directly from official 1.14.7 archives.
@@ -553,7 +553,6 @@ export default function LandingPage() {
                 <div className="mx-auto w-full max-w-7xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
                         <div className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/30 bg-[var(--gold)]/10 px-3 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[var(--gold)] uppercase">
-                            <Sparkles className="h-3 w-3" />
                             <span>DEVELOPMENT ROADMAP</span>
                         </div>
                         <h2 className="mt-1.5 font-display text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-white leading-tight">
@@ -571,7 +570,7 @@ export default function LandingPage() {
                             <div className="relative h-[200px] xs:h-[230px] sm:h-[260px] lg:h-[295px] xl:h-[320px] w-full overflow-hidden bg-gradient-to-b from-[#0a1528] via-[#050b14] to-[#070e1a] border-b border-white/[0.08] flex items-center justify-center">
                                 {/* Ambient Background Glow */}
                                 <div className="absolute h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.1)_50%,transparent_70%)] blur-2xl" />
-                                
+
                                 {/* Background Wings Emblem */}
                                 <img
                                     src="/assets/awakening-ui/loadout/GildWingsGold.png"
@@ -590,7 +589,7 @@ export default function LandingPage() {
                                             </span>
                                         </div>
                                         <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--gold)] border border-[var(--gold)]/40 bg-[var(--gold)]/10 px-1.5 py-0.5 rounded-sm">
-                                            Q1 2027
+                                            SOON
                                         </span>
                                     </div>
                                     <p className="mt-2 font-display text-sm font-bold text-white">
@@ -721,44 +720,54 @@ export default function LandingPage() {
                 id="cta-section"
                 className="relative flex min-h-[calc(100vh-56px)] flex-col justify-between overflow-hidden text-center scroll-mt-14"
             >
-                {/* Background Wings centered behind the CTA content, clipped cleanly */}
-                <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20 select-none overflow-hidden">
-                    <img
-                        src="/assets/awakening-ui/loadout/GildWingsGold.png"
-                        alt=""
-                        className="h-auto w-[650px] max-w-none sm:w-[750px] md:w-[900px] object-contain"
+                {/* Centered CTA Content Area with Ambient Glow & Gild Wings */}
+                <div className="relative flex flex-1 flex-col items-center justify-center px-6 py-12 sm:py-16">
+                    {/* Ambient Radial Glow */}
+                    <div
+                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.2)_0%,rgba(224,194,135,0.12)_45%,transparent_70%)] blur-2xl select-none"
                         aria-hidden="true"
                     />
-                </div>
 
-                {/* Empty top spacer to balance the layout */}
-                <div className="h-4 sm:h-8" aria-hidden="true" />
+                    {/* Centered Wings Emblem Framing the CTA */}
+                    <div
+                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none"
+                        aria-hidden="true"
+                    >
+                        <img
+                            src="/assets/awakening-ui/loadout/GildWingsGold.png"
+                            alt=""
+                            className="h-auto w-[520px] max-w-none sm:w-[680px] md:w-[780px] opacity-35 object-contain drop-shadow-[0_0_25px_rgba(224,194,135,0.25)]"
+                        />
+                    </div>
 
-                {/* Main CTA Content */}
-                <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
-                    <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
-                        Ready to Hunt, Slayer?
-                    </h2>
-                    <p className="mt-4 text-base text-[var(--ink-2)]">
-                        Launch the builder to craft, optimize, and share your Dauntless 1.14.7 loadouts today.
-                    </p>
-                    <div className="mt-8 flex items-center justify-center gap-4">
-                        <Button
-                            asChild
-                            size="lg"
-                            className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
-                        >
-                            <Link href="/builder" className="inline-flex items-center gap-2">
-                                <Hammer className="h-4 w-4" />
-                                <span>Start Building Now</span>
-                                <ArrowRight className="h-4 w-4" />
-                            </Link>
-                        </Button>
+                    {/* Foreground Typography & Action Button */}
+                    <div className="relative z-10 mx-auto max-w-3xl">
+                        <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl drop-shadow-lg">
+                            Ready to Hunt, Slayer?
+                        </h2>
+                        <p className="mt-4 text-sm sm:text-base leading-relaxed text-[var(--ink-2)] max-w-xl mx-auto">
+                            Launch the builder to craft, optimize, and share your Dauntless 1.14.7 loadouts today.
+                        </p>
+                        <div className="mt-8 flex items-center justify-center gap-4">
+                            <Button
+                                asChild
+                                size="lg"
+                                className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
+                            >
+                                <Link href="/builder" className="inline-flex items-center gap-2">
+                                    <Hammer className="h-4 w-4" />
+                                    <span>Start Building Now</span>
+                                    <ArrowRight className="h-4 w-4" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
 
                 {/* Footer docked cleanly at the bottom */}
-                <Footer />
+                <div className="relative z-10 w-full">
+                    <Footer />
+                </div>
             </section>
         </div>
     );
