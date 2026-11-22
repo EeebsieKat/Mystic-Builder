@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
 import NavLinks from "@/components/site-nav-links";
+import AdPopups from "@/components/ad-popups";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -90,6 +91,7 @@ export default function RootLayout({
                     {children}
                 </div>
                 <Toaster />
+                <AdPopups />
             </body>
         </html>
     );
