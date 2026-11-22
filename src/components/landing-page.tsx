@@ -7,44 +7,16 @@ import { useRouter } from "next/navigation";
 import {
     ArrowRight,
     ChevronDown,
-    Compass,
     Database,
-    ExternalLink,
     Hammer,
     Heart,
     Info,
-    Layers,
     Lightbulb,
-    Shield,
     Sparkles,
-    Swords,
-    Zap,
 } from "lucide-react";
 
 import { Footer } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { GAME_VERSION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
-
-const WEAPON_CLASSES = [
-    { id: "Sword", name: "Sword", icon: "/assets/icons/generic/Sword.png", role: "Balanced DPS & Overdrive" },
-    { id: "Axe", name: "Axe", icon: "/assets/icons/generic/Axe.png", role: "Charged Cleaves & Resolve" },
-    { id: "Hammer", name: "Hammer", icon: "/assets/icons/generic/Hammer.png", role: "Stagger Crushes & Aethercharge" },
-    { id: "Chain Blades", name: "Chain Blades", icon: "/assets/icons/generic/ChainBlades.png", role: "High Mobility & Reapers" },
-    { id: "War Pike", name: "War Pike", icon: "/assets/icons/generic/WarPike.png", role: "Wound Piercing & Missiles" },
-    { id: "Repeaters", name: "Repeaters", icon: "/assets/icons/generic/Repeater.png", role: "Modular Ranged Firepower" },
-    { id: "Aether Strikers", name: "Aether Strikers", icon: "/assets/icons/generic/AetherStrikers.png", role: "Rapid Mantras & Surges" },
-];
-
-const ELEMENTS = [
-    { name: "Blaze", color: "#E25822", icon: "/assets/icons/elements/Blaze.png", vs: "Frost" },
-    { name: "Frost", color: "#6EC6E8", icon: "/assets/icons/elements/Frost.png", vs: "Blaze" },
-    { name: "Shock", color: "#F3C13A", icon: "/assets/icons/elements/Shock.png", vs: "Terra" },
-    { name: "Terra", color: "#6FBF4B", icon: "/assets/icons/elements/Terra.png", vs: "Shock" },
-    { name: "Radiant", color: "#EFD97F", icon: "/assets/icons/elements/Radiant.png", vs: "Umbral" },
-    { name: "Umbral", color: "#8A5FE8", icon: "/assets/icons/elements/Umbral.png", vs: "Radiant" },
-];
 
 const LOGO_ASCII = `                   /\\    /\\                   
                   /8\\    /8\\                  
@@ -105,8 +77,6 @@ const SECTION_IDS = [
     "hero-section",
     "core-capabilities",
     "latest-news",
-    "weapon-classes",
-    "elemental-system",
     "cta-section",
 ];
 
@@ -742,83 +712,6 @@ export default function LandingPage() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* WEAPON CLASSES RAIL */}
-            <section id="weapon-classes" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
-                <div className="mx-auto max-w-5xl">
-                    <div className="flex flex-col items-center text-center">
-                        <p className="panel-label">Weapon Armory</p>
-                        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                            All 7 Slayer Weapon Classes
-                        </h2>
-                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
-                            Select a weapon class to view verified meta builds, weapon stats, cell sockets, and special modifications.
-                        </p>
-                    </div>
-
-                    <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
-                        {WEAPON_CLASSES.map(w => (
-                            <Link
-                                key={w.id}
-                                href={`/?tab=suggestions&weapon=${encodeURIComponent(w.id)}`}
-                                className="group flex flex-col items-center rounded-xl border border-[var(--line)] bg-[var(--bg-raise)]/60 p-4 text-center transition-all duration-200 hover:border-[var(--aether-line)] hover:bg-[var(--aether-a10)] hover:scale-105 cursor-pointer"
-                            >
-                                <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--line-2)] bg-black/40 p-2 group-hover:border-[var(--aether-line)] transition-colors">
-                                    <img
-                                        src={w.icon}
-                                        alt={w.name}
-                                        className="h-10 w-10 object-contain drop-shadow-sm group-hover:scale-110 transition-transform"
-                                    />
-                                </div>
-                                <span className="mt-3 font-display text-xs font-bold text-white group-hover:text-[var(--aether-hi)] transition-colors">
-                                    {w.name}
-                                </span>
-                                <span className="mt-1 line-clamp-1 text-[10px] text-[var(--ink-4)]">
-                                    {w.role}
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ELEMENTAL MATCHUP MATRIX */}
-            <section id="elemental-system" className="relative z-10 border-t border-[var(--line)] bg-[var(--bg-raise)]/30 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 scroll-mt-14 lg:scroll-mt-16">
-                <div className="mx-auto max-w-5xl">
-                    <div className="flex flex-col items-center text-center">
-                        <p className="panel-label">Elemental Affinity</p>
-                        <h3 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
-                            Master Elemental Strengths &amp; Weaknesses
-                        </h3>
-                        <p className="mt-2 max-w-xl text-xs text-[var(--ink-3)] sm:text-sm">
-                            Harness opposing elements to deal +25 power advantage and avoid -25 resistance penalties.
-                        </p>
-                    </div>
-
-                    <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                        {ELEMENTS.map(elem => (
-                            <Link
-                                key={elem.name}
-                                href={`/?tab=database&element=${elem.name}`}
-                                className="flex flex-col items-center rounded-xl border border-[var(--line)] bg-[var(--bg-raise)]/80 p-3.5 text-center transition-all hover:border-white/30 hover:scale-105"
-                            >
-                                <div
-                                    className="flex h-10 w-10 items-center justify-center rounded-lg p-1.5"
-                                    style={{ backgroundColor: `${elem.color}20`, border: `1px solid ${elem.color}50` }}
-                                >
-                                    <img src={elem.icon} alt={elem.name} className="h-7 w-7 object-contain" />
-                                </div>
-                                <span className="mt-2.5 text-xs font-bold text-white" style={{ color: elem.color }}>
-                                    {elem.name}
-                                </span>
-                                <span className="text-[10px] text-[var(--ink-3)]">
-                                    Strong vs {elem.vs}
-                                </span>
-                            </Link>
-                        ))}
                     </div>
                 </div>
             </section>
