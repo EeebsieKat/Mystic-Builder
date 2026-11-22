@@ -19,7 +19,7 @@ import type { PerkTotal as ViewPerkTotal } from "@/game/build-view";
 /* ------------------------------------------------------------------ */
 
 export const CrestHeader = ({ power, resistance }: { power: number; resistance: number }) => (
-    <div className="relative -mt-3 flex h-[176px] -translate-y-2 items-center justify-between" aria-label="Loadout ratings">
+    <div className="relative -mt-3 flex h-[176px] -translate-y-6 items-center justify-between" aria-label="Loadout ratings">
         {/* Power / Weapon Section (Left) */}
         <div className="relative flex h-[133px] w-[214px] items-center justify-center">
             <img
