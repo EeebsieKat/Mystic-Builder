@@ -492,29 +492,29 @@ export default function LandingPage() {
             {/* THREE CORE PILLARS / COMPACT CINEMATIC BENTO SHOWCASE */}
             <section
                 id="core-capabilities"
-                className="relative z-10 flex min-h-[calc(100vh-56px)] flex-col justify-center px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 py-4 sm:py-6 lg:py-8 scroll-mt-14"
+                className="relative z-10 flex min-h-[calc(100vh-56px)] flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-6 sm:py-8 lg:py-10 scroll-mt-14"
             >
-                <div className="mx-auto w-full max-w-6xl">
+                <div className="mx-auto w-full max-w-7xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
-                        <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
+                        <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
                             Core Capabilities
                         </p>
-                        <h2 className="mt-0.5 font-display text-xl sm:text-2xl lg:text-[24px] font-bold tracking-tight text-white leading-tight">
+                        <h2 className="mt-0.5 font-display text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-white leading-tight">
                             Everything You Need to Master the Hunt
                         </h2>
-                        <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-3)]">
+                        <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-3)]">
                             Built from official 1.14.7 game extracts with authentic visual assets, calculation engines, and instant URL sharing.
                         </p>
                     </div>
 
-                    <div className="mt-3 sm:mt-4 grid grid-cols-1 lg:grid-cols-12 gap-3.5 lg:gap-4 items-stretch">
+                    <div className="mt-5 sm:mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
                         {/* LEFT: Large Featured Hero Card (Span 7) */}
                         <Link
                             href="/builder"
-                            className="group relative lg:col-span-7 flex flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--aether-line)] hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(91,163,255,0.18)] cursor-pointer"
+                            className="group relative lg:col-span-7 flex flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--aether-line)] hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(91,163,255,0.18)] cursor-pointer"
                         >
                             {/* Proportional Image Frame */}
-                            <div className="relative h-[160px] xs:h-[185px] sm:h-[205px] lg:h-[220px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
+                            <div className="relative h-[200px] xs:h-[230px] sm:h-[260px] lg:h-[295px] xl:h-[320px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                 <Image
                                     src="/assets/showcase/preview-builder.png"
                                     alt="Awakening Loadout Planner"
@@ -527,34 +527,34 @@ export default function LandingPage() {
                             </div>
 
                             {/* Bottom Content Area */}
-                            <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4">
+                            <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 lg:p-6">
                                 <div>
                                     <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[var(--aether-hi)] uppercase border border-[var(--aether-line)] bg-[var(--aether-a10)] rounded-sm">
                                         LIVE BUILDER
                                     </div>
-                                    <h3 className="mt-1.5 font-display text-base sm:text-lg lg:text-[20px] font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--aether-hi)]">
+                                    <h3 className="mt-2 font-display text-lg sm:text-xl lg:text-[22px] font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--aether-hi)]">
                                         Awakening Loadout Planner
                                     </h3>
-                                    <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
+                                    <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-2)] line-clamp-2">
                                         The premier build calculator for Dauntless 1.14.7. Equip weapons, armour, lanterns, and omnicells with live Power Surge scaling and perk threshold calculation.
                                     </p>
                                 </div>
 
-                                <div className="mt-2.5 flex items-center gap-2 text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-[var(--aether-hi)] transition-colors group-hover:text-white">
+                                <div className="mt-4 flex items-center gap-2 text-xs sm:text-[13px] font-mono font-bold tracking-widest uppercase text-[var(--aether-hi)] transition-colors group-hover:text-white">
                                     <span>Launch Build Planner</span>
-                                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </div>
                             </div>
                         </Link>
 
                         {/* RIGHT: Stacked 2 Cards (Span 5) */}
-                        <div className="lg:col-span-5 flex flex-col gap-3 lg:gap-3.5 justify-between">
+                        <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-5 justify-between">
                             {/* Right Top: 517 Meta Guides Index */}
                             <Link
                                 href="/?tab=suggestions"
-                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--gold)]/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(224,194,135,0.18)] cursor-pointer"
+                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--gold)]/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(224,194,135,0.18)] cursor-pointer"
                             >
-                                <div className="relative h-[76px] sm:h-[88px] lg:h-[94px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
                                         src="/assets/showcase/preview-suggestions.png"
                                         alt="517 Meta Guides Index"
@@ -565,22 +565,22 @@ export default function LandingPage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-85" />
                                 </div>
 
-                                <div className="flex flex-1 flex-col justify-between p-2.5 sm:p-3">
+                                <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[var(--gold)] uppercase border border-[var(--gold)]/30 bg-[var(--gold)]/10 rounded-sm">
                                             517 META BUILDS
                                         </div>
-                                        <h3 className="mt-0.5 font-display text-xs sm:text-sm font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--gold-bright)]">
+                                        <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--gold-bright)]">
                                             517 Meta Guides Index
                                         </h3>
-                                        <p className="mt-0.5 text-[10px] sm:text-[10.5px] leading-relaxed text-[var(--ink-2)] line-clamp-1">
+                                        <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-1">
                                             Curated community meta builds from the Reforged index. Filter by weapon, perks, elemental matchup, or game mode.
                                         </p>
                                     </div>
 
-                                    <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold tracking-widest uppercase text-[var(--gold)] transition-colors group-hover:text-white">
+                                    <div className="mt-2.5 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-[var(--gold)] transition-colors group-hover:text-white">
                                         <span>Browse Meta Builds</span>
-                                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                     </div>
                                 </div>
                             </Link>
@@ -588,9 +588,9 @@ export default function LandingPage() {
                             {/* Right Bottom: Complete Item Armory */}
                             <Link
                                 href="/?tab=database"
-                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-cyan-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(6,182,212,0.18)] cursor-pointer"
+                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-cyan-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(6,182,212,0.18)] cursor-pointer"
                             >
-                                <div className="relative h-[76px] sm:h-[88px] lg:h-[94px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
                                         src="/assets/showcase/preview-database.png"
                                         alt="Complete Item Armory"
@@ -601,22 +601,22 @@ export default function LandingPage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-85" />
                                 </div>
 
-                                <div className="flex flex-1 flex-col justify-between p-2.5 sm:p-3">
+                                <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-cyan-400 uppercase border border-cyan-500/30 bg-cyan-500/10 rounded-sm">
                                             1.14.7 ITEM DATABASE
                                         </div>
-                                        <h3 className="mt-0.5 font-display text-xs sm:text-sm font-bold tracking-wider text-white uppercase transition-colors group-hover:text-cyan-200">
+                                        <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-cyan-200">
                                             Complete Item Armory
                                         </h3>
-                                        <p className="mt-0.5 text-[10px] sm:text-[10.5px] leading-relaxed text-[var(--ink-2)] line-clamp-1">
+                                        <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-1">
                                             Every weapon, armour piece, cell, and unique passive effect extracted directly from official 1.14.7 archives.
                                         </p>
                                     </div>
 
-                                    <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold tracking-widest uppercase text-cyan-400 transition-colors group-hover:text-white">
+                                    <div className="mt-2.5 flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-cyan-400 transition-colors group-hover:text-white">
                                         <span>Explore Database</span>
-                                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                     </div>
                                 </div>
                             </Link>
