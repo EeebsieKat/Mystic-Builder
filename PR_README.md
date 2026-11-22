@@ -57,10 +57,11 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 - Fixed an issue where legacy 12-hour localStorage suppression (`mystic-builder-ads-suppressed-until`) prevented promotional dialogs from showing.
 - Lowered initial popup trigger delay to 2 seconds and verified active promo cards.
 
-### 6. Item Database & Cell Descriptions
+### 6. Item Database & Slotted Cell Perk Breakdown
 - **Perk Effect Overview**: Cell modals in the Item Database browser now display the underlying perk's effect overview and description directly.
 - **Tier-Specific Breakdown**: Available Cell Tiers (+1, +2, +3) in the database modal now display the exact interpolated perk values (e.g. `+5 stamina regeneration`, `+10 stamina regeneration`, `+15 stamina regeneration`) alongside the rarity and rank.
-- **Cell Cards & Picker Overlays**: Cell list cards in the database browser now render the perk summary description, and the builder's cell item picker overlay surfaces perk effect descriptions when browsing cell sockets.
+- **Inherent Perks with Activation Stats**: Weapons, armours, and lanterns in the database browser now render full perk detail rows with the slot icon, perk points, exact effect description, and activation threshold (`ACTIVATES AT: X PERK POINTS`), matching the in-game detail card reference.
+- **Meta Builds Slotted Cells & Tooltips**: The Meta Builds inspection dialog now renders slotted cells as full detail cards displaying slot icon, cell name, perk points (`PERK POINTS: 3`), exact interpolated tier bonus description, and activation threshold (`ACTIVATES AT: 3 PERK POINTS`). Weapon and armour hover cards also display slotted cell effects.
 
 ---
 
@@ -72,7 +73,8 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 | `src/app/b/[buildId]/page.tsx` | Added `searchParams` parsing for custom build name sharing and dynamic OpenGraph titles. |
 | `src/app/layout.tsx` | Updated OpenGraph site name / title to `Mystic Builder`, wrapped children in `PageTransition`. |
 | `src/app/page.tsx` | Added redirects to `/builder`, updated OpenGraph metadata, and passed through build name params. |
-| `src/components/browse-database.tsx` | Added cell perk overview and tier-by-tier effect descriptions to database cards and detail dialogs. |
+| `src/components/browse-database.tsx` | Added cell perk overview and tier-by-tier effect descriptions to database cards, detail dialogs, and inherent perk rows. |
+| `src/components/build-suggestions.tsx` | Slotted cells in Meta Builds modal now display full perk points, interpolated tier stats, and activation thresholds. |
 | `src/components/loadout/loadout-screen.tsx` | Clean `/builder` URL sync, custom name URL sharing, fixed Randomize/Reset handlers, cell picker descriptions. |
 | `src/components/loadout/loadout-stage.tsx` | Initialized SSR stage scale to `1` to eliminate empty loadout container during server rendering. |
 | `src/components/site-nav-links.tsx` | Added `Main Website` navigation pill linking to `https://mysticparadox.com`. |
@@ -89,7 +91,7 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 - [x] **URL Cleanliness**: Visiting `/builder` displays the default build with URL bar cleanly remaining `http://localhost:3000/builder`.
 - [x] **URL Name Sharing**: Editing nameplate to a custom name updates URL to `?name=...`. Loading `/b/<id>?name=CustomName` sets the nameplate and page title.
 - [x] **Randomize & Reset**: Clicking `RANDOMIZE` updates all slots and generates a new name without snapping back to default. Clicking `RESET` clears all gear and resets name to `"SLAYER"`.
-- [x] **Cell Descriptions**: Database modal and cards display the perk overview description and specific tier effect bonuses for all cell types.
+- [x] **Cell & Inherent Perk Details**: Database modal and Meta Builds slotted cells display full perk points, interpolated tier stats, and activation thresholds matching the Awakening detail card.
 - [x] **OpenGraph Image Generation**: `GET /b/<id>/opengraph-image` returns HTTP 200 `image/png` with valid dimensions (1200x630) and rich gear/perk cards.
 - [x] **Social Link Previews**: Checked Discord embed compatibility with `og:image`, `og:title`, and `og:description`.
 - [x] **Browser Tab Synchronization**: Browser tab immediately updates to `${buildName} - Mystic Builder` on SSR load, input edits, randomize, and reset.

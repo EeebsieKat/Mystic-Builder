@@ -226,6 +226,75 @@ const EffectList = ({
     );
 };
 
+const InherentPerkRows = ({
+    perks,
+}: {
+    perks: { name: string; value: number; powerSurged?: boolean }[] | null | undefined;
+}) => {
+    if (!perks || perks.length === 0) return null;
+
+    return (
+        <div className="flex flex-col gap-2">
+            {perks.map((perk, index) => {
+                const perkDef = (gameData.perks as Record<string, PerkData>)[perk.name];
+                const type = perkDef?.type || "Prismatic";
+                const eff = perkDef?.effects?.[String(perk.value)];
+                const formattedEffect = eff
+                    ? cleanText(formatPerkEffect(eff))
+                    : perkDef?.description
+                        ? cleanText(perkDef.description)
+                        : null;
+                const slotColor = cellTypeColor(type);
+
+                return (
+                    <div
+                        key={`${perk.name}-${index}`}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-border/50 bg-background/50 p-3 hover:bg-muted/20 transition-colors"
+                    >
+                        <div className="flex items-start sm:items-center gap-3 min-w-0 sm:w-[220px] shrink-0">
+                            <div
+                                className="relative h-9 w-9 shrink-0 rounded-lg border bg-muted/40 p-1 flex items-center justify-center"
+                                style={{
+                                    borderColor: `${slotColor}60`,
+                                    backgroundColor: `${slotColor}15`,
+                                }}
+                            >
+                                <Image
+                                    src={`/assets/icons/perks/${type}.png`}
+                                    alt={perk.name}
+                                    width={26}
+                                    height={26}
+                                    className="object-contain"
+                                />
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                                <span className="text-sm font-bold text-foreground truncate">
+                                    {perk.name}
+                                    {perk.powerSurged ? " (Surged)" : ""}
+                                </span>
+                                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    PERK POINTS: {perk.value}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-1 flex-col gap-0.5 min-w-0 sm:pl-2">
+                            {formattedEffect ? (
+                                <p className="text-xs sm:text-[13px] leading-relaxed text-foreground/90 font-medium">
+                                    {highlightGameText(formattedEffect)}
+                                </p>
+                            ) : null}
+                            <span className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                                ACTIVATES AT: {perk.value} PERK POINT{perk.value === 1 ? "" : "S"}
+                            </span>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
 const ChipRow = ({ children }: { children: React.ReactNode }) => {
     const items = Array.isArray(children) ? children : [children];
     if (items.filter(Boolean).length === 0) {
@@ -692,9 +761,9 @@ const ItemDetailDialog = ({
                                             </ChipRow>
                                         </div>
                                         {(weapon.perks && weapon.perks.length > 0) ? (
-                                            <div className="border-t border-border/40 pt-2">
-                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-1">Inherent Perks</span>
-                                                <PerkList perks={weapon.perks} className="text-xs" />
+                                            <div className="border-t border-border/40 pt-2.5">
+                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                                <InherentPerkRows perks={weapon.perks} />
                                             </div>
                                         ) : null}
                                     </div>
@@ -812,9 +881,9 @@ const ItemDetailDialog = ({
                                             </ChipRow>
                                         </div>
                                         {(armour.perks && armour.perks.length > 0) ? (
-                                            <div className="border-t border-border/40 pt-2">
-                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-1">Inherent Perks</span>
-                                                <PerkList perks={armour.perks} className="text-xs" />
+                                            <div className="border-t border-border/40 pt-2.5">
+                                                <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                                <InherentPerkRows perks={armour.perks} />
                                             </div>
                                         ) : null}
                                     </div>
@@ -1097,11 +1166,16 @@ const ItemDetailDialog = ({
                                 <h4 className="text-xs font-bold uppercase tracking-wider text-primary">
                                     Cell Sockets & Inherent Perks
                                 </h4>
-                                <div className="rounded-lg border border-border/60 bg-muted/20 p-3">
+                                <div className="rounded-lg border border-border/60 bg-muted/20 p-3 flex flex-col gap-2.5">
                                     <ChipRow>
                                         <CellSlotChips cells={lantern.cells} />
                                     </ChipRow>
-                                    <PerkList perks={lantern.perks} className="mt-2 text-xs" />
+                                    {(lantern.perks && lantern.perks.length > 0) ? (
+                                        <div className="border-t border-border/40 pt-2.5">
+                                            <span className="text-[10.5px] font-semibold uppercase text-muted-foreground block mb-2">Inherent Perks</span>
+                                            <InherentPerkRows perks={lantern.perks} />
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
 
