@@ -57,21 +57,16 @@ export const viewport: Viewport = {
 const Header = () => (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--bg)]/80 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bg)]/60">
         <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
-        <div className="relative flex h-14 w-full items-center justify-between px-6 lg:px-10">
+        <div className="flex h-14 w-full items-center justify-between px-6 lg:px-10">
             <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
-                <img
-                    alt="Mystic Paradox Logo"
-                    width={50}
-                    src="/assets/awakening-ui/logo/icon.png"
-                    className="h-10 w-10 md:h-[50px] md:w-[50px]"
-                />
-                <span className="hidden whitespace-nowrap text-base sm:text-lg md:inline">
+                <img alt="Mystic Paradox Logo" width="50" src="/assets/awakening-ui/logo/icon.png" />
+                <span className="whitespace-nowrap text-base sm:text-lg">
                     <span className="text-gold-gradient font-display font-bold">Mystic</span>{" "}
                     <span className="text-foreground font-display font-bold">Builder</span>
                 </span>
             </Link>
             <nav
-                className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+                className="flex items-center gap-1.5 text-sm"
                 aria-label="Main navigation"
             >
                 <Suspense fallback={null}>
