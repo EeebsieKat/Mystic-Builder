@@ -393,7 +393,7 @@ export default function LandingPage() {
                     <img
                         src="/assets/texture/rays.png"
                         alt=""
-                        className="h-full w-full object-cover object-top mix-blend-screen opacity-65 sm:opacity-70"
+                        className="h-full w-full object-cover object-top mix-blend-screen opacity-55 sm:opacity-60"
                     />
                 </div>
 
