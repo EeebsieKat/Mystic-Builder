@@ -719,26 +719,8 @@ export default function LandingPage() {
                 id="cta-section"
                 className="relative flex min-h-[calc(100vh-56px)] flex-col justify-between overflow-hidden text-center scroll-mt-14"
             >
-                {/* Centered CTA Content Area with Ambient Glow & Gild Wings */}
+                {/* Centered CTA Content Area */}
                 <div className="relative flex flex-1 flex-col items-center justify-center px-6 py-12 sm:py-16">
-                    {/* Ambient Radial Glow */}
-                    <div
-                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.2)_0%,rgba(224,194,135,0.12)_45%,transparent_70%)] blur-2xl select-none"
-                        aria-hidden="true"
-                    />
-
-                    {/* Centered Wings Emblem Framing the CTA */}
-                    <div
-                        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none"
-                        aria-hidden="true"
-                    >
-                        <img
-                            src="/assets/awakening-ui/loadout/GildWingsGold.png"
-                            alt=""
-                            className="h-auto w-[520px] max-w-none sm:w-[680px] md:w-[780px] opacity-35 object-contain drop-shadow-[0_0_25px_rgba(224,194,135,0.25)]"
-                        />
-                    </div>
-
                     {/* Foreground Typography & Action Button */}
                     <div className="relative z-10 mx-auto max-w-3xl">
                         <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl drop-shadow-lg">
