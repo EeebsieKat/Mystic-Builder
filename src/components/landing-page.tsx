@@ -495,9 +495,9 @@ export default function LandingPage() {
 
             <div className="gold-rule mx-auto max-w-5xl w-full" aria-hidden="true" />
 
-            {/* THREE CORE PILLARS / BENTO SHOWCASE */}
+            {/* THREE CORE PILLARS / ASYMMETRIC BENTO SHOWCASE */}
             <section id="core-capabilities" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
-                <div className="mx-auto max-w-5xl">
+                <div className="mx-auto max-w-6xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
                         <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
                             Core Capabilities
@@ -510,171 +510,120 @@ export default function LandingPage() {
                         </p>
                     </div>
 
-                    <div className="mt-8 grid gap-6 md:grid-cols-3">
-                        {/* 1. Awakening Loadout Planner */}
+                    <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                        {/* LEFT: Large Featured Hero Card (Span 7) */}
                         <Link
                             href="/builder"
-                            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 shadow-lg transition-all duration-300 hover:border-[var(--aether-line)] hover:shadow-[0_0_35px_rgba(91,163,255,0.2)] hover:-translate-y-1.5 cursor-pointer"
+                            className="group relative lg:col-span-7 flex flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--aether-line)] hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(91,163,255,0.18)] cursor-pointer"
                         >
-                            {/* Window Preview Container */}
-                            <div className="relative flex flex-col border-b border-white/[0.08] bg-black/40">
-                                {/* Titlebar */}
-                                <div className="flex h-7 items-center justify-between px-3 border-b border-white/[0.06] bg-white/[0.02]">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                    </div>
-                                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--ink-4)]">
-                                        /builder
-                                    </span>
-                                    <div className="h-1.5 w-1.5 rounded-full bg-[var(--aether-hi)] shadow-[0_0_6px_rgba(91,163,255,0.8)]" />
-                                </div>
-
-                                {/* Real Screenshot with hover zoom & bottom fade */}
-                                <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden bg-black/60">
-                                    <Image
-                                        src="/assets/showcase/preview-builder.png"
-                                        alt="Awakening Loadout Planner UI Preview"
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-raise)] via-transparent to-transparent" />
-                                </div>
+                            {/* Large Image Frame taking upper ~65% */}
+                            <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:h-[380px] xl:h-[420px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
+                                <Image
+                                    src="/assets/showcase/preview-builder.png"
+                                    alt="Awakening Loadout Planner"
+                                    fill
+                                    priority
+                                    sizes="(max-width: 1024px) 100vw, 60vw"
+                                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-80" />
                             </div>
 
-                            {/* Card Content */}
-                            <div className="flex flex-1 flex-col justify-between p-5">
+                            {/* Bottom Content Area */}
+                            <div className="flex flex-1 flex-col justify-between p-6">
                                 <div>
-                                    <div className="inline-flex items-center gap-1.5 rounded-md border border-[var(--aether-line)] bg-[var(--aether-a10)] px-2.5 py-0.5 text-[10px] font-semibold text-[var(--aether-hi)]">
-                                        <Hammer className="h-3 w-3" />
-                                        <span>Build Calculator</span>
+                                    <div className="inline-block px-2.5 py-0.5 text-[10px] font-mono font-bold tracking-widest text-[var(--aether-hi)] uppercase border border-[var(--aether-line)] bg-[var(--aether-a10)] rounded-sm">
+                                        LIVE BUILDER
                                     </div>
-                                    <h3 className="mt-3 font-display text-base sm:text-lg font-bold text-white transition-colors group-hover:text-[var(--aether-hi)]">
+                                    <h3 className="mt-3.5 font-display text-xl sm:text-2xl font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--aether-hi)]">
                                         Awakening Loadout Planner
                                     </h3>
-                                    <p className="mt-2 text-xs leading-relaxed text-[var(--ink-2)]">
-                                        Equip weapons, armor, lanterns, and omnicells with live Power Surge scaling and perk threshold calculation.
+                                    <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[var(--ink-2)]">
+                                        The premier build calculator for Dauntless 1.14.7. Equip weapons, armour, lanterns, and omnicells with live Power Surge scaling and perk threshold calculation.
                                     </p>
                                 </div>
 
-                                <div className="mt-5 flex items-center justify-between border-t border-white/[0.08] pt-3 text-xs font-semibold text-[var(--aether-hi)] transition-colors group-hover:text-white">
+                                <div className="mt-6 flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-[var(--aether-hi)] transition-colors group-hover:text-white">
                                     <span>Launch Build Planner</span>
                                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                 </div>
                             </div>
                         </Link>
 
-                        {/* 2. 517 Meta Builds Index */}
-                        <Link
-                            href="/?tab=suggestions"
-                            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 shadow-lg transition-all duration-300 hover:border-[var(--gold)]/50 hover:shadow-[0_0_35px_rgba(224,194,135,0.2)] hover:-translate-y-1.5 cursor-pointer"
-                        >
-                            {/* Window Preview Container */}
-                            <div className="relative flex flex-col border-b border-white/[0.08] bg-black/40">
-                                {/* Titlebar */}
-                                <div className="flex h-7 items-center justify-between px-3 border-b border-white/[0.06] bg-white/[0.02]">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                    </div>
-                                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--ink-4)]">
-                                        /meta-builds
-                                    </span>
-                                    <div className="h-1.5 w-1.5 rounded-full bg-[var(--gold)] shadow-[0_0_6px_rgba(224,194,135,0.8)]" />
-                                </div>
-
-                                {/* Real Screenshot with hover zoom & bottom fade */}
-                                <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden bg-black/60">
+                        {/* RIGHT: Stacked 2 Cards (Span 5) */}
+                        <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
+                            {/* Right Top: 517 Meta Guides Index */}
+                            <Link
+                                href="/?tab=suggestions"
+                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--gold)]/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(224,194,135,0.18)] cursor-pointer"
+                            >
+                                <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
                                         src="/assets/showcase/preview-suggestions.png"
-                                        alt="517 Meta Guides Index UI Preview"
+                                        alt="517 Meta Guides Index"
                                         fill
-                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                        sizes="(max-width: 1024px) 100vw, 40vw"
                                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-raise)] via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-80" />
                                 </div>
-                            </div>
 
-                            {/* Card Content */}
-                            <div className="flex flex-1 flex-col justify-between p-5">
-                                <div>
-                                    <div className="inline-flex items-center gap-1.5 rounded-md border border-[var(--gold)]/30 bg-[var(--gold)]/10 px-2.5 py-0.5 text-[10px] font-semibold text-[var(--gold)]">
-                                        <Lightbulb className="h-3 w-3" />
-                                        <span>517 Curated Guides</span>
+                                <div className="flex flex-1 flex-col justify-between p-5">
+                                    <div>
+                                        <div className="inline-block px-2.5 py-0.5 text-[10px] font-mono font-bold tracking-widest text-[var(--gold)] uppercase border border-[var(--gold)]/30 bg-[var(--gold)]/10 rounded-sm">
+                                            517 META BUILDS
+                                        </div>
+                                        <h3 className="mt-2.5 font-display text-base sm:text-lg font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--gold-bright)]">
+                                            517 Meta Guides Index
+                                        </h3>
+                                        <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
+                                            Curated community meta builds from the Reforged index. Filter by weapon, perks, elemental matchup, or game mode.
+                                        </p>
                                     </div>
-                                    <h3 className="mt-3 font-display text-base sm:text-lg font-bold text-white transition-colors group-hover:text-[var(--gold-bright)]">
-                                        517 Meta Guides Index
-                                    </h3>
-                                    <p className="mt-2 text-xs leading-relaxed text-[var(--ink-2)]">
-                                        Explore curated community meta builds from the Reforged index. Filter by weapon, perks, elemental matchup, or game mode.
-                                    </p>
-                                </div>
 
-                                <div className="mt-5 flex items-center justify-between border-t border-white/[0.08] pt-3 text-xs font-semibold text-[var(--gold)] transition-colors group-hover:text-white">
-                                    <span>Browse Meta Builds</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                                </div>
-                            </div>
-                        </Link>
-
-                        {/* 3. 1.14.7 Armory Database */}
-                        <Link
-                            href="/?tab=database"
-                            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[var(--line-2)] bg-[var(--bg-raise)]/90 shadow-lg transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_0_35px_rgba(6,182,212,0.2)] hover:-translate-y-1.5 cursor-pointer"
-                        >
-                            {/* Window Preview Container */}
-                            <div className="relative flex flex-col border-b border-white/[0.08] bg-black/40">
-                                {/* Titlebar */}
-                                <div className="flex h-7 items-center justify-between px-3 border-b border-white/[0.06] bg-white/[0.02]">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
-                                        <div className="h-2 w-2 rounded-full bg-white/20" />
+                                    <div className="mt-4 flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-[var(--gold)] transition-colors group-hover:text-white">
+                                        <span>Browse Meta Builds</span>
+                                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                     </div>
-                                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--ink-4)]">
-                                        /item-database
-                                    </span>
-                                    <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(6,182,212,0.8)]" />
                                 </div>
+                            </Link>
 
-                                {/* Real Screenshot with hover zoom & bottom fade */}
-                                <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden bg-black/60">
+                            {/* Right Bottom: Complete Item Armory */}
+                            <Link
+                                href="/?tab=database"
+                                className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-cyan-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(6,182,212,0.18)] cursor-pointer"
+                            >
+                                <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
                                         src="/assets/showcase/preview-database.png"
-                                        alt="Complete Item Armory UI Preview"
+                                        alt="Complete Item Armory"
                                         fill
-                                        sizes="(max-width: 768px) 100vw, 33vw"
+                                        sizes="(max-width: 1024px) 100vw, 40vw"
                                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-raise)] via-transparent to-transparent" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-80" />
                                 </div>
-                            </div>
 
-                            {/* Card Content */}
-                            <div className="flex flex-1 flex-col justify-between p-5">
-                                <div>
-                                    <div className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-cyan-400">
-                                        <Database className="h-3 w-3" />
-                                        <span>Game Database</span>
+                                <div className="flex flex-1 flex-col justify-between p-5">
+                                    <div>
+                                        <div className="inline-block px-2.5 py-0.5 text-[10px] font-mono font-bold tracking-widest text-cyan-400 uppercase border border-cyan-500/30 bg-cyan-500/10 rounded-sm">
+                                            1.14.7 ITEM DATABASE
+                                        </div>
+                                        <h3 className="mt-2.5 font-display text-base sm:text-lg font-bold tracking-wider text-white uppercase transition-colors group-hover:text-cyan-200">
+                                            Complete Item Armory
+                                        </h3>
+                                        <p className="mt-1.5 text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
+                                            Every weapon, armour piece, cell, and unique passive effect extracted directly from official 1.14.7 archives.
+                                        </p>
                                     </div>
-                                    <h3 className="mt-3 font-display text-base sm:text-lg font-bold text-white transition-colors group-hover:text-cyan-200">
-                                        Complete Item Armory
-                                    </h3>
-                                    <p className="mt-2 text-xs leading-relaxed text-[var(--ink-2)]">
-                                        Search every weapon, armour piece, cell, and unique passive effect extracted directly from official Dauntless 1.14.7 archives.
-                                    </p>
-                                </div>
 
-                                <div className="mt-5 flex items-center justify-between border-t border-white/[0.08] pt-3 text-xs font-semibold text-cyan-400 transition-colors group-hover:text-white">
-                                    <span>Explore Item Armory</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                                    <div className="mt-4 flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-cyan-400 transition-colors group-hover:text-white">
+                                        <span>Explore Database</span>
+                                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                                    </div>
                                 </div>
-                            </div>
-                        </Link>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>
