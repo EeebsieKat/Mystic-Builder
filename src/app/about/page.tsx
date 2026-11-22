@@ -79,7 +79,7 @@ export default function AboutPage() {
                         </Button>
                         <Button asChild variant="default" size="sm" className="gap-2">
                             <Link href="/">
-                                Open Build Planner →
+                                Open Build Planner
                             </Link>
                         </Button>
                     </div>

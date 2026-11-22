@@ -73,7 +73,7 @@ export const OG_LINE = "rgba(164, 198, 240, 0.11)";
 export const OG_LINE_2 = "rgba(164, 198, 240, 0.2)";
 export const OG_LINE_3 = "rgba(164, 198, 240, 0.32)";
 
-/** Glass panel: 22px radius (--r-xl), top→bottom glass gradient, hairline border. */
+/** Glass panel: 22px radius (--r-xl), top bottom glass gradient, hairline border. */
 export const ogGlass = (radius = 22): CSSProperties => ({
     display: "flex",
     backgroundImage: "linear-gradient(180deg, rgba(22, 35, 56, 0.6), rgba(9, 16, 28, 0.72))",

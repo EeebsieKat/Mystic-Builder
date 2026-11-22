@@ -59,7 +59,7 @@ want a banner picture).
 
 ## Tuning the popup behaviour
 
-All timing knobs live in one place, `src/ads/index.ts` → `AD_CONFIG`:
+All timing knobs live in one place, `src/ads/index.ts`   `AD_CONFIG`:
 
 | Knob                      | Default | Meaning                                                        |
 | ------------------------- | ------- | -------------------------------------------------------------- |
