@@ -760,18 +760,26 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* BOTTOM CALL TO ACTION */}
-            <section id="cta-section" className="relative px-6 py-20 text-center lg:py-28 scroll-mt-14 lg:scroll-mt-16">
-                <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25 select-none">
+            {/* BOTTOM CALL TO ACTION & FOOTER */}
+            <section
+                id="cta-section"
+                className="relative flex min-h-[calc(100vh-56px)] flex-col justify-between overflow-hidden text-center scroll-mt-14"
+            >
+                {/* Background Wings centered behind the CTA content, clipped cleanly */}
+                <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20 select-none overflow-hidden">
                     <img
                         src="/assets/awakening-ui/loadout/GildWingsGold.png"
                         alt=""
-                        className="h-auto w-[800px] max-w-none md:w-[1000px]"
+                        className="h-auto w-[650px] max-w-none sm:w-[750px] md:w-[900px] object-contain"
                         aria-hidden="true"
                     />
                 </div>
 
-                <div className="mx-auto max-w-3xl">
+                {/* Empty top spacer to balance the layout */}
+                <div className="h-4 sm:h-8" aria-hidden="true" />
+
+                {/* Main CTA Content */}
+                <div className="mx-auto max-w-3xl px-6 py-8 sm:py-12">
                     <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
                         Ready to Hunt, Slayer?
                     </h2>
@@ -792,9 +800,10 @@ export default function LandingPage() {
                         </Button>
                     </div>
                 </div>
-            </section>
 
-            <Footer />
+                {/* Footer docked cleanly at the bottom */}
+                <Footer />
+            </section>
         </div>
     );
 }
