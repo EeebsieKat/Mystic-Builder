@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
     ArrowRight,
+    ChevronDown,
     Compass,
     Database,
     ExternalLink,
@@ -235,15 +236,15 @@ export default function LandingPage() {
                             </nav>
                         </div>
 
-                        {/* Right Column: ASCII Mystic Crest */}
+                        {/* Right Column: ASCII Mystic Crest - Scaled to match left column hierarchy */}
                         <div className="relative flex items-center justify-center lg:col-span-5 select-none">
                             <div className="relative flex items-center justify-center">
                                 {/* Ambient Glow behind Crest */}
-                                <div className="absolute h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.16)_0%,rgba(224,194,135,0.08)_45%,transparent_70%)] blur-3xl" />
+                                <div className="absolute h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.18)_0%,rgba(224,194,135,0.09)_45%,transparent_70%)] blur-3xl" />
 
                                 <pre
                                     aria-label="Mystic Paradox Crest ASCII Art"
-                                    className="relative font-mono text-[8px] xs:text-[9.5px] sm:text-[11px] md:text-[12px] lg:text-[12.5px] xl:text-[14px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--gold-bright)] via-[var(--gold)] to-[var(--aether)] drop-shadow-[0_0_30px_rgba(224,194,135,0.5)] transition-transform duration-500 hover:scale-105"
+                                    className="relative font-mono text-[9.5px] xs:text-[11.5px] sm:text-[13.5px] md:text-[15px] lg:text-[16px] xl:text-[18.5px] 2xl:text-[21px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--gold-bright)] via-[var(--gold)] to-[var(--aether)] drop-shadow-[0_0_35px_rgba(224,194,135,0.5)] transition-transform duration-500 hover:scale-105"
                                 >
                                     {LOGO_ASCII}
                                 </pre>
@@ -251,12 +252,35 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Bottom Center Scroll Guide */}
+                <button
+                    type="button"
+                    onClick={() => {
+                        const next = document.getElementById("core-capabilities");
+                        if (next) {
+                            next.scrollIntoView({ behavior: "smooth" });
+                        } else {
+                            window.scrollBy({ top: window.innerHeight * 0.85, behavior: "smooth" });
+                        }
+                    }}
+                    className="group absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center transition-all duration-300 hover:translate-y-0.5 cursor-pointer select-none"
+                    aria-label="Scroll to explore features"
+                >
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-[var(--ink-3)] transition-colors group-hover:text-[var(--gold)]">
+                        Scroll to Explore
+                    </span>
+                    <div className="flex h-6 w-3.5 items-start justify-center rounded-full border border-white/20 p-0.5 transition-colors group-hover:border-[var(--gold)]/60">
+                        <div className="h-1.5 w-1 rounded-full bg-[var(--gold)] animate-[bounce_1.8s_infinite]" />
+                    </div>
+                    <ChevronDown className="h-3.5 w-3.5 -mt-0.5 text-[var(--ink-4)] transition-all group-hover:text-[var(--gold)] group-hover:translate-y-0.5 animate-pulse" />
+                </button>
             </section>
 
             <div className="gold-rule mx-auto max-w-5xl w-full" aria-hidden="true" />
 
             {/* THREE CORE PILLARS / BENTO SHOWCASE */}
-            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20">
+            <section id="core-capabilities" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20">
                 <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
                         <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
