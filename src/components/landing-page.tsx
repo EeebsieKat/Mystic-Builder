@@ -177,7 +177,7 @@ export default function LandingPage() {
             {/* Subtle Grain Texture Overlay from Assets */}
             <div
                 aria-hidden="true"
-                className="pointer-events-none fixed inset-0 z-0 opacity-100"
+                className="pointer-events-none fixed inset-0 z-0 opacity-40 mix-blend-screen"
                 style={{
                     backgroundImage: `url("/assets/texture/grain.png")`,
                     backgroundRepeat: "repeat",
@@ -201,43 +201,40 @@ export default function LandingPage() {
                                 The premier build calculator and meta armory for Dauntless 1.14.7.
                             </p>
 
-                            {/* Dauntless In-Game Navigation Menu */}
-                            <nav aria-label="Main Navigation" className="mt-7 flex w-full max-w-[390px] flex-col gap-2.5">
+                            {/* Dauntless Sleek Transparent Navigation Menu */}
+                            <nav aria-label="Main Navigation" className="mt-8 flex w-full max-w-[420px] flex-col divide-y divide-white/[0.08] border-y border-white/[0.08]">
                                 {MAIN_NAV_ITEMS.map((item) => {
                                     const Icon = item.icon;
                                     return (
                                         <Link
                                             key={item.name}
                                             href={item.href}
-                                            className="group relative flex items-center transition-all duration-200 hover:translate-x-1"
+                                            className="group relative flex items-center justify-between py-3 px-2 rounded-sm transition-all duration-200 hover:bg-white/[0.035] hover:pl-3"
                                         >
-                                            {/* Circular Medallion Badge */}
-                                            <div className="relative z-20 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#8faec7]/70 bg-gradient-to-b from-[#2e4d6a] via-[#162d42] to-[#0a1724] shadow-[0_3px_10px_rgba(0,0,0,0.85),inset_0_1px_2px_rgba(255,255,255,0.45),inset_0_-1px_2px_rgba(0,0,0,0.9)] transition-all duration-200 group-hover:border-[#72c9ff] group-hover:shadow-[0_0_16px_rgba(114,201,255,0.7)]">
-                                                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-black/70 bg-gradient-to-br from-[#12283e] to-[#06101a] text-[#8dc7ff] transition-colors group-hover:text-white">
-                                                    <Icon className="h-3.5 w-3.5" />
-                                                </div>
-                                            </div>
+                                            {/* Left glowing accent line on hover */}
+                                            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-[2.5px] rounded-r bg-[var(--aether-hi)] transition-all duration-200 group-hover:h-3/5 shadow-[0_0_10px_rgba(91,163,255,0.9)]" />
 
-                                            {/* Chamfered / Beveled Horizontal Slab Bar */}
-                                            <div className="relative -ml-4 z-10 flex h-10 sm:h-11 flex-1 items-center justify-between rounded-r-md border border-[#27445e]/90 border-t-[#6691b5]/60 border-b-[#0b1622] bg-gradient-to-b from-[#183045] via-[#0d1d2b] to-[#07131e] pl-7 pr-4 shadow-[0_4px_12px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-200 group-hover:border-[#5ba3ff] group-hover:border-t-[#b4dcff] group-hover:bg-gradient-to-b group-hover:from-[#1b88e2] group-hover:via-[#0e66b8] group-hover:to-[#074786] group-hover:shadow-[0_0_24px_rgba(91,163,255,0.55),inset_0_1px_0_rgba(255,255,255,0.6)]">
-                                                {/* Top edge gloss highlight */}
-                                                <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent rounded-tr-md" />
+                                            <div className="flex items-center gap-3.5">
+                                                {/* Circular Icon Medallion */}
+                                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] text-[var(--aether-hi)] shadow-sm transition-all duration-200 group-hover:border-[var(--aether-line)] group-hover:bg-[var(--aether-a10)] group-hover:text-white group-hover:shadow-[0_0_14px_rgba(91,163,255,0.5)]">
+                                                    <Icon className="h-4 w-4" />
+                                                </div>
 
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-display text-[13.5px] sm:text-[14.5px] font-bold tracking-wider text-slate-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] transition-colors group-hover:text-white">
+                                                    <span className="font-display text-[15px] sm:text-base font-bold tracking-wide text-white/90 transition-colors group-hover:text-white">
                                                         {item.name}
                                                     </span>
-                                                    <span className="font-mono text-xs font-semibold text-[#8dc7ff]/75 transition-colors group-hover:text-cyan-200">
+                                                    <span className="font-mono text-xs font-semibold text-[var(--gold)]/80 transition-colors group-hover:text-[var(--gold-bright)]">
                                                         [{item.key}]
                                                     </span>
                                                 </div>
+                                            </div>
 
-                                                <div className="flex items-center gap-1.5 opacity-60 transition-opacity group-hover:opacity-100">
-                                                    <span className="h-1.5 w-1.5 rotate-45 border border-cyan-400 bg-cyan-400/50" />
-                                                    <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-300">
-                                                        ENTER
-                                                    </span>
-                                                </div>
+                                            <div className="flex items-center gap-2 text-[var(--ink-3)] transition-all duration-200 group-hover:text-white group-hover:translate-x-1">
+                                                <span className="text-[10px] font-mono tracking-widest uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-80 text-[var(--aether-hi)]">
+                                                    Select
+                                                </span>
+                                                <ArrowRight className="h-4 w-4" />
                                             </div>
                                         </Link>
                                     );
