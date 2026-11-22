@@ -15,6 +15,7 @@ import type { ArmourSlotId } from "./loadout-types";
 import { interpolate } from "./loadout-types";
 import { elementColor, getTextGlowStyle } from "@/lib/site";
 import { highlightGameText } from "@/lib/game-text-highlighter";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { gameData } from "@/game/data";
 import type { Armour, CellType, Lantern, Omnicell, Weapon } from "@/game/types";
 
@@ -523,15 +524,8 @@ const ItemPickerTooltipContent = ({
     );
 };
 
-
 /* ------------------------------------------------------------------ */
-/* Item Picker Overlay                                                 */
-/*                                                                     */
-/* Two compact layouts instead of the old full-screen grid:            */
-/*  - "panel": right-hand side panel with categories, search, list and */
-/*    an item details column (weapons / armour / lanterns / omnicells) */
-/*  - "popup": smaller centred pop-up window (cells, weapon mods/parts)*/
-/* Both close when clicking anywhere outside them.                     */
+/* Item Picker Overlay                                                */
 /* ------------------------------------------------------------------ */
 
 const NORMALIZE = (text: string): string => text.toLowerCase();
@@ -551,15 +545,12 @@ export const ItemPickerOverlay = ({
     pickerKind,
 }: ItemPickerProps) => {
     const isWeaponPicker = pickerKind === "weapon" || (!pickerKind && title.toLowerCase() === "weapon");
-    const isPopup = pickerKind === "cell" || pickerKind === "part";
-
     const [weaponClass, setWeaponClass] = useState<string>("all");
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<string | null>(null);
-    const [groupTab, setGroupTab] = useState<string | null>(null);
     const [navIndex, setNavIndex] = useState<number | null>(null);
     const searchRef = useRef<HTMLInputElement>(null);
-    const listRef = useRef<HTMLDivElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
 
     const filtered = useMemo(() => {
         const needle = NORMALIZE(query.trim());
@@ -576,9 +567,6 @@ export const ItemPickerOverlay = ({
             if (filter && filterOf && filterOf(item) !== filter) {
                 return false;
             }
-            if (groupTab && item.group !== groupTab) {
-                return false;
-            }
             if (needle === "") {
                 return true;
             }
@@ -589,36 +577,33 @@ export const ItemPickerOverlay = ({
                 (item.hint ? NORMALIZE(item.hint).includes(needle) : false)
             );
         });
-    }, [items, query, filter, groupTab, filterOf, isWeaponPicker, weaponClass]);
+    }, [items, query, filter, filterOf, isWeaponPicker, weaponClass]);
 
-    const flat = useMemo(() => filtered, [filtered]);
+    const grouped = useMemo(() => {
+        const map = new Map<string, PickerItem[]>();
+        for (const item of filtered) {
+            const list = map.get(item.group) ?? [];
+            list.push(item);
+            map.set(item.group, list);
+        }
+        return [...map.entries()];
+    }, [filtered]);
+
+    const flat = useMemo(() => grouped.flatMap(([, list]) => list), [grouped]);
 
     /* Derived active index: user navigation wins, otherwise the selected item. */
     const selectedIndex = useMemo(
         () => flat.findIndex(item => item.value === selectedValue),
         [flat, selectedValue],
     );
-    const activeIndex = navIndex ?? (selectedIndex >= 0 ? selectedIndex : flat.length > 0 ? 0 : -1);
-    const activeItem = activeIndex >= 0 ? flat[activeIndex] : null;
-
-    /* Category tabs derived from the item groups (ALACRITY / BRUTALITY / …). */
-    const groupTabs = useMemo(() => {
-        const groups: string[] = [];
-        for (const item of items) {
-            if (!groups.includes(item.group)) {
-                groups.push(item.group);
-            }
-        }
-        return groups;
-    }, [items]);
-    const showGroupTabs = !isWeaponPicker && !armourSlot && groupTabs.length > 1;
+    const activeIndex = navIndex ?? (selectedIndex >= 0 ? selectedIndex : 0);
 
     useEffect(() => {
         searchRef.current?.focus();
     }, []);
 
     useEffect(() => {
-        const node = listRef.current?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`);
+        const node = gridRef.current?.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`);
         node?.scrollIntoView({ block: "nearest" });
     }, [activeIndex]);
 
@@ -631,12 +616,18 @@ export const ItemPickerOverlay = ({
         if (event.key === "Escape") {
             event.preventDefault();
             onClose();
-        } else if (event.key === "ArrowDown") {
+        } else if (event.key === "ArrowRight") {
             event.preventDefault();
             setNavIndex(index => Math.min(flat.length - 1, (index ?? activeIndex) + 1));
-        } else if (event.key === "ArrowUp") {
+        } else if (event.key === "ArrowLeft") {
             event.preventDefault();
             setNavIndex(index => Math.max(0, (index ?? activeIndex) - 1));
+        } else if (event.key === "ArrowDown") {
+            event.preventDefault();
+            setNavIndex(index => Math.min(flat.length - 1, (index ?? activeIndex) + 3));
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            setNavIndex(index => Math.max(0, (index ?? activeIndex) - 3));
         } else if (event.key === "Enter") {
             event.preventDefault();
             const item = flat[activeIndex];
@@ -646,289 +637,249 @@ export const ItemPickerOverlay = ({
         }
     };
 
-    /* Category strip shared by the weapon-class / armour-slot switchers. */
-    const categoryTabs = (
-        <div className="flex flex-wrap items-center gap-[6px] border-b border-[#3a3f47]/80 bg-[rgba(8,10,13,0.85)] px-[16px] py-[10px]">
-            {armourSlot && onSwitchArmourSlot
-                ? ARMOUR_SLOT_TABS.map(slot => {
-                      const isActive = armourSlot === slot.id;
-                      return (
-                          <button
-                              key={slot.id}
-                              type="button"
-                              onClick={() => {
-                                  setQuery("");
-                                  setNavIndex(null);
-                                  setFilter(null);
-                                  onSwitchArmourSlot(slot.id);
-                              }}
-                              aria-pressed={isActive}
-                              className={`lo-perk-row flex items-center gap-2 px-[10px] py-[6px] text-[12.5px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
-                                  isActive
-                                      ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
-                                      : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
-                              }`}
-                          >
-                              <ItemIcon icon={slot.icon} alt="" size={16} />
-                              <span>{slot.label}</span>
-                          </button>
-                      );
-                  })
-                : WEAPON_CLASS_TABS.map(tab => {
-                      const isActive = weaponClass === tab.id;
-                      return (
-                          <button
-                              key={tab.id}
-                              type="button"
-                              onClick={() => {
-                                  setWeaponClass(tab.id);
-                                  setNavIndex(null);
-                                  setGroupTab(null);
-                              }}
-                              aria-pressed={isActive}
-                              className={`lo-perk-row flex items-center gap-2 px-[10px] py-[6px] text-[12.5px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
-                                  isActive
-                                      ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
-                                      : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
-                              }`}
-                          >
-                              <ItemIcon icon={tab.icon} alt="" size={16} />
-                              <span>{tab.label}</span>
-                          </button>
-                      );
-                  })}
-            {/* Optional facet filter (armour elements) as compact chips. */}
-            {filterValues && filterValues.length > 0 && (
-                <div className="ml-auto flex items-center gap-[5px]">
-                    <button
-                        type="button"
-                        onClick={() => setFilter(null)}
-                        aria-pressed={filter === null}
-                        className={`lo-perk-row px-[9px] py-[5px] text-[11.5px] font-semibold cursor-pointer ${
-                            filter === null ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
-                        }`}
-                    >
-                        All
-                    </button>
-                    {filterValues.map(value => (
-                        <button
-                            key={value}
-                            type="button"
-                            onClick={() => setFilter(current => (current === value ? null : value))}
-                            aria-pressed={filter === value}
-                            title={value}
-                            className={`lo-perk-row flex items-center gap-1.5 px-[8px] py-[5px] text-[11.5px] font-semibold cursor-pointer ${
-                                filter === value ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
-                            }`}
-                        >
-                            <ItemIcon icon={`/assets/icons/elements/${value}.png`} alt="" size={14} />
-                            {value}
-                        </button>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-
-    /* Group tabs (cells: ALACRITY / BRUTALITY / FINESSE / INSIGHT). */
-    const groupTabsRow = showGroupTabs ? (
-        <div className="flex items-center gap-[6px] border-b border-[#3a3f47]/80 bg-[rgba(8,10,13,0.85)] px-[16px] py-[10px]">
-            <button
-                type="button"
-                onClick={() => {
-                    setGroupTab(null);
-                    setNavIndex(null);
-                }}
-                aria-pressed={groupTab === null}
-                className={`lo-perk-row px-[12px] py-[6px] text-[12.5px] font-bold uppercase tracking-[0.08em] cursor-pointer ${
-                    groupTab === null ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
-                }`}
-            >
-                All
-            </button>
-            {groupTabs.map(group => (
-                <button
-                    key={group}
-                    type="button"
-                    onClick={() => {
-                        setGroupTab(current => (current === group ? null : group));
-                        setNavIndex(null);
-                    }}
-                    aria-pressed={groupTab === group}
-                    className={`lo-perk-row px-[12px] py-[6px] text-[12.5px] font-bold uppercase tracking-[0.08em] cursor-pointer ${
-                        groupTab === group ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
-                    }`}
-                >
-                    {group}
-                </button>
-            ))}
-        </div>
-    ) : null;
-
-    /* Item list: compact rows instead of huge grid cards. */
-    const list = (
-        <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto p-[14px]">
-            {flat.length === 0 && (
-                <p className="pt-10 text-center text-[14px] text-[#84888f]">Nothing matches your search.</p>
-            )}
-            {flat.map((item, index) => {
-                const isSelected = item.value === selectedValue;
-                return (
-                    <button
-                        key={item.value}
-                        type="button"
-                        data-index={index}
-                        data-active={index === activeIndex}
-                        onClick={() => {
-                            if (index === activeIndex && isSelected) {
-                                commit(item.value);
-                            } else {
-                                setNavIndex(index);
-                            }
-                        }}
-                        onDoubleClick={() => commit(item.value)}
-                        onMouseEnter={() => setNavIndex(index)}
-                        aria-label={`${item.label}${item.hint ? ` - ${item.hint}` : ""}`}
-                        aria-pressed={isSelected}
-                        className={`lo-perk-row mb-[6px] flex h-[58px] w-full items-center gap-[12px] px-[12px] text-left transition-all duration-150 cursor-pointer ${
-                            isSelected
-                                ? "!border-[#e0a33e] bg-[#e0a33e]/[0.12] shadow-[0_0_8px_rgba(224,163,62,0.25)]"
-                                : index === activeIndex
-                                    ? "!border-[#565d68] bg-white/[0.04]"
-                                    : ""
-                        }`}
-                    >
-                        <span className="shrink-0">
-                            {item.icon ? (
-                                <ItemIcon icon={item.icon} alt={item.label} size={38} />
-                            ) : item.consumableType ? (
-                                <ConsumableGlyph type={item.consumableType} size={34} />
-                            ) : null}
-                        </span>
-                        <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
-                            <span
-                                className="truncate text-[13.5px] font-semibold"
-                                style={item.color ? getTextGlowStyle(item.color) : { color: "#e8e4da" }}
-                            >
-                                {item.label}
-                            </span>
-                            {item.hint && <span className="truncate text-[11px] text-[#9a9a94]">{item.hint}</span>}
-                        </span>
-                        {item.meta && <span className="lo-level-chip shrink-0 !text-[12px]">{item.meta}</span>}
-                        {item.behemoth && (
-                            <span className="shrink-0 rounded-[4px] border border-[#e0c287]/35 bg-[#050a12]/85 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-[#e0c287]">
-                                {item.behemoth}
-                            </span>
-                        )}
-                    </button>
-                );
-            })}
-        </div>
-    );
-
-    /* Details column: the active item's rich card + equip actions. */
-    const details = (
-        <aside
-            className="flex w-[300px] shrink-0 flex-col overflow-y-auto border-l border-[#3a3f47]/80 bg-[rgba(6,8,11,0.9)] p-[16px]"
-            aria-label={`${title} details`}
-        >
-            {activeItem ? (
-                <div className="min-h-0 flex-1">
-                    <ItemPickerTooltipContent item={activeItem} pickerKind={pickerKind} />
-                </div>
-            ) : (
-                <p className="pt-8 text-center text-[13px] text-[#84888f]">Select an item to see its details.</p>
-            )}
-            <div className="mt-[16px] flex flex-col gap-[8px] border-t border-[#3a3f47]/70 pt-[14px]">
-                <button
-                    type="button"
-                    disabled={!activeItem}
-                    onClick={() => activeItem && commit(activeItem.value)}
-                    className="lo-button-text !text-[15px] !tracking-[0.16em] !text-[#e0a33e] disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                    EQUIP{" "}
-                    {title
-                        .split(" ")
-                        .slice(-1)[0]
-                        .replace(/[sS]$/, m => (m === "s" ? "" : m))
-                        .toUpperCase()}
-                </button>
-                {allowClear && (
-                    <button
-                        type="button"
-                        onClick={() => commit(null)}
-                        className="lo-button-text !text-[13px] !tracking-[0.14em]"
-                    >
-                        CLEAR SLOT
-                    </button>
-                )}
-                <span className="text-center text-[10.5px] tracking-[0.06em] text-[#6f7783]">
-                    ARROWS to navigate · ENTER to equip · ESC to close
-                </span>
-            </div>
-        </aside>
-    );
-
-    const header = (
-        <div className="flex items-center gap-[10px] border-b border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-[16px] py-[12px]">
-            <span className="flex items-center gap-2.5 shrink-0">
-                <DiamondPip size={7} color="#bfae85" />
-                <span className="lo-serif text-[18px] font-semibold tracking-[0.16em] text-[#dcd8cc]">
-                    {title.toUpperCase()}
-                </span>
-            </span>
-            <div className="relative ml-auto w-[260px]">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7c828c]" aria-hidden />
-                <input
-                    ref={searchRef}
-                    type="text"
-                    value={query}
-                    onChange={event => {
-                        setQuery(event.target.value);
-                        setNavIndex(null);
-                    }}
-                    placeholder={`Search ${title.toLowerCase()}…`}
-                    aria-label={`Search ${title}`}
-                    className="lo-card h-[36px] w-full rounded-[4px] pl-9 pr-3 text-[13.5px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
-                />
-            </div>
-            <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close picker (Escape)"
-                className="lo-card flex h-[36px] w-[36px] shrink-0 items-center justify-center text-[#9a9a94] transition-colors hover:text-[#e0a33e]"
-            >
-                <X className="h-4 w-4" aria-hidden />
-            </button>
-        </div>
-    );
+    let runningIndex = -1;
 
     return (
         <div
-            className="lo-picker-backdrop lo-overlay-in absolute inset-0 z-40 outline-none"
+            className="lo-picker-backdrop lo-overlay-in absolute inset-0 z-40 flex flex-col outline-none"
             role="dialog"
             aria-modal="true"
             aria-label={`${title} picker`}
             onKeyDown={onKeyDown}
-            onPointerDown={onClose}
             tabIndex={-1}
         >
-            {/* clicking the panel itself must not close the picker */}
-            <div
-                className={`lo-panel lo-fade-in absolute flex flex-col overflow-hidden shadow-[0_10px_50px_rgba(0,0,0,0.7)] ${
-                    isPopup
-                        ? "left-1/2 top-1/2 h-[min(560px,86%)] w-[min(880px,92%)] -translate-x-1/2 -translate-y-1/2"
-                        : "right-[24px] top-[24px] bottom-[24px] w-[660px]"
-                }`}
-                onPointerDown={event => event.stopPropagation()}
-            >
-                {header}
-                {(armourSlot && onSwitchArmourSlot) || isWeaponPicker ? categoryTabs : null}
-                {groupTabsRow}
-                <div className="flex min-h-0 flex-1">
-                    {list}
-                    {details}
+            {/* header: cleaned up without upper slot switcher */}
+            <div className="flex flex-wrap items-center gap-6 border-b border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-[56px] py-[16px]">
+                <span className="flex items-center gap-3 shrink-0">
+                    <DiamondPip size={8} color="#bfae85" />
+                    <span className="lo-serif text-[24px] font-semibold tracking-[0.16em] text-[#dcd8cc]">
+                        {title.toUpperCase()}
+                    </span>
+                </span>
+
+                <div className="relative ml-auto w-[380px]">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7c828c]" aria-hidden />
+                    <input
+                        ref={searchRef}
+                        type="text"
+                        value={query}
+                        onChange={event => {
+                            setQuery(event.target.value);
+                            setNavIndex(null);
+                        }}
+                        placeholder={`Search ${title.toLowerCase()}…`}
+                        aria-label={`Search ${title}`}
+                        className="lo-card h-[42px] w-full rounded-[4px] pl-10 pr-4 text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                    />
                 </div>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label="Close picker (Escape)"
+                    className="lo-card flex h-[42px] w-[42px] items-center justify-center text-[#9a9a94] transition-colors hover:text-[#e0a33e]"
+                >
+                    <X className="h-5 w-5" aria-hidden />
+                </button>
+            </div>
+
+            {/* body */}
+            <div className="flex min-h-0 flex-1">
+                {/* filter rail */}
+                {((filterValues && filterValues.length > 0) || (armourSlot && onSwitchArmourSlot) || isWeaponPicker) && (
+                    <nav className="flex w-[200px] shrink-0 flex-col gap-[6px] overflow-y-auto border-r border-[#3a3f47] bg-[rgba(8,10,13,0.85)] p-[16px]" aria-label={filterLabel}>
+                        {/* Armour slot switcher in rail */}
+                        {armourSlot && onSwitchArmourSlot && (
+                            <div className="mb-4 flex flex-col gap-[4px] border-b border-[#3a3f47]/70 pb-3">
+                                <span className="lo-sublabel mb-1">ARMOUR PIECE</span>
+                                {ARMOUR_SLOT_TABS.map(slot => {
+                                    const isActive = armourSlot === slot.id;
+                                    return (
+                                        <button
+                                            key={slot.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setQuery("");
+                                                setNavIndex(null);
+                                                onSwitchArmourSlot(slot.id);
+                                            }}
+                                            aria-pressed={isActive}
+                                            className={`lo-perk-row flex items-center gap-2.5 px-[12px] py-[8px] text-left text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
+                                                isActive
+                                                    ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
+                                                    : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
+                                            }`}
+                                        >
+                                            <ItemIcon icon={slot.icon} alt="" size={18} />
+                                            <span>{slot.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* Weapon class switcher in rail */}
+                        {isWeaponPicker && (
+                            <div className="mb-4 flex flex-col gap-[4px] border-b border-[#3a3f47]/70 pb-3">
+                                <span className="lo-sublabel mb-1">WEAPON CLASS</span>
+                                {WEAPON_CLASS_TABS.map(tab => {
+                                    const isActive = weaponClass === tab.id;
+                                    return (
+                                        <button
+                                            key={tab.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setWeaponClass(tab.id);
+                                                setNavIndex(null);
+                                            }}
+                                            aria-pressed={isActive}
+                                            className={`lo-perk-row flex items-center gap-2.5 px-[12px] py-[8px] text-left text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
+                                                isActive
+                                                    ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
+                                                    : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
+                                            }`}
+                                        >
+                                            <ItemIcon icon={tab.icon} alt="" size={18} />
+                                            <span>{tab.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {filterValues && filterValues.length > 0 && (
+                            <>
+                                <span className="lo-sublabel mb-1">{(filterLabel ?? "Filter").toUpperCase()}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setFilter(null)}
+                                    aria-pressed={filter === null}
+                                    className={`lo-perk-row px-[12px] py-[8px] text-left text-[13.5px] font-semibold tracking-[0.04em] ${
+                                        filter === null ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
+                                    }`}
+                                >
+                                    All
+                                </button>
+                                {filterValues.map(value => (
+                                    <button
+                                        key={value}
+                                        type="button"
+                                        onClick={() => setFilter(current => (current === value ? null : value))}
+                                        aria-pressed={filter === value}
+                                        className={`lo-perk-row flex items-center gap-2 px-[12px] py-[8px] text-left text-[13.5px] font-semibold tracking-[0.04em] ${
+                                            filter === value ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
+                                        }`}
+                                    >
+                                        <ItemIcon icon={`/assets/icons/elements/${value}.png`} alt="" size={17} />
+                                        {value}
+                                    </button>
+                                ))}
+                            </>
+                        )}
+                    </nav>
+                )}
+
+                {/* grid */}
+                <div ref={gridRef} className="min-h-0 flex-1 overflow-y-auto p-[28px]">
+                    {flat.length === 0 && (
+                        <p className="pt-16 text-center text-[15px] text-[#84888f]">Nothing matches your search.</p>
+                    )}
+                    {grouped.map(([group, list]) => (
+                        <section key={group} className="mb-[26px]">
+                            {(grouped.length > 1 || isWeaponPicker) && (
+                                <div className="mb-[12px] flex items-center gap-3">
+                                    <span className="lo-serif text-[16px] font-semibold tracking-[0.14em] text-[#c8cbcf]">
+                                        {group.toUpperCase()}
+                                    </span>
+                                    <span className="lo-flourish" aria-hidden />
+                                </div>
+                            )}
+                            <div className="grid grid-cols-[repeat(auto-fill,minmax(158px,1fr))] gap-[12px]">
+                                {list.map(item => {
+                                    runningIndex += 1;
+                                    const index = runningIndex;
+                                    const isSelected = item.value === selectedValue;
+                                    return (
+                                        <HoverCard key={item.value} openDelay={80} closeDelay={80}>
+                                            <HoverCardTrigger asChild>
+                                                <button
+                                                    type="button"
+                                                    data-index={index}
+                                                    data-active={index === activeIndex}
+                                                    onClick={() => commit(item.value)}
+                                                    onMouseEnter={() => setNavIndex(index)}
+                                                    aria-label={`${item.label}${item.hint ? ` - ${item.hint}` : ""}${item.behemoth ? ` (Crafted from ${item.behemoth})` : ""}`}
+                                                    aria-pressed={isSelected}
+                                                    className={`lo-picker-card group relative flex h-[178px] flex-col items-center justify-between p-[12px] text-center overflow-hidden transition-all duration-150 cursor-pointer ${
+                                                        isSelected ? "!border-[#e0a33e] shadow-[0_0_12px_rgba(224,163,62,0.4)]" : ""
+                                                    }`}
+                                                >
+                                                    {/* Top bar: Level/stat chip + Behemoth tag */}
+                                                    <div className="flex w-full items-center justify-between min-h-[20px]">
+                                                        <span className="lo-level-chip !text-[12px]">{item.meta ?? ""}</span>
+                                                        {item.behemoth && (
+                                                            <span
+                                                                className="rounded-[4px] border border-[#e0c287]/35 bg-[#050a12]/85 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-[#e0c287] shadow-xs"
+                                                            >
+                                                                {item.behemoth}
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    {item.icon ? (
+                                                        <ItemIcon icon={item.icon} alt={item.label} size={78} />
+                                                    ) : item.consumableType ? (
+                                                        <ConsumableGlyph type={item.consumableType} size={72} />
+                                                    ) : (
+                                                        <ItemIcon icon={item.icon} alt={item.label} size={78} />
+                                                    )}
+
+                                                    <span className="flex w-full flex-col gap-[2px] overflow-visible">
+                                                        <span
+                                                            className="text-[13.5px] font-semibold overflow-visible"
+                                                            style={item.color ? getTextGlowStyle(item.color) : { color: "#e8e4da" }}
+                                                        >
+                                                            {item.label}
+                                                        </span>
+                                                        {item.hint && (
+                                                            <span className="truncate text-[11.5px] text-[#9a9a94]">
+                                                                {item.hint}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </button>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent
+                                                side="top"
+                                                align="center"
+                                                sideOffset={8}
+                                                avoidCollisions
+                                                className="pointer-events-none z-50 w-80 sm:w-96 rounded-xl border border-[var(--line-2)] bg-[#0a101c]/95 p-4 shadow-2xl backdrop-blur-xl"
+                                            >
+                                                <ItemPickerTooltipContent item={item} pickerKind={pickerKind} />
+                                            </HoverCardContent>
+                                        </HoverCard>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    ))}
+                </div>
+            </div>
+
+            {/* footer */}
+            <div className="flex items-center justify-between border-t border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-[56px] py-[12px]">
+                <span className="text-[12.5px] tracking-[0.06em] text-[#84888f]">
+                    ARROWS to navigate · ENTER to equip · ESC to close
+                </span>
+                {allowClear && (
+                    <button
+                        type="button"
+                        onClick={() => commit(null)}
+                        className="lo-button-text !text-[15px] tracking-[0.16em]"
+                    >
+                        CLEAR SLOT
+                    </button>
+                )}
             </div>
         </div>
     );
