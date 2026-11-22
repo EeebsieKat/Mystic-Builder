@@ -33,6 +33,7 @@ import type {
     Omnicell,
     Part,
     PerkValue,
+    Weapon,
     WeaponType,
 } from "@/game/types";
 import { cellTypeColor, cellTypeLabel, elementColor, extractBuildId, localBuildPath } from "@/lib/site";
