@@ -10,7 +10,7 @@ import type { CellType } from "@/game/types";
 import type { PerkTotal as ViewPerkTotal } from "@/game/build-view";
 import { cellTypeColor, cellTypeLabel } from "@/lib/site";
 import { highlightGameText } from "@/lib/game-text-highlighter";
-import { formatPerkEffect } from "./loadout-types";
+import { formatPerkEffect, getTierBreakdown } from "./loadout-types";
 import { ItemIcon } from "./decor";
 
 /* ------------------------------------------------------------------ */
@@ -44,6 +44,7 @@ export const PerkTierHoverTooltip = ({
     const slotColor = cellTypeColor(slotType);
     const activeRank = Math.min(6, Math.max(1, value));
     const ranks = [1, 2, 3, 4, 5, 6];
+    const breakdown = getTierBreakdown(perk, ranks, name);
 
     return (
         <HoverCard openDelay={60} closeDelay={80}>
@@ -106,7 +107,19 @@ export const PerkTierHoverTooltip = ({
                         </p>
                     )}
 
-                    {/* Tiers Breakdown (+1 to +6) */}
+                    {/* Base Effect (identical across all tiers) */}
+                    {breakdown.commonSentences.length > 0 && (
+                        <div className="rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 text-xs leading-relaxed">
+                            <span className="font-semibold text-primary uppercase text-[10px] tracking-wider block mb-0.5">
+                                Base Effect (All Tiers)
+                            </span>
+                            <span className="text-foreground/90 font-medium">
+                                {highlightGameText(breakdown.commonSentences.join(" "))}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Tiers Breakdown (+1 to +6) showing only what changes */}
                     <div className="flex flex-col gap-1.5">
                         <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                             <span>Perk Tiers (+1 to +6)</span>
@@ -115,8 +128,7 @@ export const PerkTierHoverTooltip = ({
 
                         <div className="flex flex-col gap-1.5">
                             {ranks.map(r => {
-                                const eff = perk.effects?.[String(r)];
-                                const effDesc = eff ? formatPerkEffect(eff) : "No bonus at this tier.";
+                                const effDesc = breakdown.changingSentencesMap[r] || "No bonus at this tier.";
                                 const isActive = r === activeRank;
                                 const isUnlocked = r <= value;
 
@@ -232,12 +244,12 @@ export const PerkSummaryDialog = ({
                                     value={perk.value}
                                     type={perk.type}
                                 >
-                                    <div className="relative group rounded-xl border border-border/60 bg-muted/20 px-4 py-3 hover:border-primary/80 hover:bg-muted/30 hover:shadow-[0_0_15px_rgba(91,163,255,0.15)] transition-all cursor-pointer">
+                                    <div className="relative group rounded-none border border-border/60 bg-muted/20 px-4 py-3 hover:border-primary/80 hover:bg-muted/30 hover:shadow-[0_0_15px_rgba(91,163,255,0.15)] transition-all cursor-pointer">
                                         {/* Corner bracket marks */}
-                                        <span className="pointer-events-none absolute left-1.5 top-1.5 h-2 w-2 border-l border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
-                                        <span className="pointer-events-none absolute right-1.5 top-1.5 h-2 w-2 border-r border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
-                                        <span className="pointer-events-none absolute bottom-1.5 left-1.5 h-2 w-2 border-b border-l border-primary/40 group-hover:border-primary/80 transition-colors" />
-                                        <span className="pointer-events-none absolute bottom-1.5 right-1.5 h-2 w-2 border-b border-r border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute left-1 top-1 h-2 w-2 border-l border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute right-1 top-1 h-2 w-2 border-r border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute bottom-1 left-1 h-2 w-2 border-b border-l border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute bottom-1 right-1 h-2 w-2 border-b border-r border-primary/40 group-hover:border-primary/80 transition-colors" />
 
                                         {/* Card content */}
                                         <div className="flex items-center justify-between gap-3">
@@ -257,7 +269,7 @@ export const PerkSummaryDialog = ({
                                                 {isMax ? (
                                                     <Badge
                                                         variant="outline"
-                                                        className="text-[10px] font-bold border-amber-400/50 bg-amber-400/15 text-amber-300 py-0.5"
+                                                        className="text-[10px] font-bold border-amber-400/50 bg-amber-400/15 text-amber-300 py-0.5 rounded-none"
                                                     >
                                                         MAXED
                                                     </Badge>

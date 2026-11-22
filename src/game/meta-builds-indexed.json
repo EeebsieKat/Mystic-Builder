@@ -35,6 +35,10 @@
     {
       "name": "Catalyst",
       "description": "These are the best builds you can have for general hunting, maximizing damage and using Blitz tonics as your source of attack speed.\nRecommended tonics for maximum damage: Frenzy, Blitz, Aetherdrive."
+    },
+    {
+      "name": "Generosity",
+      "description": "Generosity is a Mystic Paradox Insight cell. It heals nearby Slayers for a share of the healing you receive: 20 / 25 / 35 / 40 / 45 / 55% at +1 to +6. From +4, sharing healing also gives you +10 / 15 / 20% damage for 5 seconds, and sharing again refreshes it. Every heal you receive counts (flask, lifesteal, orbs, other Slayers' heals) except another Generosity's shared heal. These are the Artificer builds (the drone's healing aura) and the Iceborne builds (lifesteal) with both Insight cells set to Generosity for +6."
     }
   ],
   "builds": [
@@ -8246,7 +8250,7 @@
         },
         {
           "name": "Fleet Footed",
-          "value": 5
+          "value": 3
         }
       ],
       "cells": [
@@ -9206,8 +9210,8 @@
       "weaponElement": "Frost",
       "bondName": "Frostwülf's Slam",
       "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsSlam.png",
-      "omnicellName": "Bastion",
-      "omnicellIcon": "/assets/icons/omnicells/Bastion.png",
+      "omnicellName": "Discipline",
+      "omnicellIcon": "/assets/icons/omnicells/Discipline.png",
       "lanternName": "Skarn's Defiance",
       "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
       "head": {
@@ -26222,8 +26226,8 @@
       "weaponElement": "Radiant",
       "bondName": "Valomyr's Burden",
       "bondIcon": "/assets/icons/weapons/valomyr/ValomyrsBurden.png",
-      "omnicellName": "Discipline",
-      "omnicellIcon": "/assets/icons/omnicells/Discipline.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
       "lanternName": "Skarn's Defiance",
       "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
       "head": {
@@ -42638,7 +42642,7 @@
       "vsElement": null,
       "subcategory": "Twin Suns",
       "weaponType": "Repeater",
-      "weaponName": "The Twin Suns",
+      "weaponName": "Twin Suns",
       "weaponIcon": "/assets/icons/weapons/generic/TheTwinSuns.png",
       "weaponElement": null,
       "bondName": null,
@@ -42731,7 +42735,7 @@
       "vsElement": null,
       "subcategory": "Twin Suns",
       "weaponType": "Repeater",
-      "weaponName": "The Twin Suns",
+      "weaponName": "Twin Suns",
       "weaponIcon": "/assets/icons/weapons/generic/TheTwinSuns.png",
       "weaponElement": null,
       "bondName": null,
@@ -47744,6 +47748,5073 @@
         {
           "slot": "Insight",
           "cellName": "Catalyst Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-Pk1N5AbMZoFosNLC7CAi2HiUnSSt9Ez0941B.G8NNLxE4STOE6lHTj0MBZk1b",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Permanent Frost",
+      "weaponIcon": "/assets/icons/weapons/urska/PermanentFrost.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Chomp",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsChomp.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-SIcN-T7X~iSexeojtK8gDF9TS__n388KHuEi2RZE0y68-7kN2zm_mowEsiZM3",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Artificer",
+      "weaponType": "Chain Blades",
+      "weaponName": "Blizzard's Teeth",
+      "weaponIcon": "/assets/icons/weapons/urska/BlizzardsTeeth.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Skinners",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsSkinners.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-vLgE7HpQveVlwDJF6RexEkfzBOAVmynyo-sCTiNjBlq5b6o6xU1XFJhkgDa-p",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "Bomb Cyclone",
+      "weaponIcon": "/assets/icons/weapons/urska/BombCyclone.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Slam",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsSlam.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-61rgaTb~~amG4.m9hmzKtOanFSSRW6Vo~wKzLrt4CbhTv6e90eBAQuX~M1b8E3",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "Cold Hell",
+      "weaponIcon": "/assets/icons/weapons/urska/ColdHell.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Rip",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsRip.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-lhpALf~KM1l0LRXzLog7.UGZtt5R0kZGpy7BHCmJqmXw0teAtmC8THM~ODoUM",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Incinerator's Song",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/IncineratorsSong.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Decree",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosDecree.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-SEbQ4oBqamhO6Pnt5ECY8cMbDzw7KPhMfM15Ea2T035HG1YOiREnMb-EeXd",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "Magma Quake",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/MagmaQuake.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Burden",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosBurden.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Predator",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-cubw55mr9v7oPUcTx61X~628CCyXYrhcdyP2XniTQXRJGh0Hh3YVnvZ4tEwi1H",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "Pyroclastic Envoy",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/PyroclasticEnvoy.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Arrow",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosArrow.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-H6sJqmiKQCBbx25jop-gskChJJghm6MjIsn3MXKHtrGXH09pbdB2ZBvx1gtbb",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Malignant Scourge",
+      "weaponIcon": "/assets/icons/weapons/agarus/MalignantScourge.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Claw",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksClaw.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-ETUI6fgKWxH2MDI-dzemeEWLzz16_sERAE.9SH1UpiWt4geKyaLe-py9nAPzu",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Artificer",
+      "weaponType": "Chain Blades",
+      "weaponName": "Death Blossoms",
+      "weaponIcon": "/assets/icons/weapons/agarus/DeathBlossoms.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Wings",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksWings.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-wVKgllmr-obToX5b8yvlK0xSVVjf.BAlvgeLGEayP.s2tK9~pQtnJq.nvyhmR",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "Unsteady Ground",
+      "weaponIcon": "/assets/icons/weapons/agarus/UnsteadyGround.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Jaw",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksJaw.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Berserker",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Predator",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-4LyG9R.FqgysEMryrguiUu0kNN4AqjeFbe~facvC_2TxN0Ms4ZPDrf1kanSjFI",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "Parasitic Curse",
+      "weaponIcon": "/assets/icons/weapons/agarus/ParasiticCurse.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Sting",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksSting.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-bP6xd3ogz8YSGJBPemFeQL~DSuul3Wsk7VI2gSpR-Na_N_txEpuz-boeUBg90q",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Terminal Voltage",
+      "weaponIcon": "/assets/icons/weapons/malkarion/TerminalVoltage.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Cleaver",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsCleaver.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Pulse",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-WRl7sNtcwG0a3Ug8-D8l7M5HaEEMq_~G_PgZkQrOQWX8TFXPpUQT-H69jkvGi1",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Artificer",
+      "weaponType": "Chain Blades",
+      "weaponName": "Electric Cruelties",
+      "weaponIcon": "/assets/icons/weapons/malkarion/ElectricCruelties.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Pincers",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsPincers.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Pulse",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-5J3OlnpFxAh.CE~8Ywt7yDcguVV_AbZDArfSyGgVwJ1XpFnHA-_mu5YAlcTY2v",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "Galvanic Impact",
+      "weaponIcon": "/assets/icons/weapons/malkarion/GalvanicImpact.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Maul",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsMaul.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Berserker",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Predator",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-X_F5dxljAZdXLbs7CMSL5.yM6GGzoZapCAG-YSyvDUl517Nr1z9y9CGFqDhHoU",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "The Conductor",
+      "weaponIcon": "/assets/icons/weapons/malkarion/TheConductor.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Javelin",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsJavelin.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Stride of Thorns",
+        "icon": "/assets/icons/armours/koshai/StrideOfThorns.png"
+      },
+      "perks": [
+        {
+          "name": "Predator",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Adrenaline",
+          "value": 5
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-32.tAhnC8McOTZ3z4_qRg2xEePPgyqUJPsimeHzvwqfTUB5RrD~wVc5am5809s",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Mindsplitter",
+      "weaponIcon": "/assets/icons/weapons/thrax/Mindsplitter.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Mercy",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersMercy.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Thrax's Shadow",
+        "icon": "/assets/icons/armours/thrax/ThraxsShadow.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Stride of Thorns",
+        "icon": "/assets/icons/armours/koshai/StrideOfThorns.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 10
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-~yoa5Zh.951h8qp2AZszstsxhQQEe0t~WozOjkTxg50~orWuRhMhgGemwOjx5a",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Artificer",
+      "weaponType": "Chain Blades",
+      "weaponName": "Night Terrors",
+      "weaponIcon": "/assets/icons/weapons/thrax/NightTerrors.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Trap",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersTrap.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Thrax's Shadow",
+        "icon": "/assets/icons/armours/thrax/ThraxsShadow.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Stride of Thorns",
+        "icon": "/assets/icons/armours/koshai/StrideOfThorns.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-_tvP5ze0eq2v7wM5EhSIti1fthh8g0dPh4PVU5tTXnwyhiAfvuvmvZFY6S-oxv",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "Sanity Check",
+      "weaponIcon": "/assets/icons/weapons/thrax/SanityCheck.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Price",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersPrice.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Thrax's Shadow",
+        "icon": "/assets/icons/armours/thrax/ThraxsShadow.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Stride of Thorns",
+        "icon": "/assets/icons/armours/koshai/StrideOfThorns.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Berserker",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-Y4~7nmCXV~_N8ir3d-JdLMHMpttJNYQvTKn8BEKD1f4vOnisLT9FRQuT7zVLFl",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "The Apocalypse Needle",
+      "weaponIcon": "/assets/icons/weapons/thrax/TheApocalypseNeedle.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Spike",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersSpike.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Thrax's Shadow",
+        "icon": "/assets/icons/armours/thrax/ThraxsShadow.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Stride of Thorns",
+        "icon": "/assets/icons/armours/koshai/StrideOfThorns.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Berserker",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-o7Rnum~7Rzdo-1XOoYAvWwrrvggRXZxsTlanrdTHvbPp.M3Cm8qJH5NBKRGVhl",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Artificer",
+      "weaponType": "Axe",
+      "weaponName": "Existential Crisis",
+      "weaponIcon": "/assets/icons/weapons/chronovore/ExistentialCrisis.png",
+      "weaponElement": "Radiant",
+      "bondName": "Edge of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/EdgeOfDawn.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Mantle of Thorns",
+        "icon": "/assets/icons/armours/koshai/MantleOfThorns.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Predator",
+          "value": 10
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-yH7XdncxsIet-ih-tQLIluJP600hwXJUBWUKHqai0jtAjyCuoq0-R~GS_YzBdg",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Artificer",
+      "weaponType": "Chain Blades",
+      "weaponName": "The Weeping Hours",
+      "weaponIcon": "/assets/icons/weapons/chronovore/TheWeepingHours.png",
+      "weaponElement": "Radiant",
+      "bondName": "Fangs of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/FangsOfDawn.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Mantle of Thorns",
+        "icon": "/assets/icons/armours/koshai/MantleOfThorns.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Predator",
+          "value": 10
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-pjmCh8MJ4VDg-gZz_MU0EGJDkJJKL07uKfM2MBfL3gjREi2yzCyOePYuij.SnI",
+      "title": "Chrono (Valo)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Artificer",
+      "weaponType": "Hammer",
+      "weaponName": "History's Burden",
+      "weaponIcon": "/assets/icons/weapons/chronovore/HistorysBurden.png",
+      "weaponElement": "Radiant",
+      "bondName": "Valomyr's Burden",
+      "bondIcon": "/assets/icons/weapons/valomyr/ValomyrsBurden.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Malkarion's Grasp",
+        "icon": "/assets/icons/armours/malkarion/MalkarionsGrasp.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Predator",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-SIcN-TZX~iS_xezjtKpgDFf9S__n388KHiREi2SwE0B68-73N2zm_muVwEsiZM3",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Artificer",
+      "weaponType": "War Pike",
+      "weaponName": "Millennium's End",
+      "weaponIcon": "/assets/icons/weapons/chronovore/MillenniumsEnd.png",
+      "weaponElement": "Radiant",
+      "bondName": "Spire of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/SpireOfDawn.png",
+      "omnicellName": "Artificer",
+      "omnicellIcon": "/assets/icons/omnicells/Artificer.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Torgadoro's Brawn",
+        "icon": "/assets/icons/armours/torgadoro/TorgadorosBrawn.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Overpower",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Predator",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Predator Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-qrfLTEZTvCZaI4eUecqtETa1TznivC0jhyoiAC0YHvU3CbPHB4S8CrFxS2aTw",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Permanent Frost",
+      "weaponIcon": "/assets/icons/weapons/urska/PermanentFrost.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Chomp",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsChomp.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-1af8T0BCECovFyQfOczC3T3yfZXiKC5QFMEiACAdTmUmCkwHg5ubCXFNS6df4",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "Blizzard's Teeth",
+      "weaponIcon": "/assets/icons/weapons/urska/BlizzardsTeeth.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Skinners",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsSkinners.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-M271TCxoYP6h5HBJlKsy86roVbqUX5Sd59_aJrGasfXc2YJTlgvaMn-YVLBE",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "Bomb Cyclone",
+      "weaponIcon": "/assets/icons/weapons/urska/BombCyclone.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Slam",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsSlam.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-mNf6TKzfjCPJHWeFXcWUETnMi7bCpCOxTa8cqCNkUEUBCz4fXkHaCeasrSKpfZ",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "Cold Hell",
+      "weaponIcon": "/assets/icons/weapons/urska/ColdHell.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Rip",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsRip.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-WqfjTkaCJC7Kikwf1u5hvIanSEoiBCXWco5irCYJu8UvCXVHY1sVCVFMSNMTo",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "Repeater",
+      "weaponName": "Cryo-Cannons",
+      "weaponIcon": "/assets/icons/weapons/urska/CryoCannons.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Chillers",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsChillers.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-EQfPTjvFNC00UQNtmcWh6TwKsadiJCPeHOEcoC0mi2CbCmOsBdSBCPFLSdYh6",
+      "title": "Urska (Frostwülf)",
+      "category": "Generosity",
+      "vsElement": "Blaze",
+      "subcategory": "Iceborne",
+      "weaponType": "Sword",
+      "weaponName": "Hypothermica",
+      "weaponIcon": "/assets/icons/weapons/urska/Hypothermica.png",
+      "weaponElement": "Frost",
+      "bondName": "Frostwülf's Bite",
+      "bondIcon": "/assets/icons/weapons/frostwulf/FrostwulfsBite.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 8
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Galvanized",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Adrenaline Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Galvanized Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-qrfLTEQfvCZaI1niecqtET1uznivC0jhyoiAC0YHvU3CoZUB4S8C5aixS2aTw",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Incinerator's Song",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/IncineratorsSong.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Decree",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosDecree.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-7xfVTjZTKC0qtBgFrcYCnTAhK8i8Cp8hmjiWCM6FAUaC7BHBWSvCAET7S3PsN",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "Scorching Agonies",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/ScorchingAgonies.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Fangs",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosFangs.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-wKfQTg0C4CEXUBPFzcYCZTkSx0iaCgPFzpivC8dUQUeCE3HqEu5CKZSoSwQF1",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "Magma Quake",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/MagmaQuake.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Burden",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosBurden.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        },
+        {
+          "name": "Parasitic",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Fortitude",
+          "cellName": "Parasitic Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-bMfLT00SoCRRUaZHJcqUxTNfpeioCmMsZjcqC26iWCRCPjsYAtWCEKuKSO2s7",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "Pyroclastic Envoy",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/PyroclasticEnvoy.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Arrow",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosArrow.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-ewfeT45UACz3FBWTEugheI6ghQ2iYCvKU4aiKCe6tnU6CrJT3ZuXCAqT5SVJhX",
+      "title": "Torg (Hellion)",
+      "category": "Generosity",
+      "vsElement": "Frost",
+      "subcategory": "Iceborne",
+      "weaponType": "Repeater",
+      "weaponName": "Volcanic Eruptions",
+      "weaponIcon": "/assets/icons/weapons/torgadoro/VolcanicEruptions.png",
+      "weaponElement": "Blaze",
+      "bondName": "Inferno's Roar",
+      "bondIcon": "/assets/icons/weapons/hellion/InfernosRoar.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-rBfoTqWFeCoQCBzFqcet0T7IOjiNCXJH8wiBCqYFpUrCL3Homu4CLzcnSVjhZ",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Malignant Scourge",
+      "weaponIcon": "/assets/icons/weapons/agarus/MalignantScourge.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Claw",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksClaw.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-xgfJT5qubCJLtv0hOcxC8TxCyQizCLrUqkixCJqiWUkCqEHqQu5COVtJSrzhv",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "Death Blossoms",
+      "weaponIcon": "/assets/icons/weapons/agarus/DeathBlossoms.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Wings",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksWings.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-LWfOTJ0FzCdpHP4HwcgCQTMszBiMCpbhgKidCx2IVUMCwZiJh2CkPH7SbvI7",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "Unsteady Ground",
+      "weaponIcon": "/assets/icons/weapons/agarus/UnsteadyGround.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Jaw",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksJaw.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Volcanic Treads",
+        "icon": "/assets/icons/armours/charrogg/VolcanicTreads.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Berserker",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-gxfJTMoH2CzzU5EIWcNUWTdTOgiLCeAf8of7C3ghwC4C51IagtmC84fmSmqTk",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "Parasitic Curse",
+      "weaponIcon": "/assets/icons/weapons/agarus/ParasiticCurse.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Sting",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksSting.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-pnfXTKvtwCWNFqWIQuAhJIXwIqriMCV6S70iLCBWsoUZCmzce4TdCPQCeSE5FQ",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "Repeater",
+      "weaponName": "Tainted Needles",
+      "weaponIcon": "/assets/icons/weapons/agarus/TaintedNeedles.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Lights",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksLights.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-1af8T0MSECN5Ha4HOc2h3TRHZXiKCKqFMPcACxxUyCmCARHZJtbCkOFNS6df4",
+      "title": "Agarus (Kharabak)",
+      "category": "Generosity",
+      "vsElement": "Shock",
+      "subcategory": "Iceborne",
+      "weaponType": "Sword",
+      "weaponName": "Poisonous Thorn",
+      "weaponIcon": "/assets/icons/weapons/agarus/PoisonousThorn.png",
+      "weaponElement": "Terra",
+      "bondName": "Kharabak's Spur",
+      "bondIcon": "/assets/icons/weapons/kharabak/KharabaksSpur.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-jJfvTNjuXCZvIb1CbcBt4TvRSkWiaCQYHnoivCwBsoUgCrzHKEsACWBurSOEs0",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Terminal Voltage",
+      "weaponIcon": "/assets/icons/weapons/malkarion/TerminalVoltage.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Cleaver",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsCleaver.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Pulse",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-PWfoT1oseC2PCo3t4c1CLT2rFk1i1CyPTjdiAC5KsEUMC3mTe0TLCr6h1SOoso",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "Electric Cruelties",
+      "weaponIcon": "/assets/icons/weapons/malkarion/ElectricCruelties.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Pincers",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsPincers.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Pulse",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-bMfLTBycoCRgHN5uJcOCxTXWTpeioCmMsZeiqCKZuZURC6OH4LSWCEXcKSO2s7",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "Galvanic Impact",
+      "weaponIcon": "/assets/icons/weapons/malkarion/GalvanicImpact.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Maul",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsMaul.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-yKfETm8fBC5nsEXsjcwUYTvYiVLibCRLIrdi7Cd7UZUJC6zHjBuwC6pSnSAZsB",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "The Conductor",
+      "weaponIcon": "/assets/icons/weapons/malkarion/TheConductor.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Javelin",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsJavelin.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-xgfJTyyCbCJMCv0hbunhxIQbhyQizCLrUqkixCJqiWUkCqEHqQu5COVtJSrzhv",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "Repeater",
+      "weaponName": "Dynamic Deadlights",
+      "weaponIcon": "/assets/icons/weapons/malkarion/DynamicDeadlights.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Avengers",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsAvengers.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Overpower",
+          "value": 3
+        },
+        {
+          "name": "Pulse",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-XafXTExTYCvqHO2HEc0h5TbxTrpi7CKYFzBcJC77U3C3CBQsR3t4C6viJSoBsZ",
+      "title": "Malk (Sahvyt)",
+      "category": "Generosity",
+      "vsElement": "Terra",
+      "subcategory": "Iceborne",
+      "weaponType": "Sword",
+      "weaponName": "Cyclonic Fury",
+      "weaponIcon": "/assets/icons/weapons/malkarion/CyclonicFury.png",
+      "weaponElement": "Shock",
+      "bondName": "Sahvyt's Cutlass",
+      "bondIcon": "/assets/icons/weapons/sahvyt/SahvytsCutlass.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-Q6fWTYrSBCjEf0eCXcZtbTmxTzpioCpgH7diwCLwf7UeCkLHdtpCR8HYSXwSo",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Mindsplitter",
+      "weaponIcon": "/assets/icons/weapons/thrax/Mindsplitter.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Mercy",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersMercy.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-PWfoT8KIeC2PCKxs4c1CLTw4Fk1i1CyPTjdiAC5KsEUMC3mTetLCr6h1SOoso",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "Night Terrors",
+      "weaponIcon": "/assets/icons/weapons/thrax/NightTerrors.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Trap",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersTrap.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-wKfQTg4h4CXrHALhzcYCZTmXCx0iaCgPFzpivC8dUQUeCE3Hqt5CKZSoSwQF1",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "Sanity Check",
+      "weaponIcon": "/assets/icons/weapons/thrax/SanityCheck.png",
+      "weaponElement": "Umbral",
+      "bondName": "Stalker's Price",
+      "bondIcon": "/assets/icons/weapons/riftstalker/StalkersPrice.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Parasitic",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Fortitude",
+          "cellName": "Parasitic Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-Z0fETMyukCx8HMriBcjUKTmksJkipCYaFM2cgCJ4TRUYCONHJKtPC14fLSAXsz",
+      "title": "Thrax (Rift)",
+      "category": "Generosity",
+      "vsElement": "Radiant",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "The Apocalypse Needle",
+      "weaponIcon": "/assets/icons/weapons/thrax/TheApocalypseNeedle.png",
+      "weaponElement": "Umbral",
+      "bondName": "Gyre of Night",
+      "bondIcon": "/assets/icons/weapons/shrowd/GyreOfNight.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-4Nf5TLACQCmqH1EC2UYtxTMEsKZiqCeJfv6crCooUeCkCNeTYXtVCLNu2Sg6fX",
+      "title": "Chrono (Valo)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Iceborne",
+      "weaponType": "Aether Strikers",
+      "weaponName": "Chaos & Entropy",
+      "weaponIcon": "/assets/icons/weapons/chronovore/ChaosAndEntropy.png",
+      "weaponElement": "Radiant",
+      "bondName": "Valomyr's Visions",
+      "bondIcon": "/assets/icons/weapons/valomyr/ValomyrsVisions.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Fiery Gauntlets",
+        "icon": "/assets/icons/armours/embermane/FieryGauntlets.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Cunning",
+          "value": 8
+        },
+        {
+          "name": "Endurance",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Cunning Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-mNf6TKOcjCa3CWeFXcJtETXdi7bCpCk2Ha8cqCxrcEUBCAJHXtaCBMsrSKpfZ",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Iceborne",
+      "weaponType": "Axe",
+      "weaponName": "Existential Crisis",
+      "weaponIcon": "/assets/icons/weapons/chronovore/ExistentialCrisis.png",
+      "weaponElement": "Radiant",
+      "bondName": "Edge of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/EdgeOfDawn.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Adrenaline",
+          "value": 5
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-KBfkT0xs0CgYh62IPc0CYTYmIxni5C2LSE2cACPVuAUBCpnH3tYCxJUESdwhg",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Iceborne",
+      "weaponType": "Chain Blades",
+      "weaponName": "The Weeping Hours",
+      "weaponIcon": "/assets/icons/weapons/chronovore/TheWeepingHours.png",
+      "weaponElement": "Radiant",
+      "bondName": "Fangs of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/FangsOfDawn.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Boreal March",
+        "icon": "/assets/icons/armours/boreus/BorealMarch.png"
+      },
+      "perks": [
+        {
+          "name": "Tenacious",
+          "value": 8
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Pulse",
+          "value": 6
+        },
+        {
+          "name": "Adrenaline",
+          "value": 5
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Pulse Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-5wf8Tz6uRCONHqRTEc0CjT2NTw7iaC2WhkbiQCgwTvUECw1Hj8uQC5QhoSLYF0",
+      "title": "Chrono (Valo)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Iceborne",
+      "weaponType": "Hammer",
+      "weaponName": "History's Burden",
+      "weaponIcon": "/assets/icons/weapons/chronovore/HistorysBurden.png",
+      "weaponElement": "Radiant",
+      "bondName": "Valomyr's Burden",
+      "bondIcon": "/assets/icons/weapons/valomyr/ValomyrsBurden.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Light's Virtue",
+        "icon": "/assets/icons/armours/rezakiri/LightsVirtue.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Bladed Boots",
+        "icon": "/assets/icons/armours/sahvyt/BladedBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Cunning",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Overpower",
+          "value": 6
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 5
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        },
+        {
+          "name": "Recycle",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Overpower Cell"
+        },
+        {
+          "slot": "Finesse",
+          "cellName": "Recycle Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        }
+      ]
+    },
+    {
+      "buildId": "mp-generosity-R4f8TRXS7CPPU55UecMUvT82UEgibCaVizdcZC6bfrUyCgYIE3tdCV7tLSW1ub",
+      "title": "Chrono (Reza)",
+      "category": "Generosity",
+      "vsElement": "Umbral",
+      "subcategory": "Iceborne",
+      "weaponType": "War Pike",
+      "weaponName": "Millennium's End",
+      "weaponIcon": "/assets/icons/weapons/chronovore/MillenniumsEnd.png",
+      "weaponElement": "Radiant",
+      "bondName": "Spire of Dawn",
+      "bondIcon": "/assets/icons/weapons/rezakiri/SpireOfDawn.png",
+      "omnicellName": "Iceborne",
+      "omnicellIcon": "/assets/icons/omnicells/Iceborne.png",
+      "lanternName": "Skarn's Defiance",
+      "lanternIcon": "/assets/icons/lanterns/SkarnsDefiance.png",
+      "head": {
+        "name": "Dark Watch",
+        "icon": "/assets/icons/armours/shrowd/DarkWatch.png"
+      },
+      "torso": {
+        "name": "Skraevwing Jacket",
+        "icon": "/assets/icons/armours/skraev/SkraevwingJacket.png"
+      },
+      "arms": {
+        "name": "Boreal Might",
+        "icon": "/assets/icons/armours/boreus/BorealMight.png"
+      },
+      "legs": {
+        "name": "Skraevwing Boots",
+        "icon": "/assets/icons/armours/skraev/SkraevwingBoots.png"
+      },
+      "perks": [
+        {
+          "name": "Adrenaline",
+          "value": 10
+        },
+        {
+          "name": "Tenacious",
+          "value": 7
+        },
+        {
+          "name": "Endurance",
+          "value": 6
+        },
+        {
+          "name": "Generosity",
+          "value": 6
+        },
+        {
+          "name": "Cunning",
+          "value": 5
+        },
+        {
+          "name": "Assassin's Frenzy",
+          "value": 3
+        },
+        {
+          "name": "Berserker",
+          "value": 3
+        }
+      ],
+      "cells": [
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Endurance Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Berserker Cell"
+        },
+        {
+          "slot": "Alacrity",
+          "cellName": "Assassin's Frenzy Cell"
+        },
+        {
+          "slot": "Brutality",
+          "cellName": "Tenacious Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
+        },
+        {
+          "slot": "Insight",
+          "cellName": "Generosity Cell"
         }
       ]
     }

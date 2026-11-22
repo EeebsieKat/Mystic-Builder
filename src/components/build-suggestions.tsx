@@ -45,6 +45,7 @@ import type { CellType } from "@/game/types";
 import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
 import { highlightGameText } from "@/lib/game-text-highlighter";
 import { getClientId, getClientFingerprint } from "@/lib/client-id";
+import { PerkTierHoverTooltip } from "@/components/loadout/perk-summary-dialog";
 
 /* ------------------------------------------------------------------ */
 /* Types & Configurations                                             */
@@ -2156,7 +2157,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                             const rank = Math.min(6, perk.value);
                                             const isMax = rank >= 6;
                                             return (
-                                                <PerkHoverTooltip key={perk.name} name={perk.name} rank={rank}>
+                                                <PerkTierHoverTooltip key={perk.name} name={perk.name} value={rank}>
                                                     <div
                                                         className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold hover:scale-105 transition-transform ${isMax
                                                             ? "border-amber-400/50 bg-amber-400/15 text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.15)]"
@@ -2166,7 +2167,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                                         <span>+{rank}</span>
                                                         <span>{perk.name}</span>
                                                     </div>
-                                                </PerkHoverTooltip>
+                                                </PerkTierHoverTooltip>
                                             );
                                         })}
                                     </div>
