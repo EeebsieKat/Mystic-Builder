@@ -37,57 +37,6 @@ const WEAPON_CLASSES = [
     { id: "Aether Strikers", name: "Aether Strikers", icon: "/assets/icons/generic/AetherStrikers.png", role: "Rapid Mantras & Surges" },
 ];
 
-const OMNICELLS = [
-    {
-        name: "Discipline",
-        icon: "/assets/icons/omnicells/Discipline.png",
-        tagline: "Flawless Parries & Critical Surges",
-        color: "from-amber-500/20 to-orange-500/10 border-amber-500/30",
-        pillColor: "text-amber-400 bg-amber-500/10 border-amber-500/30",
-        description: "Limits healing in exchange for flaming parry counter-attacks and lethal critical strike stacking.",
-    },
-    {
-        name: "Revenant",
-        icon: "/assets/icons/omnicells/Revenant.png",
-        tagline: "Void Health Sacrifice & Colossal Burst",
-        color: "from-purple-500/20 to-violet-500/10 border-purple-500/30",
-        pillColor: "text-purple-400 bg-purple-500/10 border-purple-500/30",
-        description: "Channels void tendrils that drain Slayer HP into devastating long-range dark aether explosions.",
-    },
-    {
-        name: "Tempest",
-        icon: "/assets/icons/omnicells/Tempest.png",
-        tagline: "Velocity Scaling & Shock Annihilation",
-        color: "from-sky-500/20 to-blue-500/10 border-sky-500/30",
-        pillColor: "text-sky-400 bg-sky-500/10 border-sky-500/30",
-        description: "Converts sprint velocity and dodge momentum into lightning chain charges for massive single-target strikes.",
-    },
-    {
-        name: "Bastion",
-        icon: "/assets/icons/omnicells/Bastion.png",
-        tagline: "Fortified Shields & Crushing Impact",
-        color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30",
-        pillColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30",
-        description: "Amplifies shield generation and expels stacked shielding into a devastating area-of-effect ground slam.",
-    },
-    {
-        name: "Artificer",
-        icon: "/assets/icons/omnicells/Artificer.png",
-        tagline: "Drone Support, Cleansing & Instant Revives",
-        color: "from-teal-500/20 to-cyan-500/10 border-teal-500/30",
-        pillColor: "text-teal-400 bg-teal-500/10 border-teal-500/30",
-        description: "Deploys an automated companion drone to heal teammates, laser vulnerable behemoth parts, and revive fallen Slayers.",
-    },
-    {
-        name: "Iceborne",
-        icon: "/assets/icons/omnicells/Iceborne.png",
-        tagline: "Unstoppable Glacial Fortitude",
-        color: "from-cyan-500/20 to-blue-500/10 border-cyan-500/30",
-        pillColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30",
-        description: "Grants continuous lifesteal, massive damage mitigation, and an icy lance that grants temporary invulnerability.",
-    },
-];
-
 const ELEMENTS = [
     { name: "Blaze", color: "#E25822", icon: "/assets/icons/elements/Blaze.png", vs: "Frost" },
     { name: "Frost", color: "#6EC6E8", icon: "/assets/icons/elements/Frost.png", vs: "Blaze" },
@@ -155,7 +104,7 @@ const MAIN_NAV_ITEMS = [
 const SECTION_IDS = [
     "hero-section",
     "core-capabilities",
-    "omnicell-archetypes",
+    "latest-news",
     "weapon-classes",
     "elemental-system",
     "cta-section",
@@ -626,59 +575,173 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* OMNICELL ARCHETYPES SHOWCASE */}
-            <section id="omnicell-archetypes" className="relative z-10 border-y border-[var(--line)] bg-[var(--bg-raise)]/40 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
-                <div className="mx-auto max-w-5xl">
-                    <div className="flex flex-col items-center text-center">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--aether-line)] bg-[var(--aether-a10)] px-3.5 py-1 text-xs font-semibold text-[var(--aether-hi)]">
-                            <Sparkles className="h-3.5 w-3.5" />
-                            <span>Combat Specialization</span>
+            {/* DEVELOPMENT NEWS & ROADMAP */}
+            <section
+                id="latest-news"
+                className="relative z-10 flex min-h-[calc(100vh-56px)] flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 py-8 lg:py-12 scroll-mt-14"
+            >
+                <div className="mx-auto w-full max-w-7xl">
+                    <div className="flex flex-col items-start text-left max-w-2xl">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--gold)]/30 bg-[var(--gold)]/10 px-3 py-0.5 text-[9px] font-mono font-bold tracking-widest text-[var(--gold)] uppercase">
+                            <Sparkles className="h-3 w-3" />
+                            <span>DEVELOPMENT ROADMAP</span>
                         </div>
-                        <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                            Six Distinct Omnicell Playstyles
+                        <h2 className="mt-1.5 font-display text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-white leading-tight">
+                            What We're Building Next
                         </h2>
-                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
-                            Tailor your loadout around unique combat mechanics: parrying, void damage bursts, high velocity shock attacks, or unbreakable shields.
+                        <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-3)]">
+                            Major upcoming features currently in active development for the Mystic Builder platform.
                         </p>
                     </div>
 
-                    <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {OMNICELLS.map(omni => (
-                            <Link
-                                key={omni.name}
-                                href={`/?tab=suggestions&category=${encodeURIComponent(omni.name)}`}
-                                className={`group flex flex-col justify-between rounded-xl border bg-gradient-to-br ${omni.color} p-5 transition-all duration-200 hover:scale-[1.02] hover:shadow-md cursor-pointer`}
-                            >
-                                <div>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-black/40 p-1">
-                                                <img
-                                                    src={omni.icon}
-                                                    alt={omni.name}
-                                                    className="h-10 w-10 object-contain drop-shadow-md"
-                                                />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-display text-base font-bold text-white group-hover:text-[var(--aether-hi)] transition-colors">
-                                                    {omni.name}
-                                                </h4>
-                                                <span className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold border ${omni.pillColor}`}>
-                                                    Omnicell
-                                                </span>
-                                            </div>
+                    <div className="mt-5 sm:mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
+                        {/* LEFT: Large Featured News Card (Span 7) - Community Builds Hub */}
+                        <div className="group relative lg:col-span-7 flex flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--aether-line)] hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(91,163,255,0.18)]">
+                            {/* Graphic Frame with Dark Aether Horizon & Live Crest */}
+                            <div className="relative h-[200px] xs:h-[230px] sm:h-[260px] lg:h-[295px] xl:h-[320px] w-full overflow-hidden bg-gradient-to-b from-[#0a1528] via-[#050b14] to-[#070e1a] border-b border-white/[0.08] flex items-center justify-center">
+                                {/* Ambient Background Glow */}
+                                <div className="absolute h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.1)_50%,transparent_70%)] blur-2xl" />
+                                
+                                {/* Background Wings Emblem */}
+                                <img
+                                    src="/assets/awakening-ui/loadout/GildWingsGold.png"
+                                    alt=""
+                                    className="absolute h-auto w-[420px] max-w-none opacity-25 object-contain select-none"
+                                    aria-hidden="true"
+                                />
+
+                                {/* Social Community Preview Overlay Card */}
+                                <div className="relative z-10 mx-6 flex max-w-md w-full flex-col rounded-sm border border-white/15 bg-black/60 p-4 backdrop-blur-md shadow-2xl">
+                                    <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                                            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-white">
+                                                Community Armory
+                                            </span>
                                         </div>
+                                        <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--gold)] border border-[var(--gold)]/40 bg-[var(--gold)]/10 px-1.5 py-0.5 rounded-sm">
+                                            Q1 2027
+                                        </span>
                                     </div>
-                                    <p className="mt-3 text-xs leading-relaxed text-[var(--ink-2)]">
-                                        {omni.description}
+                                    <p className="mt-2 font-display text-sm font-bold text-white">
+                                        Endgame Dauntless Community Builds
+                                    </p>
+                                    <p className="mt-1 text-[11px] text-[var(--ink-3)] line-clamp-2">
+                                        Share your loadouts, vote on community tier lists, and copy verified builds straight to in-game.
+                                    </p>
+                                    <div className="mt-3 flex items-center justify-between pt-2 border-t border-white/10 text-[10px] font-mono text-[var(--aether-hi)]">
+                                        <span>★ 500+ Community Slayers</span>
+                                        <span className="text-[var(--gold)]">Public Sharing Ready</span>
+                                    </div>
+                                </div>
+
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-85" />
+                            </div>
+
+                            {/* Bottom Content Area */}
+                            <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 lg:p-6">
+                                <div>
+                                    <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-emerald-400 uppercase border border-emerald-500/30 bg-emerald-500/10 rounded-sm">
+                                        IN ACTIVE DEVELOPMENT
+                                    </div>
+                                    <h3 className="mt-2 font-display text-lg sm:text-xl lg:text-[22px] font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--aether-hi)]">
+                                        Community Builds & Social Armory
+                                    </h3>
+                                    <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-2)]">
+                                        A dedicated community platform allowing Slayers to publish their own loadouts, upvote top-rated creator builds, tag playstyles, and copy 1-click import links for their guildmates.
                                     </p>
                                 </div>
-                                <div className="mt-4 flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-semibold text-[var(--ink-3)] group-hover:text-white transition-colors">
-                                    <span>View {omni.name} Builds</span>
-                                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+
+                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.06]">
+                                    <div className="flex items-center gap-2">
+                                        <span className="rounded-sm bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-white/80 border border-white/[0.08]">
+                                            Upvoting &amp; Comments
+                                        </span>
+                                        <span className="rounded-sm bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-white/80 border border-white/[0.08]">
+                                            Guild Loadouts
+                                        </span>
+                                    </div>
+                                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 group-hover:text-white transition-colors">
+                                        In Progress →
+                                    </span>
                                 </div>
-                            </Link>
-                        ))}
+                            </div>
+                        </div>
+
+                        {/* RIGHT: Stacked 2 News Cards (Span 5) */}
+                        <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-5 justify-between">
+                            {/* Right Top: Custom Cells Addition */}
+                            <div className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-purple-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(168,85,247,0.18)]">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-purple-950/40 via-violet-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-6">
+                                    {/* Perk Icons Matrix Showcase */}
+                                    {["Brutality.png", "Finesse.png", "Insight.png", "Alacrity.png", "Prismatic.png"].map((icon, idx) => (
+                                        <div key={idx} className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-purple-500/20 bg-black/50 p-2 shadow-inner group-hover:border-purple-400/50 transition-colors">
+                                            <img
+                                                src={`/assets/icons/perks/${icon}`}
+                                                alt=""
+                                                className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-transform group-hover:scale-110"
+                                            />
+                                        </div>
+                                    ))}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-85" />
+                                </div>
+
+                                <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
+                                    <div>
+                                        <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-purple-400 uppercase border border-purple-500/30 bg-purple-500/10 rounded-sm">
+                                            FEATURE SPOTLIGHT • CUSTOM CELLS
+                                        </div>
+                                        <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-purple-300">
+                                            Custom Cells &amp; Unique Perk Engine
+                                        </h3>
+                                        <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
+                                            Create custom cell combinations, configure non-vanilla perk affinities, and test homebrew modifier thresholds for community server leagues.
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-2.5 flex items-center justify-between text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-purple-400 transition-colors group-hover:text-white">
+                                        <span>Perk Forge Engine</span>
+                                        <span>Coming Soon →</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Bottom: Weapons Addition */}
+                            <div className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-amber-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(245,158,11,0.18)]">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-amber-950/40 via-yellow-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-6">
+                                    {/* Weapon Icons Matrix Showcase */}
+                                    {["Sword.png", "Axe.png", "Hammer.png", "ChainBlades.png", "AetherStrikers.png"].map((icon, idx) => (
+                                        <div key={idx} className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-amber-500/20 bg-black/50 p-2 shadow-inner group-hover:border-amber-400/50 transition-colors">
+                                            <img
+                                                src={`/assets/icons/generic/${icon}`}
+                                                alt=""
+                                                className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110"
+                                            />
+                                        </div>
+                                    ))}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#070e1a] via-transparent to-transparent opacity-85" />
+                                </div>
+
+                                <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
+                                    <div>
+                                        <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-amber-400 uppercase border border-amber-500/30 bg-amber-500/10 rounded-sm">
+                                            ARSENAL EXPANSION • WEAPONS
+                                        </div>
+                                        <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-amber-300">
+                                            New Weapons &amp; Awakening Movesets
+                                        </h3>
+                                        <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
+                                            Introducing new weapon archetypes, exotic weapon specials, and Awakening-era combo damage calculation tables.
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-2.5 flex items-center justify-between text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-amber-400 transition-colors group-hover:text-white">
+                                        <span>Weapon Arsenal Lab</span>
+                                        <span>In Design →</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
