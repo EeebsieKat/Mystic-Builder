@@ -9,7 +9,7 @@
 import type { Armour, Cell, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "@/game/types";
 import { cellTypeColor, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
 import { findCellByVariantName } from "@/game/build-model";
-import { Sparkles } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 
 import { CellHexIcon, CrestEmblem, DiamondPip, ItemIcon, ShowcaseCorners, ShieldGlyph, SwordGlyph, ConsumableGlyph } from "./decor";
 import type { CellSlotKey } from "./loadout-types";
@@ -406,7 +406,7 @@ export const ItemDetailPanel = ({
                             onClick={onOpenPerkSummary}
                             className="lo-card group flex w-full cursor-pointer items-center justify-center gap-2.5 py-3 px-4 outline-none transition-all hover:border-[#5ba3ff]/80 hover:bg-[#5ba3ff]/10 hover:shadow-[0_0_12px_rgba(91,163,255,0.2)] focus-visible:shadow-[0_0_0_1px_#e0a33e]"
                         >
-                            <Sparkles className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
+                            <HelpCircle className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
                             <span className="text-[12.5px] font-bold tracking-[0.06em] text-[#e8e4da] uppercase">
                                 View Build Perk Summary
                             </span>
@@ -421,7 +421,7 @@ export const ItemDetailPanel = ({
                     onClick={onOpenPerkSummary}
                     className="lo-card group flex w-full cursor-pointer items-center justify-center gap-2.5 py-3 px-4 outline-none transition-all hover:border-[#5ba3ff]/80 hover:bg-[#5ba3ff]/10 hover:shadow-[0_0_12px_rgba(91,163,255,0.2)] focus-visible:shadow-[0_0_0_1px_#e0a33e]"
                 >
-                    <Sparkles className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
+                    <HelpCircle className="h-4 w-4 text-[#5ba3ff] group-hover:scale-110 transition-transform" />
                     <span className="text-[12.5px] font-bold tracking-[0.06em] text-[#e8e4da] uppercase">
                         View Build Perk Summary
                     </span>

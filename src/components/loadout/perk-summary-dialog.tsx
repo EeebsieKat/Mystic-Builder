@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Sparkles, X } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { HelpCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
 import { gameData } from "@/game/data";
@@ -192,37 +192,32 @@ export const PerkSummaryDialog = ({
 }: PerkSummaryDialogProps) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent
-                className="w-[92vw] max-w-[460px] p-0 overflow-hidden border border-[#3a4759]/80 bg-[#090e18]/95 shadow-[0_20px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl rounded-2xl"
-                showCloseButton={false}
-            >
-                {/* Silver/Steel Header Banner Matching Image 1 */}
-                <div className="relative flex items-center justify-between border-b border-[#3a4759]/70 bg-gradient-to-b from-[#e6ebf2] via-[#cfd8e5] to-[#b3c1d4] px-5 py-2.5 text-[#0f172a] shadow-md">
-                    <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-[#1e293b]" />
-                        <DialogTitle className="text-sm font-extrabold tracking-[0.08em] uppercase text-[#0f172a] select-none font-display">
-                            Perk Summary
-                        </DialogTitle>
+            <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto border-border/80 bg-card/95 backdrop-blur-xl p-6 shadow-2xl">
+                {/* Dialog Header matching other site modals */}
+                <DialogHeader className="gap-1 border-b border-border/40 pb-4 text-left pr-8">
+                    <div className="flex items-center gap-2.5">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-primary/40 bg-primary/10 text-primary">
+                            <HelpCircle className="h-4.5 w-4.5" />
+                        </div>
+                        <div>
+                            <DialogTitle className="text-xl font-bold tracking-tight text-foreground font-display">
+                                Perk Summary
+                            </DialogTitle>
+                            <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+                                Active build perk point totals across equipped gear and slotted cells
+                            </DialogDescription>
+                        </div>
                     </div>
-
-                    <button
-                        type="button"
-                        onClick={() => onOpenChange(false)}
-                        className="rounded-md p-1 text-[#0f172a]/70 hover:bg-black/10 hover:text-[#0f172a] transition-colors cursor-pointer"
-                        aria-label="Close"
-                    >
-                        <X className="h-4 w-4" />
-                    </button>
-                </div>
+                </DialogHeader>
 
                 {/* Subtitle / Tip */}
-                <div className="flex items-center justify-between px-5 pt-3 text-[11px] text-muted-foreground/80 font-medium">
-                    <span>Active build perk point totals</span>
-                    <span className="text-[#5ba3ff]">Hover perk to view +1 to +6 tiers</span>
+                <div className="flex items-center justify-between text-xs text-muted-foreground font-medium pt-1">
+                    <span>Equipped Perks ({perkTotals.length})</span>
+                    <span className="text-primary font-semibold">Hover perk to view +1 to +6 tiers</span>
                 </div>
 
-                {/* List of Perk Rows Matching Image 1 */}
-                <div className="flex flex-col gap-2 p-5 pt-2 max-h-[70vh] overflow-y-auto">
+                {/* List of Perk Rows */}
+                <div className="flex flex-col gap-2.5 max-h-[60vh] overflow-y-auto pr-1">
                     {perkTotals.length === 0 ? (
                         <div className="py-12 text-center text-sm text-muted-foreground">
                             No perks active. Equip gear or socket cells into your build.
@@ -237,12 +232,12 @@ export const PerkSummaryDialog = ({
                                     value={perk.value}
                                     type={perk.type}
                                 >
-                                    <div className="relative group rounded-lg border border-[#2b384e]/70 bg-[#0c1320]/85 px-4 py-3 hover:border-[#5ba3ff]/80 hover:bg-[#132035]/95 hover:shadow-[0_0_15px_rgba(91,163,255,0.15)] transition-all cursor-pointer">
-                                        {/* Corner bracket marks matching Image 1 */}
-                                        <span className="pointer-events-none absolute left-1.5 top-1.5 h-2 w-2 border-l border-t border-[#5ba3ff]/40 group-hover:border-[#5ba3ff]/80 transition-colors" />
-                                        <span className="pointer-events-none absolute right-1.5 top-1.5 h-2 w-2 border-r border-t border-[#5ba3ff]/40 group-hover:border-[#5ba3ff]/80 transition-colors" />
-                                        <span className="pointer-events-none absolute bottom-1.5 left-1.5 h-2 w-2 border-b border-l border-[#5ba3ff]/40 group-hover:border-[#5ba3ff]/80 transition-colors" />
-                                        <span className="pointer-events-none absolute bottom-1.5 right-1.5 h-2 w-2 border-b border-r border-[#5ba3ff]/40 group-hover:border-[#5ba3ff]/80 transition-colors" />
+                                    <div className="relative group rounded-xl border border-border/60 bg-muted/20 px-4 py-3 hover:border-primary/80 hover:bg-muted/30 hover:shadow-[0_0_15px_rgba(91,163,255,0.15)] transition-all cursor-pointer">
+                                        {/* Corner bracket marks */}
+                                        <span className="pointer-events-none absolute left-1.5 top-1.5 h-2 w-2 border-l border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute right-1.5 top-1.5 h-2 w-2 border-r border-t border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute bottom-1.5 left-1.5 h-2 w-2 border-b border-l border-primary/40 group-hover:border-primary/80 transition-colors" />
+                                        <span className="pointer-events-none absolute bottom-1.5 right-1.5 h-2 w-2 border-b border-r border-primary/40 group-hover:border-primary/80 transition-colors" />
 
                                         {/* Card content */}
                                         <div className="flex items-center justify-between gap-3">
@@ -253,7 +248,7 @@ export const PerkSummaryDialog = ({
                                                     size={30}
                                                     className="shrink-0 drop-shadow"
                                                 />
-                                                <span className="text-[16px] font-bold text-[#eef3fb] tracking-[0.03em] truncate group-hover:text-white transition-colors">
+                                                <span className="text-[15.5px] font-bold text-foreground tracking-[0.02em] truncate group-hover:text-primary transition-colors">
                                                     +{perk.value} {perk.name}
                                                 </span>
                                             </div>
@@ -267,7 +262,7 @@ export const PerkSummaryDialog = ({
                                                         MAXED
                                                     </Badge>
                                                 ) : (
-                                                    <span className="text-[11px] font-semibold text-[#8f949c] group-hover:text-foreground transition-colors">
+                                                    <span className="text-[11px] font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
                                                         {perk.value}/6
                                                     </span>
                                                 )}
