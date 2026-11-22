@@ -1,6 +1,6 @@
 /** Shared site config and Dauntless color mappings. */
 
-export const SITE_NAME = "mystic Builder";
+export const SITE_NAME = "Mystic Builder";
 
 export const SITE_TAGLINE = "A dark-mode Dauntless build planner - plan builds, share them, and get rich Discord link previews.";
 

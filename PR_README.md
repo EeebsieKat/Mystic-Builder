@@ -8,7 +8,7 @@
 
 ## 🌟 Executive Summary
 
-This Pull Request delivers a comprehensive visual and functional overhaul to **mystic Builder**, transitioning the Awakening loadout builder to a dedicated route with server-side rendered (SSR) default loadouts, introducing robust build name sharing via URLs, enhancing user navigation and page transitions, and streamlining the landing page experience.
+This Pull Request delivers a comprehensive visual and functional overhaul to **Mystic Builder**, transitioning the Awakening loadout builder to a dedicated route with server-side rendered (SSR) default loadouts, introducing robust build name sharing via URLs, enhancing user navigation and page transitions, and streamlining the landing page experience.
 
 ---
 
@@ -50,9 +50,9 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **m
   - Satori OpenGraph image generator now supports custom build names in the rendered card banner (`?name=...`).
 - **Dynamic Browser Tab & Page `<title>` Synchronization**:
   - Added real-time `document.title` synchronization in `LoadoutScreen` reacting to build name edits, randomize, and reset.
-  - Implemented SSR metadata resolution with absolute title formatting (`${title} - mystic Builder`) across `/builder` and `/b/[buildId]`, ensuring the browser tab always identifies the active build rather than displaying the bare domain name.
+  - Implemented SSR metadata resolution with absolute title formatting (`${title} - Mystic Builder`) across `/builder` and `/b/[buildId]`, ensuring the browser tab always identifies the active build rather than displaying the bare domain name.
   - Default build name resolution on `/b/[buildId]` (`buildNameplate`) now infers weapon identity (e.g. `TERRA CHAIN BLADES`, `SHOCK HAMMER`) instead of falling back to a generic `"SLAYER"`.
-- **OpenGraph & Twitter Cards**: Updated website graph titles, site names, and metadata across `layout.tsx`, `page.tsx`, and `builder/page.tsx` to **`mystic Builder`**, pointing to `https://builder.mysticparadox.com` in production environments.
+- **OpenGraph & Twitter Cards**: Updated website graph titles, site names, and metadata across `layout.tsx`, `page.tsx`, and `builder/page.tsx` to **`Mystic Builder`**, pointing to `https://builder.mysticparadox.com` in production environments.
 
 ### 5. Ad System & Promo Cards
 - Fixed an issue where legacy 12-hour localStorage suppression (`mystic-builder-ads-suppressed-until`) prevented promotional dialogs from showing.
@@ -66,14 +66,14 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **m
 |------|----------------|
 | `src/app/builder/page.tsx` | Server component initializing `Nacroleps` SSR default build, dynamic metadata, and query param support. |
 | `src/app/b/[buildId]/page.tsx` | Added `searchParams` parsing for custom build name sharing and dynamic OpenGraph titles. |
-| `src/app/layout.tsx` | Updated OpenGraph site name / title to `mystic Builder`, wrapped children in `PageTransition`. |
+| `src/app/layout.tsx` | Updated OpenGraph site name / title to `Mystic Builder`, wrapped children in `PageTransition`. |
 | `src/app/page.tsx` | Added redirects to `/builder`, updated OpenGraph metadata, and passed through build name params. |
 | `src/components/loadout/loadout-screen.tsx` | Clean `/builder` URL sync, custom name URL sharing, fixed Randomize/Reset handlers, and name generators. |
 | `src/components/loadout/loadout-stage.tsx` | Initialized SSR stage scale to `1` to eliminate empty loadout container during server rendering. |
 | `src/components/site-nav-links.tsx` | Added `Main Website` navigation pill linking to `https://mysticparadox.com`. |
 | `src/components/page-transition.tsx` | Added smooth fade-out and fade-in page transitions. |
 | `src/components/landing-page.tsx` | Polished CTA, removed deprecated sections, and adjusted bento layouts. |
-| `src/lib/site.ts` | Updated `SITE_NAME` to `mystic Builder`, enhanced `localBuildPath` and `localEditPath` with name support. |
+| `src/lib/site.ts` | Updated `SITE_NAME` to `Mystic Builder`, enhanced `localBuildPath` and `localEditPath` with name support. |
 | `src/ads/index.ts` & `src/ads/ads.json` | Fixed suppression lock and lowered modal delay. |
 
 ---
@@ -86,5 +86,5 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **m
 - [x] **Randomize & Reset**: Clicking `RANDOMIZE` updates all slots and generates a new name without snapping back to default. Clicking `RESET` clears all gear and resets name to `"SLAYER"`.
 - [x] **OpenGraph Image Generation**: `GET /b/<id>/opengraph-image` returns HTTP 200 `image/png` with valid dimensions (1200x630) and rich gear/perk cards.
 - [x] **Social Link Previews**: Checked Discord embed compatibility with `og:image`, `og:title`, and `og:description`.
-- [x] **Browser Tab Synchronization**: Browser tab immediately updates to `${buildName} - mystic Builder` on SSR load, input edits, randomize, and reset.
+- [x] **Browser Tab Synchronization**: Browser tab immediately updates to `${buildName} - Mystic Builder` on SSR load, input edits, randomize, and reset.
 - [x] **Build Integrity**: `npm run build && node scripts/copy-standalone.js` builds with 0 errors.
