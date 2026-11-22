@@ -680,13 +680,3 @@ body::before {
   filter: brightness(0.94);
 }
 
-
-/* ---- nav conveyor ----------------------------------------------------- */
-
-/* Respect reduced-motion preferences for the header nav conveyor. */
-@media (prefers-reduced-motion: reduce) {
-  .nav-conveyor,
-  .nav-conveyor * {
-    transition-duration: 0.01ms !important;
-  }
-}
