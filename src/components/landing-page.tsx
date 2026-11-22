@@ -375,7 +375,7 @@ export default function LandingPage() {
     }, [getCurrentSectionIndex, router, scrollToSection]);
 
     return (
-        <div className="relative flex w-full flex-col overflow-x-hidden bg-[var(--bg)] text-foreground">
+        <div className="relative flex w-full flex-col bg-[var(--bg)] text-foreground">
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
             <section
                 id="hero-section"

@@ -183,10 +183,12 @@
   }
   html {
     color-scheme: dark;
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body), "Inter", "Segoe UI", system-ui, sans-serif;
+    overflow-x: clip;
   }
 }
 
