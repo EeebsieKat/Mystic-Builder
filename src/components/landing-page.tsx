@@ -239,9 +239,7 @@ export default function LandingPage() {
                         <div className="relative flex items-center justify-center lg:col-span-5 select-none">
                             <div className="relative flex items-center justify-center">
                                 {/* Ambient Glow behind Crest */}
-                                <div className="absolute h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.14)_50%,transparent_70%)] blur-2xl animate-pulse" />
-                                <div className="absolute h-84 w-84 rounded-full border border-[var(--gold)]/15 opacity-40 animate-[spin_60s_linear_infinite]" />
-                                <div className="absolute h-72 w-72 rounded-full border border-dashed border-[var(--aether-line)]/30 opacity-30 animate-[spin_40s_linear_infinite_reverse]" />
+                                <div className="absolute h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.16)_0%,rgba(224,194,135,0.08)_45%,transparent_70%)] blur-3xl" />
 
                                 <pre
                                     aria-label="Mystic Paradox Crest ASCII Art"
