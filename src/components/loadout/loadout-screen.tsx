@@ -23,7 +23,7 @@ import {
     findOmnicellByName,
     findWeaponByName,
 } from "@/game/build-model";
-import { buildBuildView, tryDeserialize } from "@/game/build-view";
+import { buildBuildView, buildNameplate, tryDeserialize } from "@/game/build-view";
 import { consumableOptions, consumables, findConsumableByName, HEALING_FLASK } from "@/game/consumables";
 import type {
     Armour,
@@ -36,7 +36,7 @@ import type {
     Weapon,
     WeaponType,
 } from "@/game/types";
-import { cellTypeColor, cellTypeLabel, elementColor, extractBuildId, localBuildPath } from "@/lib/site";
+import { cellTypeColor, cellTypeLabel, DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, elementColor, extractBuildId, localBuildPath, SITE_NAME } from "@/lib/site";
 
 import { LoadoutStage } from "./loadout-stage";
 import {
@@ -63,8 +63,7 @@ import { interpolate, type PerkRow } from "./loadout-types";
 /* Defaults and Draft                                                  */
 /* ------------------------------------------------------------------ */
 
-export const DEFAULT_BUILD_ID = "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
-export const DEFAULT_BUILD_NAME = "Nacroleps";
+export { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME };
 
 const EMPTY_DRAFT: LoadoutDraft = {
     weaponName: null,
@@ -280,6 +279,20 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
     const searchParams = useSearchParams();
     const { toast } = useToast();
 
+    const getInitialBuildName = useCallback((parsed: BuildModel | null, id: string, nameParam?: string | null): string => {
+        if (nameParam && nameParam.trim()) {
+            return nameParam.trim().slice(0, 24);
+        }
+        if (id === DEFAULT_BUILD_ID) {
+            return DEFAULT_BUILD_NAME;
+        }
+        if (parsed) {
+            const parsedView = buildBuildView(parsed, id);
+            return buildNameplate(parsedView, id);
+        }
+        return "SLAYER";
+    }, []);
+
     const [draft, setDraft] = useState<LoadoutDraft>(() => {
         const id = initialBuildId || searchParams.get("b") || DEFAULT_BUILD_ID;
         const nameParam = initialName || searchParams.get("name") || searchParams.get("n");
@@ -287,13 +300,12 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
         if (id) {
             const parsed = tryDeserialize(id);
             if (parsed) {
-                const defaultNameForId = id === DEFAULT_BUILD_ID ? DEFAULT_BUILD_NAME : "SLAYER";
                 initialDraft = draftFromModel(parsed);
-                initialDraft.buildName = nameParam || defaultNameForId;
+                initialDraft.buildName = getInitialBuildName(parsed, id, nameParam);
             }
         }
         if (nameParam) {
-            initialDraft.buildName = nameParam;
+            initialDraft.buildName = nameParam.trim().slice(0, 24);
         }
         return initialDraft;
     });
@@ -311,15 +323,15 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
             if (initialBuildId) {
                 const parsed = tryDeserialize(initialBuildId);
                 if (parsed) {
-                    const defaultNameForId = initialBuildId === DEFAULT_BUILD_ID ? DEFAULT_BUILD_NAME : "SLAYER";
+                    const fallbackName = getInitialBuildName(parsed, initialBuildId, null);
                     setDraft(prev => ({
                         ...draftFromModel(parsed),
-                        buildName: initialName || (prev.buildName && prev.buildName !== "SLAYER" && prev.buildName !== DEFAULT_BUILD_NAME ? prev.buildName : defaultNameForId),
+                        buildName: initialName || (prev.buildName && prev.buildName !== "SLAYER" && prev.buildName !== DEFAULT_BUILD_NAME ? prev.buildName : fallbackName),
                     }));
                 }
             }
         }
-    }, [initialBuildId, initialName]);
+    }, [initialBuildId, initialName, getInitialBuildName]);
 
     const [selectedSlot, setSelectedSlot] = useState<SelectionId>("weapon");
     /* The center detail card always shows the last inspected gear slot, even
@@ -367,6 +379,21 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
         }
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
+
+    /* Update browser tab title dynamically whenever draft or build view changes */
+    useEffect(() => {
+        if (typeof document === "undefined") {
+            return;
+        }
+        const name = draft.buildName?.trim();
+        const activeName =
+            name && name !== "SLAYER"
+                ? name
+                : view?.weapon
+                    ? `${view.weapon.name} ${view.weapon.type} Build`
+                    : "Loadout Builder";
+        document.title = `${activeName} - ${SITE_NAME}`;
+    }, [draft.buildName, view]);
 
     /* Esc deselects back to the perk summary (and closes overlays). */
     useEffect(() => {

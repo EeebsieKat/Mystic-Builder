@@ -7,10 +7,8 @@ import { Button } from "@/components/ui/button";
 import { ViewCounter } from "@/components/view-counter";
 import { LoadoutScreen } from "@/components/loadout/loadout-screen";
 import { buildSummary, buildTitle, parseBuildId } from "@/game/build-view";
-import { elementColor, SITE_NAME } from "@/lib/site";
+import { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, elementColor, SITE_NAME } from "@/lib/site";
 import { OG_GOLD } from "@/lib/og-theme";
-
-export const revalidate = 86400;
 
 interface BuildPageProps {
     params: Promise<{ buildId: string }>;
@@ -25,28 +23,48 @@ export async function generateMetadata({ params, searchParams }: BuildPageProps)
 
     if (!parsed) {
         return {
-            title: `Invalid build - ${SITE_NAME}`,
+            title: "Invalid build",
             robots: { index: false },
         };
     }
 
-    const title = customName ? customName : buildTitle(parsed.view);
+    const title = customName
+        ? customName
+        : buildId === DEFAULT_BUILD_ID
+            ? DEFAULT_BUILD_NAME
+            : buildTitle(parsed.view);
+    const fullTitle = `${title} - ${SITE_NAME}`;
     const description = buildSummary(parsed.view);
     const themeColor = parsed.view.weapon ? elementColor(parsed.view.weapon.elemental) : OG_GOLD;
 
+    const ogImageUrl = customName
+        ? `/b/${buildId}/opengraph-image?name=${encodeURIComponent(customName)}`
+        : `/b/${buildId}/opengraph-image`;
+
     return {
-        title,
+        title: {
+            absolute: fullTitle,
+        },
         description,
         openGraph: {
-            title,
+            title: fullTitle,
             description,
             type: "website",
             siteName: SITE_NAME,
+            images: [
+                {
+                    url: ogImageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: fullTitle,
+                },
+            ],
         },
         twitter: {
             card: "summary_large_image",
-            title,
+            title: fullTitle,
             description,
+            images: [ogImageUrl],
         },
         other: {
             "theme-color": themeColor,

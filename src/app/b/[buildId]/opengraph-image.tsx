@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { parseBuildId, buildTitle } from "@/game/build-view";
-import { cellTypeColor, elementColor, getSiteUrl, SITE_NAME } from "@/lib/site";
+import { cellTypeColor, DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, elementColor, getSiteUrl, SITE_NAME } from "@/lib/site";
 import { loadIconDataUrl } from "@/lib/og-icons";
 import {
     loadOgFonts,
@@ -128,8 +128,16 @@ interface GearRow {
     chips: OgChip[];
 }
 
-export default async function Image({ params }: { params: Promise<{ buildId: string }> }) {
+export default async function Image({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ buildId: string }>;
+    searchParams?: Promise<{ name?: string; n?: string }>;
+}) {
     const { buildId } = await params;
+    const sp = await searchParams;
+    const customName = sp?.name || sp?.n;
     const parsed = parseBuildId(buildId);
     const fonts = await loadOgFonts();
 
@@ -268,7 +276,9 @@ export default async function Image({ params }: { params: Promise<{ buildId: str
                     <Crest icon={logo} tone={OG_LINE_2} glow={true} />
                     <div style={{ display: "flex", flexDirection: "column", gap: 9, flex: 1, minWidth: 0 }}>
                         <div style={ogEyebrow(17)}>{"Dauntless · Mystic Paradox 1.14.7"}</div>
-                        <div style={ogHeadline(38)}>{trunc(buildTitle(view), 42)}</div>
+                        <div style={ogHeadline(38)}>
+                            {trunc(customName || (buildId === DEFAULT_BUILD_ID ? DEFAULT_BUILD_NAME : buildTitle(view)), 42)}
+                        </div>
                     </div>
                     {view.weapon ? <Crest icon={weaponIcon} tone={toneAlpha(elementTone, 0.45)} glow={true} /> : null}
                 </div>

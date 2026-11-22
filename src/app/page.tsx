@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} - Dauntless build planner`,
     description: SITE_TAGLINE,
     openGraph: {
-        title: "mystic Builder",
+        title: SITE_NAME,
         description: SITE_TAGLINE,
-        siteName: "mystic Builder",
+        siteName: SITE_NAME,
     },
     twitter: {
         card: "summary_large_image",
-        title: "mystic Builder",
+        title: SITE_NAME,
         description: SITE_TAGLINE,
     },
 };

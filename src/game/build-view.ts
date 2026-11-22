@@ -340,3 +340,19 @@ export const buildTitle = (view: BuildView): string => {
     }
     return "Dauntless Build";
 };
+
+export const buildNameplate = (view: BuildView, buildId?: string): string => {
+    if (buildId === "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC") {
+        return "Nacroleps";
+    }
+    if (view.weapon) {
+        const element = view.weapon.elemental ? view.weapon.elemental.toUpperCase() : "";
+        const type = view.weapon.type.toUpperCase();
+        const elementalTitle = element ? `${element} ${type}` : type;
+        if (elementalTitle.length <= 24) {
+            return elementalTitle;
+        }
+        return view.weapon.name.slice(0, 24);
+    }
+    return "SLAYER";
+};

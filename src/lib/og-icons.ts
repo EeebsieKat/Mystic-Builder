@@ -35,28 +35,54 @@ export const loadFont = async (fileName: string): Promise<Buffer> => {
     }
 
     const candidates = [
-        path.join(process.cwd(), "src", "assets", "fonts", fileName),
         path.join(process.cwd(), "public", "fonts", fileName),
+        path.join(process.cwd(), "src", "assets", "fonts", fileName),
+        path.join(__dirname, "..", "..", "public", "fonts", fileName),
+        path.join(__dirname, "..", "assets", "fonts", fileName),
     ];
 
     for (const candidate of candidates) {
         try {
-            const data = fs.readFileSync(candidate);
-            fontCache.set(fileName, data);
-            return data;
+            if (fs.existsSync(candidate)) {
+                const data = fs.readFileSync(candidate);
+                fontCache.set(fileName, data);
+                return data;
+            }
         } catch {
             // try next candidate
         }
     }
 
-    const { getSiteUrl } = await import("./site");
-    const response = await fetch(`${getSiteUrl()}/fonts/${fileName}`, { signal: AbortSignal.timeout(8000) });
-    if (!response.ok) {
-        throw new Error(`Font ${fileName} unavailable`);
+    try {
+        const { getSiteUrl } = await import("./site");
+        const response = await fetch(`${getSiteUrl()}/fonts/${fileName}`, { signal: AbortSignal.timeout(5000) });
+        if (response.ok) {
+            const data = Buffer.from(await response.arrayBuffer());
+            fontCache.set(fileName, data);
+            return data;
+        }
+    } catch {
+        // Fall back to local fallback font
     }
-    const data = Buffer.from(await response.arrayBuffer());
-    fontCache.set(fileName, data);
-    return data;
+
+    // Ultimate fallback to ensure opengraph image never throws 500
+    const fallbackCandidates = [
+        path.join(process.cwd(), "public", "fonts", "DejaVuSans.ttf"),
+        path.join(process.cwd(), "src", "assets", "fonts", "DejaVuSans.ttf"),
+    ];
+    for (const fb of fallbackCandidates) {
+        try {
+            if (fs.existsSync(fb)) {
+                const data = fs.readFileSync(fb);
+                fontCache.set(fileName, data);
+                return data;
+            }
+        } catch {
+            // continue
+        }
+    }
+
+    throw new Error(`Font ${fileName} unavailable`);
 };
 
 const readBinary = async (relativePath: string, urlPath: string): Promise<string | null> => {

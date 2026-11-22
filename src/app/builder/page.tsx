@@ -1,28 +1,33 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import LoadoutScreen, { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME } from "@/components/loadout/loadout-screen";
-import { SITE_TAGLINE } from "@/lib/site";
+import LoadoutScreen from "@/components/loadout/loadout-screen";
+import { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 interface BuilderPageProps {
     searchParams?: Promise<{ b?: string; name?: string; n?: string }>;
 }
 
 export async function generateMetadata({ searchParams }: BuilderPageProps): Promise<Metadata> {
-    const sp = await searchParams;
+    const sp = searchParams ? await searchParams : undefined;
     const customName = sp?.name || sp?.n;
-    const title = customName ? customName : DEFAULT_BUILD_NAME;
+    const rawTitle = customName ? customName : DEFAULT_BUILD_NAME;
+    const fullTitle = `${rawTitle} - ${SITE_NAME}`;
     return {
-        title,
+        title: {
+            absolute: fullTitle,
+        },
         description: SITE_TAGLINE,
         openGraph: {
-            title: customName ? `${customName} - mystic Builder` : "mystic Builder",
+            title: fullTitle,
             description: SITE_TAGLINE,
-            siteName: "mystic Builder",
+            siteName: SITE_NAME,
         },
         twitter: {
             card: "summary_large_image",
-            title: customName ? `${customName} - mystic Builder` : "mystic Builder",
+            title: fullTitle,
             description: SITE_TAGLINE,
         },
     };
