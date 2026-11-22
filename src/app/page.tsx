@@ -12,6 +12,16 @@ import { GAME_VERSION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 export const metadata: Metadata = {
     title: `${SITE_NAME} - Dauntless build planner`,
     description: SITE_TAGLINE,
+    openGraph: {
+        title: "mystic Builder",
+        description: SITE_TAGLINE,
+        siteName: "mystic Builder",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "mystic Builder",
+        description: SITE_TAGLINE,
+    },
 };
 
 interface HomeProps {

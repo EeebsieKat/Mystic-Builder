@@ -11,9 +11,20 @@ interface BuilderPageProps {
 export async function generateMetadata({ searchParams }: BuilderPageProps): Promise<Metadata> {
     const sp = await searchParams;
     const customName = sp?.name || sp?.n;
+    const title = customName ? customName : DEFAULT_BUILD_NAME;
     return {
-        title: customName ? customName : DEFAULT_BUILD_NAME,
+        title,
         description: SITE_TAGLINE,
+        openGraph: {
+            title: customName ? `${customName} - mystic Builder` : "mystic Builder",
+            description: SITE_TAGLINE,
+            siteName: "mystic Builder",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: customName ? `${customName} - mystic Builder` : "mystic Builder",
+            description: SITE_TAGLINE,
+        },
     };
 }
 

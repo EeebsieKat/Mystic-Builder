@@ -39,14 +39,16 @@ export const metadata: Metadata = {
     },
     keywords: ["Dauntless", "Dauntless Builder", "build planner", "Mystic Paradox", "Discord embed", "Open Graph"],
     openGraph: {
-        title: SITE_NAME,
+        title: "mystic Builder",
         description: SITE_TAGLINE,
         url: siteUrl,
-        siteName: SITE_NAME,
+        siteName: "mystic Builder",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
+        title: "mystic Builder",
+        description: SITE_TAGLINE,
     },
     robots: { index: true, follow: true },
 };
