@@ -117,19 +117,17 @@ export default function LandingPage() {
                         {/* Left Column: Headlines & Actions */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
                             {/* Main Headline */}
-                            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-                                Forge Your Ultimate{" "}
-                                <span className="text-gold-gradient block sm:inline">Slayer Loadout</span>
+                            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[52px] leading-tight">
+                                Forge Your Ultimate <span className="text-gold-gradient">Slayer Loadout</span>
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--ink-2)] sm:text-lg">
-                                The premier dark-mode build calculator, armory database, and community meta library designed
-                                exclusively for Dauntless 1.14.7. Plan weapons, armor, cell thresholds, and generate instant Discord preview cards.
+                            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
+                                The premier build calculator and meta armory for Dauntless 1.14.7. Plan gear, cell thresholds, and share builds instantly.
                             </p>
 
                             {/* Action Buttons (2 buttons only) */}
-                            <div className="mt-8 flex flex-wrap items-center gap-4">
+                            <div className="mt-7 flex flex-wrap items-center gap-4">
                                 <Button
                                     asChild
                                     size="lg"
@@ -153,28 +151,6 @@ export default function LandingPage() {
                                         <span>Explore</span>
                                     </Link>
                                 </Button>
-                            </div>
-
-                            {/* Quick Stats Pill Ticker */}
-                            <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 w-full">
-                                {[
-                                    { label: "Weapons", value: "231" },
-                                    { label: "Armour Pieces", value: "139" },
-                                    { label: "Cells & Perks", value: "81" },
-                                    { label: "Meta Builds", value: "517" },
-                                ].map(stat => (
-                                    <div
-                                        key={stat.label}
-                                        className="flex flex-col items-start rounded-xl border border-[var(--line)] bg-[var(--bg-raise)]/60 px-4 py-3 shadow-xs backdrop-blur-sm"
-                                    >
-                                        <span className="font-display text-2xl font-bold text-white sm:text-3xl">
-                                            {stat.value}
-                                        </span>
-                                        <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--ink-3)]">
-                                            {stat.label}
-                                        </span>
-                                    </div>
-                                ))}
                             </div>
                         </div>
 
