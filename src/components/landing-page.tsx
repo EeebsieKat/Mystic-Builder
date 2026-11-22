@@ -133,15 +133,6 @@ export default function LandingPage() {
 
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
             <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-16 pb-16 lg:pt-20 lg:pb-20">
-                {/* Golden Wing Crest Backdrop */}
-                <div className="pointer-events-none absolute top-1/2 right-0 -z-10 flex -translate-y-1/2 items-center justify-center opacity-25 select-none">
-                    <img
-                        src="/assets/awakening-ui/loadout/GildWingsGold.png"
-                        alt=""
-                        className="h-auto w-[650px] max-w-none md:w-[850px] lg:w-[950px]"
-                        aria-hidden="true"
-                    />
-                </div>
 
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
