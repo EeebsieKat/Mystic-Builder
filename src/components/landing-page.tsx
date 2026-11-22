@@ -15,7 +15,6 @@ import {
     Info,
     Layers,
     Lightbulb,
-    Share2,
     Shield,
     Sparkles,
     Swords,
@@ -159,7 +158,6 @@ const SECTION_IDS = [
     "omnicell-archetypes",
     "weapon-classes",
     "elemental-system",
-    "sharing-preview",
     "cta-section",
 ];
 
@@ -517,7 +515,7 @@ export default function LandingPage() {
                             <div className="relative h-[200px] xs:h-[230px] sm:h-[260px] lg:h-[295px] xl:h-[320px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                 <Image
                                     src="/assets/showcase/preview-builder.png?v=3"
-                                    alt="Awakening Loadout Planner"
+                                    alt="Loadout Planner"
                                     fill
                                     unoptimized
                                     priority
@@ -534,7 +532,7 @@ export default function LandingPage() {
                                         LIVE BUILDER
                                     </div>
                                     <h3 className="mt-2 font-display text-lg sm:text-xl lg:text-[22px] font-bold tracking-wider text-white uppercase transition-colors group-hover:text-[var(--aether-hi)]">
-                                        Awakening Loadout Planner
+                                        Loadout Planner
                                     </h3>
                                     <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-2)] line-clamp-2">
                                         The premier build calculator for Dauntless 1.14.7. Equip weapons, armour, lanterns, and omnicells with live Power Surge scaling and perk threshold calculation.
@@ -758,61 +756,6 @@ export default function LandingPage() {
                                 </span>
                             </Link>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* DISCORD PREVIEWS & LINK SHARING */}
-            <section id="sharing-preview" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
-                <div className="mx-auto max-w-5xl rounded-2xl border border-[var(--line-2)] bg-gradient-to-b from-[var(--bg-raise)] to-[#070e17] p-8 shadow-2xl lg:p-12">
-                    <div className="grid items-center gap-8 md:grid-cols-2">
-                        <div>
-                            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-400">
-                                <Share2 className="h-3.5 w-3.5" />
-                                <span>Rich Discord Social Cards</span>
-                            </div>
-                            <h3 className="mt-4 font-display text-2xl font-bold text-white sm:text-3xl">
-                                Share Live Build Cards in Any Channel
-                            </h3>
-                            <p className="mt-3 text-sm leading-relaxed text-[var(--ink-2)]">
-                                Every saved loadout generates a dynamic 1200×630 Open Graph card with real item icons, elemental strengths, perk points, and weapon bond details.
-                            </p>
-                            <div className="mt-6 flex flex-col gap-2.5 text-xs text-[var(--ink-3)]">
-                                <div className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold">✓</span>
-                                    <span>High-resolution visual embed directly in Discord chat</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold">✓</span>
-                                    <span>1-click import link for your guildmates and party</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold">✓</span>
-                                    <span>Fast serverless generation with 24-hour edge caching</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Visual Mock Card */}
-                        <div className="flex flex-col rounded-xl border border-[#2b2d31] bg-[#1e1f22] p-4 text-xs shadow-xl font-sans">
-                            <div className="flex items-center gap-2 pb-3 border-b border-[#2b2d31]">
-                                <span className="h-2.5 w-2.5 rounded-full bg-[#23a55a]" />
-                                <span className="font-bold text-white">Mystic Builder Embed</span>
-                                <span className="rounded bg-[#5865f2] px-1.5 py-0.2 text-[9px] font-bold text-white">BOT</span>
-                            </div>
-                            <div className="mt-3 rounded-lg border-l-4 border-[var(--aether)] bg-[#2b2d31]/50 p-3.5">
-                                <p className="font-semibold text-[var(--aether-hi)] text-sm">
-                                    Discipline Crit Striker • Dauntless 1.14.7
-                                </p>
-                                <p className="mt-1 text-[#949ba4] text-[11px] leading-relaxed">
-                                    Chaos &amp; Entropy + Thrax Bond • +6 Predator, +6 Cunning, +6 Pulse, +6 Catalyst
-                                </p>
-                                <div className="mt-3 flex items-center justify-between text-[10px] text-[#b5bac1]">
-                                    <span>Shared via mysticparadox.com</span>
-                                    <span className="text-[var(--gold)] font-bold">Awakening UI</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
