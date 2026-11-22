@@ -237,6 +237,8 @@ const ARMOUR_SLOTS: { id: ArmourSlotId; nameKey: "headName" | "torsoName" | "arm
     { id: "legs", nameKey: "legsName", surgedKey: "legsSurged", cellKey: "legsCell", label: "Legs" },
 ];
 
+export const DEFAULT_BUILD_ID = "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
+
 export interface LoadoutScreenProps {
     initialBuildId?: string;
 }
@@ -246,7 +248,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
     const { toast } = useToast();
 
     const [draft, setDraft] = useState<LoadoutDraft>(() => {
-        const id = initialBuildId || searchParams.get("b");
+        const id = initialBuildId || searchParams.get("b") || DEFAULT_BUILD_ID;
         if (id) {
             const parsed = tryDeserialize(id);
             if (parsed) {
