@@ -1028,12 +1028,20 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
                         continue;
                     }
                     const perks = Object.entries(cell.variants[variantName].perks);
+                    const firstPerk = perks[0];
+                    const perkDef = firstPerk ? (gameData.perks as Record<string, { description?: string; effects?: Record<string, { description: string; values?: Record<string, string | number> }> }>)[firstPerk[0]] : null;
+                    const effectDef = firstPerk && perkDef?.effects?.[String(firstPerk[1])];
+                    const effectDesc = effectDef
+                        ? interpolate(effectDef.description, effectDef.values)
+                        : perkDef?.description;
+
                     items.push({
                         value: variantName,
                         label: variantName,
                         icon: `/assets/icons/perks/${cell.slot}.png`,
                         group: cellTypeLabel(cell.slot),
                         hint: perks.map(([name, value]) => `${name} +${value}`).join(", "),
+                        description: effectDesc ? effectDesc.replace(/<[^>]*>/g, "").trim() : undefined,
                         color: cellTypeColor(cell.slot),
                     });
                 }
