@@ -464,9 +464,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             consumable2: pickConsumable(),
             consumable3: pickConsumable(),
         });
-
-        toast({ title: "Random build rolled", description: "Feeling lucky, Slayer?" });
-    }, [draft.buildName, toast]);
+    }, [draft.buildName]);
 
     const importBuild = useCallback(() => {
         const id = extractBuildId(importValue);
