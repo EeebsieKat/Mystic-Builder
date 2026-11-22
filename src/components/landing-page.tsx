@@ -94,6 +94,34 @@ const ELEMENTS = [
     { name: "Umbral", color: "#8A5FE8", icon: "/assets/icons/elements/Umbral.png", vs: "Radiant" },
 ];
 
+const AXE_ASCII = `                     /\\
+                    /  \\
+                   | /\\ |
+  ,---.            | || |            ,---.
+ /   / \\           | || |           / \\   \\
+|   |   \\          | || |          /   |   |
+|    \\   \\   /\\    | || |    /\\   /   /    |
+ \\    \\   \\ /  \\   | || |   /  \\ /   /    /
+  \\    \\   X    \\__|[++]|__/    X   /    /
+   \\    \\ / \\                  / \\ /    /
+    \\    V   \\                /   V    /
+     \`---'    \\              /    \`---'
+               \`--.  ||  .--'
+                  |  ||  |
+                 /   ||   \\
+                |    ||    |
+                 \\__[++]__/
+                     ||
+                     ||
+                    [++]
+                     ||
+                     ||
+                    [++]
+                     ||
+                     ||
+                    <++>
+                     \\/`;
+
 export default function LandingPage() {
     return (
         <div className="relative flex w-full flex-col overflow-hidden bg-[var(--bg)] text-foreground">
@@ -154,19 +182,20 @@ export default function LandingPage() {
                             </div>
                         </div>
 
-                        {/* Right Column: Logo on the right side */}
-                        <div className="relative flex items-center justify-center lg:col-span-5">
+                        {/* Right Column: ASCII Battleaxe */}
+                        <div className="relative flex items-center justify-center lg:col-span-5 select-none">
                             <div className="relative flex items-center justify-center">
-                                {/* Ambient Glow behind Crest */}
-                                <div className="absolute h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.25)_0%,rgba(224,194,135,0.15)_50%,transparent_70%)] blur-2xl animate-pulse" />
-                                <div className="absolute h-80 w-80 rounded-full border border-[var(--gold)]/20 opacity-40 animate-[spin_60s_linear_infinite]" />
-                                <div className="absolute h-72 w-72 rounded-full border border-dashed border-[var(--aether-line)]/40 opacity-30 animate-[spin_40s_linear_infinite_reverse]" />
+                                {/* Ambient Glow behind Axe */}
+                                <div className="absolute h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.12)_50%,transparent_70%)] blur-2xl animate-pulse" />
+                                <div className="absolute h-80 w-80 rounded-full border border-[var(--gold)]/15 opacity-40 animate-[spin_60s_linear_infinite]" />
+                                <div className="absolute h-72 w-72 rounded-full border border-dashed border-[var(--aether-line)]/30 opacity-30 animate-[spin_40s_linear_infinite_reverse]" />
 
-                                <img
-                                    src="/assets/awakening-ui/logo/icon.png"
-                                    alt="Mystic Paradox Crest"
-                                    className="relative h-56 w-56 object-contain drop-shadow-[0_0_35px_rgba(91,163,255,0.5)] transition-transform duration-500 hover:scale-105 sm:h-64 sm:w-64 lg:h-72 lg:w-72"
-                                />
+                                <pre
+                                    aria-label="Dauntless Battleaxe ASCII Art"
+                                    className="relative font-mono text-[9px] sm:text-[11px] md:text-[12px] lg:text-[13px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-transform duration-500 hover:scale-105"
+                                >
+                                    {AXE_ASCII}
+                                </pre>
                             </div>
                         </div>
                     </div>
