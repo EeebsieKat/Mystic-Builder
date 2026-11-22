@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 import BuildSuggestions from "@/components/build-suggestions";
 import DatabaseBrowser from "@/components/browse-database";
 import LandingPage from "@/components/landing-page";
-import LoadoutScreen from "@/components/loadout/loadout-screen";
 import { Footer } from "@/components/site-footer";
 import { gameData } from "@/game/data";
 import { GAME_VERSION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
@@ -20,10 +20,17 @@ interface HomeProps {
 
 const Home = async ({ searchParams }: HomeProps) => {
     const { tab, b } = await searchParams;
+
+    if (tab === "builder") {
+        redirect("/builder");
+    }
+    if (b) {
+        redirect(`/builder?b=${b}`);
+    }
+
     const isDatabase = tab === "database";
     const isSuggestions = tab === "suggestions";
     const isLiked = tab === "liked";
-    const isBuilder = tab === "builder" || Boolean(b);
 
     return (
         <main className="flex w-full flex-1 flex-col">
@@ -55,16 +62,6 @@ const Home = async ({ searchParams }: HomeProps) => {
                     </Suspense>
                     <Footer />
                 </>
-            ) : isBuilder ? (
-                <Suspense
-                    fallback={
-                        <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">
-                            Loading loadout…
-                        </div>
-                    }
-                >
-                    <LoadoutScreen />
-                </Suspense>
             ) : (
                 <LandingPage />
             )}

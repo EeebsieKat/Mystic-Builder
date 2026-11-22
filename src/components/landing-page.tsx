@@ -155,7 +155,7 @@ export default function LandingPage() {
                                     size="lg"
                                     className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:from-[#7cb8ff] hover:to-[#56caff] hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
                                 >
-                                    <Link href="/?tab=builder" className="inline-flex items-center gap-2">
+                                    <Link href="/builder" className="inline-flex items-center gap-2">
                                         <Hammer className="h-4 w-4" />
                                         <span>Launch Build Planner</span>
                                         <ArrowRight className="h-4 w-4" />
@@ -230,7 +230,7 @@ export default function LandingPage() {
                             </div>
                             <div className="mt-4 pt-3 border-t border-[var(--line)]">
                                 <Link
-                                    href="/?tab=builder"
+                                    href="/builder"
                                     className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--aether-hi)] transition-colors hover:text-white"
                                 >
                                     <span>Open Build Planner</span>
@@ -505,7 +505,7 @@ export default function LandingPage() {
                             size="lg"
                             className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
                         >
-                            <Link href="/?tab=builder" className="inline-flex items-center gap-2">
+                            <Link href="/builder" className="inline-flex items-center gap-2">
                                 <Hammer className="h-4 w-4" />
                                 <span>Start Building Now</span>
                                 <ArrowRight className="h-4 w-4" />

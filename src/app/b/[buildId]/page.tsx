@@ -65,7 +65,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
                     along the way. Double-check that the whole <code>/b/...</code> part is intact.
                 </p>
                 <Button asChild>
-                    <Link href="/">
+                    <Link href="/builder">
                         <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
                         Back to the builder
                     </Link>

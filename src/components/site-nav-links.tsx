@@ -17,6 +17,7 @@ const NavLinks = () => {
     const likedActive = pathname === "/" && searchParams.get("tab") === "liked";
     const builderActive =
         pathname === "/builder" ||
+        pathname === "/builer" ||
         (pathname === "/" && (searchParams.get("tab") === "builder" || searchParams.has("b"))) ||
         pathname.startsWith("/b/");
     const aboutActive = pathname === "/about";
@@ -24,7 +25,7 @@ const NavLinks = () => {
     const navItems = [
         { href: "/?tab=liked", label: "Liked", icon: Heart, active: likedActive },
         { href: "/?tab=database", label: "Database", icon: Database, active: databaseActive },
-        { href: "/?tab=builder", label: "Builder", icon: Hammer, active: builderActive },
+        { href: "/builder", label: "Builder", icon: Hammer, active: builderActive },
         { href: "/?tab=suggestions", label: "Suggestions", icon: Lightbulb, active: suggestionsActive },
         { href: "/about", label: "About", icon: Info, active: aboutActive },
     ];
