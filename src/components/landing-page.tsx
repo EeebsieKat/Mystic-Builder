@@ -17,6 +17,7 @@ import {
 
 import { Footer } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
+import { usePageTransition } from "@/components/page-transition";
 
 const LOGO_ASCII = `                   /\\    /\\                   
                   /8\\    /8\\                  
@@ -82,6 +83,7 @@ const SECTION_IDS = [
 
 export default function LandingPage() {
     const router = useRouter();
+    const { navigate } = usePageTransition();
     const isAutoScrollingRef = useRef(false);
     const scrollCooldownRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -284,7 +286,7 @@ export default function LandingPage() {
             const key = e.key.toUpperCase();
             const match = MAIN_NAV_ITEMS.find((item) => item.key === key);
             if (match) {
-                router.push(match.href);
+                navigate(match.href);
             }
         };
         window.addEventListener("keydown", onKeyDown);
@@ -527,7 +529,7 @@ export default function LandingPage() {
                                             1.14.7 ITEMS
                                         </div>
                                         <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-cyan-200">
-                                            ITEMS DATABSE
+                                            ITEMS DATABASE
                                         </h3>
                                         <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-1">
                                             Every weapon, armour piece, cell, and unique passive effect extracted directly from official 1.14.7 archives.
@@ -617,7 +619,7 @@ export default function LandingPage() {
                                         Community Builds & Social Armory
                                     </h3>
                                     <p className="mt-1 text-xs sm:text-sm leading-relaxed text-[var(--ink-2)]">
-                                        A dedicated community platform allowing Slayers to publish their own loadouts, upvote top-rated creator builds, tag playstyles, and copy 1-click import links for their guildmates.
+                                        A dedicated community platform allowing Slayers to publish their own loadouts, upvote top-rated creator builds, tag playstyles, and copy 1-click import links for other slayers.
                                     </p>
                                 </div>
 
@@ -625,9 +627,6 @@ export default function LandingPage() {
                                     <div className="flex items-center gap-2">
                                         <span className="rounded-sm bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-white/80 border border-white/[0.08]">
                                             Upvoting &amp; Comments
-                                        </span>
-                                        <span className="rounded-sm bg-white/[0.04] px-2 py-1 font-mono text-[10px] text-white/80 border border-white/[0.08]">
-                                            Guild Loadouts
                                         </span>
                                     </div>
                                     <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-400 group-hover:text-white transition-colors">
@@ -658,10 +657,10 @@ export default function LandingPage() {
                                 <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-purple-400 uppercase border border-purple-500/30 bg-purple-500/10 rounded-sm">
-                                            FEATURE SPOTLIGHT • CUSTOM CELLS
+                                            FEATURE SPOTLIGHT
                                         </div>
                                         <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-purple-300">
-                                            Custom Cells &amp; Unique Perk Engine
+                                            Build for Custom Cells from Paradox.
                                         </h3>
                                         <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
                                             Create custom cell combinations, configure non-vanilla perk affinities, and test homebrew modifier thresholds for community server leagues.
@@ -694,13 +693,13 @@ export default function LandingPage() {
                                 <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4 lg:p-4.5">
                                     <div>
                                         <div className="inline-block px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest text-amber-400 uppercase border border-amber-500/30 bg-amber-500/10 rounded-sm">
-                                            ARSENAL EXPANSION • WEAPONS
+                                            ARSENAL EXPANSION • WEAPONS BUILD
                                         </div>
                                         <h3 className="mt-1 font-display text-sm sm:text-base font-bold tracking-wider text-white uppercase transition-colors group-hover:text-amber-300">
-                                            New Weapons &amp; Awakening Movesets
+                                            New Weapons &amp; Builds
                                         </h3>
                                         <p className="mt-0.5 text-[11px] sm:text-xs leading-relaxed text-[var(--ink-2)] line-clamp-2">
-                                            Introducing new weapon archetypes, exotic weapon specials, and Awakening-era combo damage calculation tables.
+                                            Introducing new weapon archetypes, exotic weapon specials.
                                         </p>
                                     </div>
 

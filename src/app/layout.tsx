@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
 import SiteHeader from "@/components/site-header";
+import PageTransition from "@/components/page-transition";
 import AdPopups from "@/components/ad-popups";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
@@ -64,9 +65,9 @@ export default function RootLayout({
         <html lang="en" className={`dark ${cinzel.variable} ${inter.variable}`} suppressHydrationWarning>
             <body className="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
                 <SiteHeader />
-                <div className="relative flex flex-1 flex-col">
+                <PageTransition>
                     {children}
-                </div>
+                </PageTransition>
                 <Toaster />
                 <AdPopups />
             </body>
