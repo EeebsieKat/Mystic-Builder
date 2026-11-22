@@ -728,32 +728,4 @@ body::before {
   .ad-exit {
     animation-duration: 0.01ms;
   }
-  .animate-axe-rotate {
-    animation: none;
-    transform: rotate(-15deg);
-  }
-}
-
-/* Landing Page Hero Axe Floating Rotation Animation */
-@keyframes axe-rotate-float {
-  0% {
-    transform: rotate(-16deg) translateY(0px);
-  }
-  25% {
-    transform: rotate(-22deg) translateY(-6px);
-  }
-  50% {
-    transform: rotate(-13deg) translateY(-12px);
-  }
-  75% {
-    transform: rotate(-7deg) translateY(-6px);
-  }
-  100% {
-    transform: rotate(-16deg) translateY(0px);
-  }
-}
-
-.animate-axe-rotate {
-  animation: axe-rotate-float 7s ease-in-out infinite;
-  transform-origin: 65% 50%;
 }

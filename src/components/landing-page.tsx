@@ -101,10 +101,10 @@ const AXE_ASCII = `                      ✦                    _.gd8888888bp._ 
                                          \`.               ,'
                                            \\     .-.     /
                                             \\   ( ✦ )   /
- .-----[⚡]----------._______________________:____[===]___j
-/  MYSTIC SLAYER    | ══ ◈ ══ ᛟ ══ ᚱ ══ ◈ ══ |           |\`-.,_
+ .------------------._______________________:____[===]___j
+/                   | ══ ◈ ══ ᛟ ══ ᚱ ══ ◈ ══ |           |\`-.,_
 \\###################|######################|###########|,-'\`
- \`-----[⚡]----------'                       :    ___   l
+ \`------------------'                       :    ___   l
                                             /   ( ✦ )   \\
                                    fsc     /     \`-'     \\
                                          ,'       ◈       \`.
@@ -183,7 +183,7 @@ export default function LandingPage() {
 
                                 <pre
                                     aria-label="Dauntless Battleaxe ASCII Art"
-                                    className="animate-axe-rotate relative font-mono text-[7px] xs:text-[8px] sm:text-[9.5px] md:text-[10.5px] lg:text-[10px] xl:text-[11.5px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_28px_rgba(91,163,255,0.45)] transition-all duration-300"
+                                    className="relative -rotate-12 hover:rotate-0 font-mono text-[7px] xs:text-[8px] sm:text-[9.5px] md:text-[10.5px] lg:text-[10px] xl:text-[11.5px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_28px_rgba(91,163,255,0.45)] transition-transform duration-500"
                                 >
                                     {AXE_ASCII}
                                 </pre>
