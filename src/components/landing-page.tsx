@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -153,13 +153,217 @@ const MAIN_NAV_ITEMS = [
     },
 ];
 
+const SECTION_IDS = [
+    "hero-section",
+    "core-capabilities",
+    "omnicell-archetypes",
+    "weapon-classes",
+    "elemental-system",
+    "sharing-preview",
+    "cta-section",
+];
+
 export default function LandingPage() {
     const router = useRouter();
+    const isAutoScrollingRef = useRef(false);
+    const scrollCooldownRef = useRef<NodeJS.Timeout | null>(null);
 
-    /* Keyboard navigation shortcut matching in-game Dauntless hotkeys */
+    const scrollToSection = useCallback((targetId: string) => {
+        const targetEl = document.getElementById(targetId);
+        if (!targetEl) return;
+
+        isAutoScrollingRef.current = true;
+        const navOffset = targetId === "hero-section" ? 0 : 56;
+        const targetTop =
+            targetId === "hero-section"
+                ? 0
+                : Math.max(0, targetEl.getBoundingClientRect().top + window.scrollY - navOffset);
+
+        window.scrollTo({
+            top: targetTop,
+            behavior: "smooth",
+        });
+
+        if (scrollCooldownRef.current) {
+            clearTimeout(scrollCooldownRef.current);
+        }
+        scrollCooldownRef.current = setTimeout(() => {
+            isAutoScrollingRef.current = false;
+        }, 850);
+    }, []);
+
+    const getCurrentSectionIndex = useCallback(() => {
+        const scrollY = window.scrollY;
+        if (scrollY < window.innerHeight * 0.45) {
+            return 0;
+        }
+
+        const navOffset = 64;
+        let closestIndex = 0;
+        let minDistance = Infinity;
+
+        for (let i = 0; i < SECTION_IDS.length; i++) {
+            const el = document.getElementById(SECTION_IDS[i]);
+            if (!el) continue;
+            const rect = el.getBoundingClientRect();
+            const distance = Math.abs(rect.top - navOffset);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = i;
+            }
+        }
+
+        return closestIndex;
+    }, []);
+
+    /* Auto-scroll between sections on mouse wheel / trackpad scroll */
+    useEffect(() => {
+        const onWheel = (e: WheelEvent) => {
+            // Ignore dominant horizontal trackpad gestures
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5) return;
+
+            // If an auto-scroll transition is active, consume event to prevent jitter
+            if (isAutoScrollingRef.current) {
+                if (e.cancelable) e.preventDefault();
+                return;
+            }
+
+            // Filter out finger-resting trackpad micro-noise
+            if (Math.abs(e.deltaY) < 18) return;
+
+            const direction = e.deltaY > 0 ? "down" : "up";
+            const currentIdx = getCurrentSectionIndex();
+            const currentId = SECTION_IDS[currentIdx];
+            const currentEl = document.getElementById(currentId);
+
+            if (!currentEl) return;
+
+            const rect = currentEl.getBoundingClientRect();
+            const navOffset = currentIdx === 0 ? 0 : 56;
+
+            if (direction === "down") {
+                // From hero section, any downward scroll immediately glides to the next section
+                if (currentIdx === 0) {
+                    if (e.cancelable) e.preventDefault();
+                    scrollToSection(SECTION_IDS[1]);
+                    return;
+                }
+
+                // For content sections, only advance when user reaches near bottom of the current section
+                const isAtSectionBottom = rect.bottom <= window.innerHeight + 40;
+                if (isAtSectionBottom && currentIdx < SECTION_IDS.length - 1) {
+                    if (e.cancelable) e.preventDefault();
+                    scrollToSection(SECTION_IDS[currentIdx + 1]);
+                }
+            } else {
+                // Scrolling up
+                if (currentIdx === 1) {
+                    // Near top of first content section, return smoothly to hero
+                    const isNearTop = rect.top >= navOffset - 40;
+                    if (isNearTop) {
+                        if (e.cancelable) e.preventDefault();
+                        scrollToSection(SECTION_IDS[0]);
+                        return;
+                    }
+                } else if (currentIdx > 1) {
+                    const isAtSectionTop = rect.top >= navOffset - 40;
+                    if (isAtSectionTop) {
+                        if (e.cancelable) e.preventDefault();
+                        scrollToSection(SECTION_IDS[currentIdx - 1]);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("wheel", onWheel, { passive: false });
+        return () => {
+            window.removeEventListener("wheel", onWheel);
+            if (scrollCooldownRef.current) clearTimeout(scrollCooldownRef.current);
+        };
+    }, [getCurrentSectionIndex, scrollToSection]);
+
+    /* Touch gesture swipe auto-scroll for mobile and tablets */
+    useEffect(() => {
+        let touchStartY = 0;
+        let touchStartX = 0;
+
+        const onTouchStart = (e: TouchEvent) => {
+            if (e.touches.length === 1) {
+                touchStartY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX;
+            }
+        };
+
+        const onTouchEnd = (e: TouchEvent) => {
+            if (isAutoScrollingRef.current) return;
+            if (e.changedTouches.length !== 1) return;
+
+            const deltaY = touchStartY - e.changedTouches[0].clientY;
+            const deltaX = touchStartX - e.changedTouches[0].clientX;
+
+            // Check if vertical swipe is distinct and greater than horizontal movement
+            if (Math.abs(deltaY) > 50 && Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+                const direction = deltaY > 0 ? "down" : "up";
+                const currentIdx = getCurrentSectionIndex();
+
+                if (direction === "down") {
+                    if (currentIdx === 0) {
+                        scrollToSection(SECTION_IDS[1]);
+                    } else if (currentIdx < SECTION_IDS.length - 1) {
+                        const currentEl = document.getElementById(SECTION_IDS[currentIdx]);
+                        if (currentEl && currentEl.getBoundingClientRect().bottom <= window.innerHeight + 50) {
+                            scrollToSection(SECTION_IDS[currentIdx + 1]);
+                        }
+                    }
+                } else {
+                    if (currentIdx === 1) {
+                        const currentEl = document.getElementById(SECTION_IDS[1]);
+                        if (currentEl && currentEl.getBoundingClientRect().top >= 20) {
+                            scrollToSection(SECTION_IDS[0]);
+                        }
+                    } else if (currentIdx > 1) {
+                        const currentEl = document.getElementById(SECTION_IDS[currentIdx]);
+                        if (currentEl && currentEl.getBoundingClientRect().top >= 20) {
+                            scrollToSection(SECTION_IDS[currentIdx - 1]);
+                        }
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("touchstart", onTouchStart, { passive: true });
+        window.addEventListener("touchend", onTouchEnd, { passive: true });
+
+        return () => {
+            window.removeEventListener("touchstart", onTouchStart);
+            window.removeEventListener("touchend", onTouchEnd);
+        };
+    }, [getCurrentSectionIndex, scrollToSection]);
+
+    /* Keyboard navigation shortcut matching in-game Dauntless hotkeys & scroll arrows */
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+            // Section auto-scroll on arrow keys from hero / boundaries
+            if (e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)) {
+                if (window.scrollY < window.innerHeight * 0.45) {
+                    e.preventDefault();
+                    scrollToSection(SECTION_IDS[1]);
+                    return;
+                }
+            } else if (e.key === "ArrowUp" || e.key === "PageUp" || (e.key === " " && e.shiftKey)) {
+                const currentIdx = getCurrentSectionIndex();
+                if (currentIdx === 1) {
+                    const el = document.getElementById(SECTION_IDS[1]);
+                    if (el && el.getBoundingClientRect().top >= 20) {
+                        e.preventDefault();
+                        scrollToSection(SECTION_IDS[0]);
+                        return;
+                    }
+                }
+            }
+
             const key = e.key.toUpperCase();
             const match = MAIN_NAV_ITEMS.find((item) => item.key === key);
             if (match) {
@@ -168,12 +372,31 @@ export default function LandingPage() {
         };
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [router]);
+    }, [getCurrentSectionIndex, router, scrollToSection]);
 
     return (
-        <div className="relative flex w-full flex-col overflow-hidden bg-[var(--bg)] text-foreground">
+        <div className="relative flex w-full flex-col overflow-x-hidden bg-[var(--bg)] text-foreground">
+            {/* God Rays streaming down from top center */}
+            <div
+                className="pointer-events-none absolute -top-4 sm:-top-8 left-1/2 -z-10 h-[720px] sm:h-[900px] lg:h-[1080px] w-full max-w-[1920px] -translate-x-1/2 overflow-hidden select-none"
+                style={{
+                    maskImage: "radial-gradient(ellipse 85% 75% at 50% 0%, black 40%, transparent 92%)",
+                    WebkitMaskImage: "radial-gradient(ellipse 85% 75% at 50% 0%, black 40%, transparent 92%)",
+                }}
+                aria-hidden="true"
+            >
+                <Image
+                    src="/assets/texture/rays.png"
+                    alt=""
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover object-top mix-blend-screen opacity-85 sm:opacity-90 contrast-105"
+                />
+            </div>
+
             {/* Ambient Background Aura */}
-            <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
+            <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.14)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
 
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
             <section
@@ -256,14 +479,7 @@ export default function LandingPage() {
                 {/* Bottom Center Scroll Guide */}
                 <button
                     type="button"
-                    onClick={() => {
-                        const next = document.getElementById("core-capabilities");
-                        if (next) {
-                            next.scrollIntoView({ behavior: "smooth" });
-                        } else {
-                            window.scrollBy({ top: window.innerHeight * 0.85, behavior: "smooth" });
-                        }
-                    }}
+                    onClick={() => scrollToSection("core-capabilities")}
                     className="group absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center transition-all duration-300 hover:translate-y-0.5 cursor-pointer select-none"
                     aria-label="Scroll to explore features"
                 >
@@ -280,7 +496,7 @@ export default function LandingPage() {
             <div className="gold-rule mx-auto max-w-5xl w-full" aria-hidden="true" />
 
             {/* THREE CORE PILLARS / BENTO SHOWCASE */}
-            <section id="core-capabilities" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20">
+            <section id="core-capabilities" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
                 <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
                         <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
@@ -374,7 +590,7 @@ export default function LandingPage() {
             </section>
 
             {/* OMNICELL ARCHETYPES SHOWCASE */}
-            <section className="relative z-10 border-y border-[var(--line)] bg-[var(--bg-raise)]/40 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
+            <section id="omnicell-archetypes" className="relative z-10 border-y border-[var(--line)] bg-[var(--bg-raise)]/40 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
                 <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <div className="inline-flex items-center gap-2 rounded-full border border-[var(--aether-line)] bg-[var(--aether-a10)] px-3.5 py-1 text-xs font-semibold text-[var(--aether-hi)]">
@@ -431,7 +647,7 @@ export default function LandingPage() {
             </section>
 
             {/* WEAPON CLASSES RAIL */}
-            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
+            <section id="weapon-classes" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
                 <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <p className="panel-label">Weapon Armory</p>
@@ -470,7 +686,7 @@ export default function LandingPage() {
             </section>
 
             {/* ELEMENTAL MATCHUP MATRIX */}
-            <section className="relative z-10 border-t border-[var(--line)] bg-[var(--bg-raise)]/30 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14">
+            <section id="elemental-system" className="relative z-10 border-t border-[var(--line)] bg-[var(--bg-raise)]/30 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 scroll-mt-14 lg:scroll-mt-16">
                 <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <p className="panel-label">Elemental Affinity</p>
@@ -508,7 +724,7 @@ export default function LandingPage() {
             </section>
 
             {/* DISCORD PREVIEWS & LINK SHARING */}
-            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
+            <section id="sharing-preview" className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20 scroll-mt-14 lg:scroll-mt-16">
                 <div className="mx-auto max-w-5xl rounded-2xl border border-[var(--line-2)] bg-gradient-to-b from-[var(--bg-raise)] to-[#070e17] p-8 shadow-2xl lg:p-12">
                     <div className="grid items-center gap-8 md:grid-cols-2">
                         <div>
@@ -563,7 +779,7 @@ export default function LandingPage() {
             </section>
 
             {/* BOTTOM CALL TO ACTION */}
-            <section className="relative px-6 py-20 text-center lg:py-28">
+            <section id="cta-section" className="relative px-6 py-20 text-center lg:py-28 scroll-mt-14 lg:scroll-mt-16">
                 <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25 select-none">
                     <img
                         src="/assets/awakening-ui/loadout/GildWingsGold.png"
