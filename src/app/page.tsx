@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import BuildSuggestions from "@/components/build-suggestions";
 import DatabaseBrowser from "@/components/browse-database";
+import LandingPage from "@/components/landing-page";
 import LoadoutScreen from "@/components/loadout/loadout-screen";
 import { Footer } from "@/components/site-footer";
 import { gameData } from "@/game/data";
@@ -14,14 +15,15 @@ export const metadata: Metadata = {
 };
 
 interface HomeProps {
-    searchParams: Promise<{ tab?: string }>;
+    searchParams: Promise<{ tab?: string; b?: string }>;
 }
 
 const Home = async ({ searchParams }: HomeProps) => {
-    const { tab } = await searchParams;
+    const { tab, b } = await searchParams;
     const isDatabase = tab === "database";
     const isSuggestions = tab === "suggestions";
     const isLiked = tab === "liked";
+    const isBuilder = tab === "builder" || Boolean(b);
 
     return (
         <main className="flex w-full flex-1 flex-col">
@@ -53,7 +55,7 @@ const Home = async ({ searchParams }: HomeProps) => {
                     </Suspense>
                     <Footer />
                 </>
-            ) : (
+            ) : isBuilder ? (
                 <Suspense
                     fallback={
                         <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">
@@ -63,6 +65,8 @@ const Home = async ({ searchParams }: HomeProps) => {
                 >
                     <LoadoutScreen />
                 </Suspense>
+            ) : (
+                <LandingPage />
             )}
         </main>
     );

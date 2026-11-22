@@ -803,7 +803,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     group: entry.type,
                     behemoth: entry.behemoth ?? null,
                     hint: entry.elemental ?? undefined,
-                    meta: String(entry.power.powerSurged ?? entry.power.base),
+                    meta: `Power ${entry.power.base}${entry.power.powerSurged ? ` (${entry.power.powerSurged})` : ""}`,
                     color: entry.elemental ? elementColor(entry.elemental) : undefined,
                 }));
             return {
@@ -830,7 +830,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     behemoth: entry.behemoth ?? null,
                     strength: entry.strength ?? null,
                     hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
-                    meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
+                    meta: `Res ${entry.resistance.base}${entry.resistance.powerSurged ? ` (${entry.resistance.powerSurged})` : ""}`,
                     color: entry.strength ? elementColor(entry.strength) : undefined,
                 }));
             return {

@@ -16,13 +16,15 @@ const NavLinks = () => {
     const suggestionsActive = pathname === "/" && searchParams.get("tab") === "suggestions";
     const likedActive = pathname === "/" && searchParams.get("tab") === "liked";
     const builderActive =
-        (pathname === "/" || pathname.startsWith("/b/")) && !databaseActive && !suggestionsActive && !likedActive;
+        pathname === "/builder" ||
+        (pathname === "/" && (searchParams.get("tab") === "builder" || searchParams.has("b"))) ||
+        pathname.startsWith("/b/");
     const aboutActive = pathname === "/about";
 
     const navItems = [
         { href: "/?tab=liked", label: "Liked", icon: Heart, active: likedActive },
         { href: "/?tab=database", label: "Database", icon: Database, active: databaseActive },
-        { href: "/", label: "Builder", icon: Hammer, active: builderActive },
+        { href: "/?tab=builder", label: "Builder", icon: Hammer, active: builderActive },
         { href: "/?tab=suggestions", label: "Suggestions", icon: Lightbulb, active: suggestionsActive },
         { href: "/about", label: "About", icon: Info, active: aboutActive },
     ];

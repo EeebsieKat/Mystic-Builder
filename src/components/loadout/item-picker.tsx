@@ -206,7 +206,7 @@ const ItemPickerTooltipContent = ({
                     {/* Stats row: Defence, Strength, Weakness, Cell Socket */}
                     <div className="flex items-center gap-2 flex-wrap text-xs">
                         <span className="rounded-[4px] border border-[#3a3f47] bg-[#141a24] px-2 py-0.5 text-[11px] font-bold text-[#e8e4da]">
-                            +{armour.resistance?.powerSurged ?? armour.resistance?.base ?? 30} Defence
+                            +{armour.resistance?.base ?? 25} Defence{armour.resistance?.powerSurged ? ` (${armour.resistance.powerSurged} Surged)` : ""}
                         </span>
 
                         {armour.strength && (
@@ -329,7 +329,7 @@ const ItemPickerTooltipContent = ({
                                     {weapon.name}
                                 </h4>
                                 <span className="rounded-md border border-[#e0a33e]/50 bg-[#e0a33e]/15 px-1.5 py-0.2 text-[9.5px] font-bold text-[#e0a33e]">
-                                    Power {weapon.power?.powerSurged ?? 120}
+                                    Power {weapon.power?.base ?? 100}{weapon.power?.powerSurged ? ` (${weapon.power.powerSurged} Surged)` : ""}
                                 </span>
                             </div>
                             <p className="text-[11.5px] text-[#9a9a94] mt-0.5">
