@@ -5,7 +5,7 @@ import { Cinzel, Inter } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
-import NavLinks from "@/components/site-nav-links";
+import SiteHeader from "@/components/site-header";
 import AdPopups from "@/components/ad-popups";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
@@ -55,29 +55,6 @@ export const viewport: Viewport = {
     colorScheme: "dark",
 };
 
-const Header = () => (
-    <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[var(--bg)]/80 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bg)]/60">
-        <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
-        <div className="relative flex h-14 w-full items-center justify-between px-6 lg:px-10">
-            <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
-                <img alt="Mystic Paradox Logo" width="50" src="/assets/awakening-ui/logo/icon.png" />
-                <span className="whitespace-nowrap text-base sm:text-lg">
-                    <span className="text-gold-gradient font-display font-bold">Mystic</span>{" "}
-                    <span className="text-foreground font-display font-bold">Builder</span>
-                </span>
-            </Link>
-            <nav
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 text-sm"
-                aria-label="Main navigation"
-            >
-                <Suspense fallback={null}>
-                    <NavLinks />
-                </Suspense>
-            </nav>
-        </div>
-    </header>
-);
-
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -86,7 +63,7 @@ export default function RootLayout({
     return (
         <html lang="en" className={`dark ${cinzel.variable} ${inter.variable}`} suppressHydrationWarning>
             <body className="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
-                <Header />
+                <SiteHeader />
                 <div className="relative flex flex-1 flex-col">
                     {children}
                 </div>

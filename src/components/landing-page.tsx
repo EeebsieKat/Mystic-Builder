@@ -175,7 +175,10 @@ export default function LandingPage() {
             <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
 
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
-            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-12 pb-16 lg:pt-16 lg:pb-20">
+            <section
+                id="hero-section"
+                className="relative z-10 flex min-h-screen flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-12 lg:py-16"
+            >
 
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
