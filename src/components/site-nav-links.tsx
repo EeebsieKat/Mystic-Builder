@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Database, Hammer, Heart, Info, Lightbulb } from "lucide-react";
+import { Database, ExternalLink, Globe, Hammer, Heart, Info, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,26 +28,48 @@ const NavLinks = () => {
         { href: "/?tab=suggestions", label: "Meta Builds", icon: Lightbulb, active: suggestionsActive },
         { href: "/?tab=liked", label: "Liked Builds", icon: Heart, active: likedActive },
         { href: "/about", label: "About", icon: Info, active: aboutActive },
+        {
+            href: "https://mysticparadox.com",
+            label: "Main Website",
+            icon: Globe,
+            external: true,
+        },
     ];
 
     return (
         <>
-            {navItems.map(({ href, label, icon: Icon, active }) => (
-                <Link
-                    key={href}
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                        "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border",
-                        active
-                            ? "border-[var(--aether-line)] bg-[var(--aether-a10)] text-white shadow-xs [&>svg]:text-[var(--aether-hi)]"
-                            : "border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)]",
-                    )}
-                >
-                    <Icon className="h-3.5 w-3.5 transition-colors" />
-                    <span>{label}</span>
-                </Link>
-            ))}
+            {navItems.map(({ href, label, icon: Icon, active, external }) =>
+                external ? (
+                    <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)] group cursor-pointer"
+                        )}
+                    >
+                        <Icon className="h-3.5 w-3.5 transition-colors group-hover:text-[var(--gold)]" />
+                        <span>{label}</span>
+                        <ExternalLink className="h-3 w-3 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                    </a>
+                ) : (
+                    <Link
+                        key={href}
+                        href={href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                            "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border",
+                            active
+                                ? "border-[var(--aether-line)] bg-[var(--aether-a10)] text-white shadow-xs [&>svg]:text-[var(--aether-hi)]"
+                                : "border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)]",
+                        )}
+                    >
+                        <Icon className="h-3.5 w-3.5 transition-colors" />
+                        <span>{label}</span>
+                    </Link>
+                )
+            )}
         </>
     );
 };
