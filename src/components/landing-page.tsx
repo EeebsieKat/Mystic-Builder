@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
     ArrowRight,
     Compass,
@@ -9,6 +11,7 @@ import {
     ExternalLink,
     Hammer,
     Heart,
+    Info,
     Layers,
     Lightbulb,
     Share2,
@@ -115,7 +118,57 @@ const LOGO_ASCII = `                   /\\    /\\
  /8O\\              /\\    /\\              /OO\\ 
   /88\\                                  /8O\\  `;
 
+const MAIN_NAV_ITEMS = [
+    {
+        name: "Builder",
+        key: "B",
+        href: "/builder",
+        icon: Hammer,
+        isPrimary: true,
+    },
+    {
+        name: "Item Database",
+        key: "D",
+        href: "/?tab=database",
+        icon: Database,
+    },
+    {
+        name: "Meta Builds",
+        key: "M",
+        href: "/?tab=suggestions",
+        icon: Lightbulb,
+    },
+    {
+        name: "Liked Builds",
+        key: "L",
+        href: "/?tab=liked",
+        icon: Heart,
+    },
+    {
+        name: "About",
+        key: "A",
+        href: "/about",
+        icon: Info,
+    },
+];
+
 export default function LandingPage() {
+    const router = useRouter();
+
+    /* Keyboard navigation shortcut matching in-game Dauntless hotkeys */
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+            const key = e.key.toUpperCase();
+            const match = MAIN_NAV_ITEMS.find((item) => item.key === key);
+            if (match) {
+                router.push(match.href);
+            }
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [router]);
+
     return (
         <div className="relative flex w-full flex-col overflow-hidden bg-[var(--bg)] text-foreground">
             {/* Ambient Background Aura */}
@@ -132,48 +185,64 @@ export default function LandingPage() {
             />
 
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
-            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-16 pb-16 lg:pt-20 lg:pb-20">
+            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-12 pb-16 lg:pt-16 lg:pb-20">
 
                 <div className="mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-                        {/* Left Column: Headlines & Actions */}
+                        {/* Left Column: Headlines & Dauntless Menu */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
                             {/* Main Headline */}
-                            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[52px] leading-tight">
+                            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[50px] leading-tight">
                                 Forge Your Ultimate <span className="text-gold-gradient">Slayer Loadout</span>
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-5 max-w-lg text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
-                                The premier build calculator and meta armory for Dauntless 1.14.7. Plan gear, cell thresholds, and share builds instantly.
+                            <p className="mt-3 max-w-lg text-xs leading-relaxed text-[var(--ink-2)] sm:text-sm">
+                                The premier build calculator and meta armory for Dauntless 1.14.7.
                             </p>
 
-                            {/* Action Buttons (2 buttons only) */}
-                            <div className="mt-8 flex flex-wrap items-center gap-4">
-                                <Button
-                                    asChild
-                                    size="lg"
-                                    className="h-12 rounded-xl bg-gradient-to-r from-[var(--aether)] to-[#38bdf8] px-8 text-sm font-bold text-black shadow-[0_0_25px_rgba(91,163,255,0.4)] transition-all hover:scale-105 hover:from-[#7cb8ff] hover:to-[#56caff] hover:shadow-[0_0_35px_rgba(91,163,255,0.6)] cursor-pointer"
-                                >
-                                    <Link href="/builder" className="inline-flex items-center gap-2">
-                                        <Hammer className="h-4 w-4" />
-                                        <span>Launch Build Planner</span>
-                                        <ArrowRight className="h-4 w-4" />
-                                    </Link>
-                                </Button>
+                            {/* Dauntless In-Game Navigation Menu */}
+                            <nav aria-label="Main Navigation" className="mt-7 flex w-full max-w-[390px] flex-col gap-2.5">
+                                {MAIN_NAV_ITEMS.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.href}
+                                            className="group relative flex items-center transition-all duration-200 hover:translate-x-1"
+                                        >
+                                            {/* Circular Medallion Badge */}
+                                            <div className="relative z-20 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#8faec7]/70 bg-gradient-to-b from-[#2e4d6a] via-[#162d42] to-[#0a1724] shadow-[0_3px_10px_rgba(0,0,0,0.85),inset_0_1px_2px_rgba(255,255,255,0.45),inset_0_-1px_2px_rgba(0,0,0,0.9)] transition-all duration-200 group-hover:border-[#72c9ff] group-hover:shadow-[0_0_16px_rgba(114,201,255,0.7)]">
+                                                <div className="flex h-7 w-7 items-center justify-center rounded-full border border-black/70 bg-gradient-to-br from-[#12283e] to-[#06101a] text-[#8dc7ff] transition-colors group-hover:text-white">
+                                                    <Icon className="h-3.5 w-3.5" />
+                                                </div>
+                                            </div>
 
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="lg"
-                                    className="h-12 rounded-xl border-[var(--gold)]/40 bg-[var(--bg-raise)]/80 px-7 text-sm font-semibold text-[var(--gold)] backdrop-blur-md transition-all hover:border-[var(--gold)] hover:bg-[var(--gold)]/10 hover:text-[var(--gold-bright)] cursor-pointer"
-                                >
-                                    <Link href="/?tab=suggestions" className="inline-flex items-center gap-2">
-                                        <Lightbulb className="h-4 w-4" />
-                                        <span>Explore</span>
-                                    </Link>
-                                </Button>
-                            </div>
+                                            {/* Chamfered / Beveled Horizontal Slab Bar */}
+                                            <div className="relative -ml-4 z-10 flex h-10 sm:h-11 flex-1 items-center justify-between rounded-r-md border border-[#27445e]/90 border-t-[#6691b5]/60 border-b-[#0b1622] bg-gradient-to-b from-[#183045] via-[#0d1d2b] to-[#07131e] pl-7 pr-4 shadow-[0_4px_12px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.18)] transition-all duration-200 group-hover:border-[#5ba3ff] group-hover:border-t-[#b4dcff] group-hover:bg-gradient-to-b group-hover:from-[#1b88e2] group-hover:via-[#0e66b8] group-hover:to-[#074786] group-hover:shadow-[0_0_24px_rgba(91,163,255,0.55),inset_0_1px_0_rgba(255,255,255,0.6)]">
+                                                {/* Top edge gloss highlight */}
+                                                <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent rounded-tr-md" />
+
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-display text-[13.5px] sm:text-[14.5px] font-bold tracking-wider text-slate-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] transition-colors group-hover:text-white">
+                                                        {item.name}
+                                                    </span>
+                                                    <span className="font-mono text-xs font-semibold text-[#8dc7ff]/75 transition-colors group-hover:text-cyan-200">
+                                                        [{item.key}]
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center gap-1.5 opacity-60 transition-opacity group-hover:opacity-100">
+                                                    <span className="h-1.5 w-1.5 rotate-45 border border-cyan-400 bg-cyan-400/50" />
+                                                    <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-300">
+                                                        ENTER
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
                         </div>
 
                         {/* Right Column: ASCII Mystic Crest */}

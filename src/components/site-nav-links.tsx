@@ -23,10 +23,10 @@ const NavLinks = () => {
     const aboutActive = pathname === "/about";
 
     const navItems = [
-        { href: "/?tab=liked", label: "Liked", icon: Heart, active: likedActive },
-        { href: "/?tab=database", label: "Database", icon: Database, active: databaseActive },
         { href: "/builder", label: "Builder", icon: Hammer, active: builderActive },
-        { href: "/?tab=suggestions", label: "Suggestions", icon: Lightbulb, active: suggestionsActive },
+        { href: "/?tab=database", label: "Item Database", icon: Database, active: databaseActive },
+        { href: "/?tab=suggestions", label: "Meta Builds", icon: Lightbulb, active: suggestionsActive },
+        { href: "/?tab=liked", label: "Liked Builds", icon: Heart, active: likedActive },
         { href: "/about", label: "About", icon: Info, active: aboutActive },
     ];
 
