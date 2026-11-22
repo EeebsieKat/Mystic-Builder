@@ -376,35 +376,27 @@ export default function LandingPage() {
 
     return (
         <div className="relative flex w-full flex-col overflow-x-hidden bg-[var(--bg)] text-foreground">
-            {/* God Rays streaming down from top center */}
-            <div
-                className="pointer-events-none absolute -top-4 sm:-top-8 left-1/2 -z-10 h-[720px] sm:h-[900px] lg:h-[1080px] w-full max-w-[1920px] -translate-x-1/2 overflow-hidden select-none"
-                style={{
-                    maskImage: "radial-gradient(ellipse 85% 75% at 50% 0%, black 40%, transparent 92%)",
-                    WebkitMaskImage: "radial-gradient(ellipse 85% 75% at 50% 0%, black 40%, transparent 92%)",
-                }}
-                aria-hidden="true"
-            >
-                <Image
-                    src="/assets/texture/rays.png"
-                    alt=""
-                    fill
-                    priority
-                    sizes="100vw"
-                    className="object-cover object-top mix-blend-screen opacity-85 sm:opacity-90 contrast-105"
-                />
-            </div>
-
-            {/* Ambient Background Aura */}
-            <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.14)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
-
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
             <section
                 id="hero-section"
-                className="relative z-10 flex min-h-screen flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-12 lg:py-16"
+                className="relative flex min-h-screen flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-12 lg:py-16 overflow-hidden"
             >
+                {/* God Rays streaming down from top center */}
+                <div
+                    className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 z-0 h-[680px] sm:h-[820px] lg:h-[950px] w-full max-w-[1920px] select-none"
+                    aria-hidden="true"
+                >
+                    <img
+                        src="/assets/texture/rays.png"
+                        alt=""
+                        className="h-full w-full object-cover object-top mix-blend-screen opacity-95"
+                    />
+                </div>
 
-                <div className="mx-auto w-full max-w-5xl">
+                {/* Ambient Background Aura */}
+                <div className="pointer-events-none absolute -top-40 left-1/2 z-0 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.14)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
+
+                <div className="relative z-10 mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
                         {/* Left Column: Headlines & Dauntless Menu */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
