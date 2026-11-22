@@ -516,9 +516,10 @@ export default function LandingPage() {
                             {/* Proportional Image Frame */}
                             <div className="relative h-[200px] xs:h-[230px] sm:h-[260px] lg:h-[295px] xl:h-[320px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                 <Image
-                                    src="/assets/showcase/preview-builder.png"
+                                    src="/assets/showcase/preview-builder.png?v=3"
                                     alt="Awakening Loadout Planner"
                                     fill
+                                    unoptimized
                                     priority
                                     sizes="(max-width: 1024px) 100vw, 60vw"
                                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
@@ -556,9 +557,10 @@ export default function LandingPage() {
                             >
                                 <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
-                                        src="/assets/showcase/preview-suggestions.png"
+                                        src="/assets/showcase/preview-suggestions.png?v=3"
                                         alt="517 Meta Guides Index"
                                         fill
+                                        unoptimized
                                         sizes="(max-width: 1024px) 100vw, 40vw"
                                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                     />
@@ -592,9 +594,10 @@ export default function LandingPage() {
                             >
                                 <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
                                     <Image
-                                        src="/assets/showcase/preview-database.png"
+                                        src="/assets/showcase/preview-database.png?v=3"
                                         alt="Complete Item Armory"
                                         fill
+                                        unoptimized
                                         sizes="(max-width: 1024px) 100vw, 40vw"
                                         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                                     />
