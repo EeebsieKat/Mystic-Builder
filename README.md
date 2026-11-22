@@ -81,7 +81,7 @@ The full 1.14.7 item database (231 weapons, 139 armour pieces, 81 cells, 81 perk
 
 ## 8. Build View Counters
 - POST increments and GET reads per-build views, validated against a strict build-id pattern.
-- Storage: Netlify Blobs ("build-stats" store, strong consistency) in production with an automatic in-memory fallback for local dev and other hosts.
+- Storage: SQLite via Prisma BuildStat model (persistent views and likes).
 - Tracked via an invisible counter on the build page and rendered as "N view(s)".
 
 ## 9. Game Text Syntax Highlighter
@@ -100,7 +100,7 @@ The full 1.14.7 item database (231 weapons, 139 armour pieces, 81 cells, 81 perk
 
 ## 11. About & Licenses Page (/about)
 - License cards: AGPL-3.0 core license, Phoenix Labs IP / copyright notice, and the dauntless-builder-reforged data attribution.
-- Services & tech attribution grid: GitHub, Netlify, SQLite, Next.js + React 19, Tailwind CSS 4, shadcn/ui + Radix UI, Prisma ORM, Lucide icons, CUE4Parse, Google Fonts.
+- Services & tech attribution grid: GitHub, SQLite, Next.js + React 19, Tailwind CSS 4, shadcn/ui + Radix UI, Prisma ORM, Lucide icons, CUE4Parse, Google Fonts.
 - Project overview ("what Mystic Builder is") with GitHub repository and Open Build Planner call-to-action buttons.
 
 ## 12. Data Pipeline, Tooling & Shipped Assets
@@ -115,7 +115,7 @@ The full 1.14.7 item database (231 weapons, 139 armour pieces, 81 cells, 81 perk
 - Next.js (App Router) + React 19 + TypeScript with standalone output; Tailwind CSS 4 + shadcn/ui + Radix primitives; framer-motion animations; toast notification system.
 - Prisma + SQLite: BuildLike model (buildId, clientId, fingerprint, ip, userAgent + compound unique constraint and 4 indexes) and BuildStat model (likes + views).
 - API routes: like toggle + per-build like status, bulk likes hydration, view counter, build preview JSON, and a health-check endpoint.
-- Netlify-ready deployment: netlify.toml (Node 22, OG functions bundling all fonts/assets, @netlify/plugin-nextjs) and Netlify Blobs for view stats.
+- Production standalone server deployment with Pterodactyl container support and multi-platform ARM64/Debian Prisma engines.
 - Caddyfile dev proxy with XTransformPort query forwarding, and a local dev recipe (prisma generate / db push, .env DATABASE_URL).
 - Legacy card-based build editor kept in src/components/builder (searchable combobox item selects, mock Discord preview, lantern cell indicators, stats / perk totals / import panels) — currently unrouted and superseded by the Awakening screen.
 

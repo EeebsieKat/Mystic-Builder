@@ -21,12 +21,6 @@ export const getSiteUrl = (): string => {
     if (process.env.APP_URL) {
         return process.env.APP_URL.replace(/\/$/, "");
     }
-    if (process.env.URL) {
-        return process.env.URL.replace(/\/$/, "");
-    }
-    if (process.env.DEPLOY_PRIME_URL) {
-        return process.env.DEPLOY_PRIME_URL.replace(/\/$/, "");
-    }
     const port = process.env.PORT || process.env.SERVER_PORT || "3000";
     return `http://localhost:${port}`;
 };
