@@ -100,10 +100,10 @@ export default function LandingPage() {
             {/* Ambient Background Aura */}
             <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
 
-            {/* HERO SECTION */}
-            <section className="relative px-6 pt-12 pb-20 lg:px-12 lg:pt-16 lg:pb-24">
+            {/* HERO SECTION - Full First Viewport */}
+            <section className="relative flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-6 pt-16 pb-16 lg:px-12 lg:pt-20 lg:pb-20">
                 {/* Golden Wing Crest Backdrop */}
-                <div className="pointer-events-none absolute top-4 right-0 -z-10 flex items-center justify-center opacity-30 select-none">
+                <div className="pointer-events-none absolute top-1/2 right-0 -z-10 flex -translate-y-1/2 items-center justify-center opacity-25 select-none">
                     <img
                         src="/assets/awakening-ui/loadout/GildWingsGold.png"
                         alt=""
@@ -112,7 +112,7 @@ export default function LandingPage() {
                     />
                 </div>
 
-                <div className="mx-auto max-w-6xl">
+                <div className="mx-auto w-full max-w-6xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
                         {/* Left Column: Headlines & Actions */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
@@ -122,12 +122,12 @@ export default function LandingPage() {
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
+                            <p className="mt-5 max-w-lg text-sm leading-relaxed text-[var(--ink-2)] sm:text-base">
                                 The premier build calculator and meta armory for Dauntless 1.14.7. Plan gear, cell thresholds, and share builds instantly.
                             </p>
 
                             {/* Action Buttons (2 buttons only) */}
-                            <div className="mt-7 flex flex-wrap items-center gap-4">
+                            <div className="mt-8 flex flex-wrap items-center gap-4">
                                 <Button
                                     asChild
                                     size="lg"
