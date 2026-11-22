@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import LoadoutScreen from "@/components/loadout/loadout-screen";
-import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import LoadoutScreen, { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME } from "@/components/loadout/loadout-screen";
+import { SITE_TAGLINE } from "@/lib/site";
 
-export const metadata: Metadata = {
-    title: `Loadout Builder - ${SITE_NAME}`,
-    description: SITE_TAGLINE,
-};
+interface BuilderPageProps {
+    searchParams?: Promise<{ b?: string; name?: string; n?: string }>;
+}
 
-export default function BuilderPage() {
+export async function generateMetadata({ searchParams }: BuilderPageProps): Promise<Metadata> {
+    const sp = await searchParams;
+    const customName = sp?.name || sp?.n;
+    return {
+        title: customName ? customName : DEFAULT_BUILD_NAME,
+        description: SITE_TAGLINE,
+    };
+}
+
+export default async function BuilderPage({ searchParams }: BuilderPageProps) {
+    const sp = await searchParams;
+    const initialBuildId = sp?.b || DEFAULT_BUILD_ID;
+    const initialName = sp?.name || sp?.n || (sp?.b ? undefined : DEFAULT_BUILD_NAME);
+
     return (
         <main className="flex w-full flex-1 flex-col">
             <Suspense
@@ -19,7 +31,7 @@ export default function BuilderPage() {
                     </div>
                 }
             >
-                <LoadoutScreen />
+                <LoadoutScreen initialBuildId={initialBuildId} initialName={initialName} />
             </Suspense>
         </main>
     );

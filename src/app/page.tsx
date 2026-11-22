@@ -15,17 +15,19 @@ export const metadata: Metadata = {
 };
 
 interface HomeProps {
-    searchParams: Promise<{ tab?: string; b?: string }>;
+    searchParams: Promise<{ tab?: string; b?: string; name?: string; n?: string }>;
 }
 
 const Home = async ({ searchParams }: HomeProps) => {
-    const { tab, b } = await searchParams;
+    const { tab, b, name, n } = await searchParams;
+    const customName = name || n;
+    const nameParam = customName ? `name=${encodeURIComponent(customName)}` : "";
 
     if (tab === "builder") {
-        redirect("/builder");
+        redirect(nameParam ? `/builder?${nameParam}` : "/builder");
     }
     if (b) {
-        redirect(`/builder?b=${b}`);
+        redirect(`/builder?b=${b}${nameParam ? `&${nameParam}` : ""}`);
     }
 
     const isDatabase = tab === "database";

@@ -49,10 +49,24 @@ export const extractBuildId = (input: string): string | null => {
 export const builderLinkFor = (buildId: string): string => `${BUILDER_ORIGIN}/b/${buildId}`;
 
 /** Local build page for a build id (used for sharing + Discord embeds). */
-export const localBuildPath = (buildId: string): string => `/b/${buildId}`;
+export const localBuildPath = (buildId: string, name?: string | null): string => {
+    const hasName = Boolean(name && name.trim() !== "");
+    return `/b/${buildId}${hasName ? `?name=${encodeURIComponent(name!.trim())}` : ""}`;
+};
 
 /** Local editor link that opens a build in the Mystic Builder editor. */
-export const localEditPath = (buildId: string): string => `/builder?b=${buildId}`;
+export const localEditPath = (buildId: string, name?: string | null): string => {
+    const isDefault = buildId === "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
+    const isDefaultName = !name || name.trim() === "" || name.trim() === "Nacroleps";
+    if (isDefault && isDefaultName) {
+        return "/builder";
+    }
+    const nameParam = name && name.trim() !== "" ? `name=${encodeURIComponent(name.trim())}` : "";
+    if (isDefault) {
+        return `/builder?${nameParam}`;
+    }
+    return `/builder?b=${buildId}${nameParam ? `&${nameParam}` : ""}`;
+};
 
 export const elementColor = (elemental: string | null | undefined): string =>
     ({
