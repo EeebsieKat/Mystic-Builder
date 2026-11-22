@@ -290,7 +290,9 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             return;
         }
         const isBRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/b/");
-        const url = hasAnyItem(draft) ? (isBRoute ? `/b/${buildId}` : `/?b=${buildId}`) : "/";
+        const url = hasAnyItem(draft)
+            ? (isBRoute ? `/b/${buildId}` : `/builder?b=${buildId}`)
+            : (isBRoute ? `/b/${buildId}` : "/builder");
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
 
