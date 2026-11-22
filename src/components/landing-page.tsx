@@ -94,24 +94,26 @@ const ELEMENTS = [
     { name: "Umbral", color: "#8A5FE8", icon: "/assets/icons/elements/Umbral.png", vs: "Radiant" },
 ];
 
-const AXE_ASCII = `                      ✦                    _.gd8888888bp._       *
-                                        .g88888888888888888p.  . '
-                                      .d8888P""   ⚡   ""Y8888b.
-                                      "Y8P"   ◈       ◈   "Y8P'
-                                         \`.               ,'
-                                           \\     .-.     /
-                                            \\   ( ✦ )   /
- .------------------._______________________:____[===]___j
-/                   | ══ ◈ ══ ᛟ ══ ᚱ ══ ◈ ══ |           |\`-.,_
-\\###################|######################|###########|,-'\`
- \`------------------'                       :    ___   l
-                                            /   ( ✦ )   \\
-                                   fsc     /     \`-'     \\
-                                         ,'       ◈       \`.
-                                      .d8b.               .d8b.
-                                      "Y8888p..   ⚡   ,.d8888P"
-                                   . '  "Y88888888888888888P"
-                      ✦                    ""YY8888888PP""       *`;
+const LOGO_ASCII = `                   /\\    /\\                   
+                  /8\\    /8\\                  
+                 /88\\    /O8\\                 
+                /8O8\\    /8O8\\                
+               /#88\\      /OO8\\               
+              /#88#\\      /8OO8\\              
+             /#88#\\        /8OO8\\             
+           /8#88#\\    ◈     /8888O\\           
+          /8888#\\            /88888\\          
+        /888888\\              /88888O\\        
+       /8OOO88\\                /888O88\\       
+       /O88OOO88\\            /8OOOO8OO\\       
+     /    /88OOO8\\          /8OOOOO\\    \\     
+    /88O\\   /88OO8\\        /OOOOO\\   /O88\\    
+   /8oOO88\\   /8OO8\\      /OoOO\\   /O888O8\\   
+  /OoOOOOO8O\\   /8O\\      /oO\\   /O888888OO\\  
+/OOOOOooOOO8#\\   /88\\    /OO\\   /88OOooooOOOO\\
+/8o\\       /o8\\   /8\\    /O\\   /Oo\\       /oO\\
+ /8O\\              /\\    /\\              /OO\\ 
+  /88\\                                  /8O\\  `;
 
 export default function LandingPage() {
     return (
@@ -173,19 +175,19 @@ export default function LandingPage() {
                             </div>
                         </div>
 
-                        {/* Right Column: ASCII Battleaxe */}
+                        {/* Right Column: ASCII Mystic Crest */}
                         <div className="relative flex items-center justify-center lg:col-span-5 select-none">
                             <div className="relative flex items-center justify-center">
-                                {/* Ambient Glow behind Axe */}
-                                <div className="absolute h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.12)_50%,transparent_70%)] blur-2xl animate-pulse" />
-                                <div className="absolute h-80 w-80 rounded-full border border-[var(--gold)]/15 opacity-40 animate-[spin_60s_linear_infinite]" />
+                                {/* Ambient Glow behind Crest */}
+                                <div className="absolute h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.22)_0%,rgba(224,194,135,0.14)_50%,transparent_70%)] blur-2xl animate-pulse" />
+                                <div className="absolute h-84 w-84 rounded-full border border-[var(--gold)]/15 opacity-40 animate-[spin_60s_linear_infinite]" />
                                 <div className="absolute h-72 w-72 rounded-full border border-dashed border-[var(--aether-line)]/30 opacity-30 animate-[spin_40s_linear_infinite_reverse]" />
 
                                 <pre
-                                    aria-label="Dauntless Battleaxe ASCII Art"
-                                    className="relative -rotate-12 hover:rotate-0 font-mono text-[7px] xs:text-[8px] sm:text-[9.5px] md:text-[10.5px] lg:text-[10px] xl:text-[11.5px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[#7cb8ff] via-[#38bdf8] to-[var(--gold)] drop-shadow-[0_0_28px_rgba(91,163,255,0.45)] transition-transform duration-500"
+                                    aria-label="Mystic Paradox Crest ASCII Art"
+                                    className="relative font-mono text-[8px] xs:text-[9.5px] sm:text-[11px] md:text-[12px] lg:text-[12.5px] xl:text-[14px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--gold-bright)] via-[var(--gold)] to-[var(--aether)] drop-shadow-[0_0_30px_rgba(224,194,135,0.5)] transition-transform duration-500 hover:scale-105"
                                 >
-                                    {AXE_ASCII}
+                                    {LOGO_ASCII}
                                 </pre>
                             </div>
                         </div>
