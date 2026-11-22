@@ -24,8 +24,9 @@ try {
   }
 } catch (err) {}
 
-// 2. Default HOSTNAME & PORT logic:
+// 2. Default HOSTNAME, PORT & NODE_ENV logic:
 process.env.HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 process.env.PORT = process.env.PORT || process.env.SERVER_PORT || '3000';
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 require('./.next/standalone/server.js');

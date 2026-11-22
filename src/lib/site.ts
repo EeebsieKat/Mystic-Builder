@@ -9,6 +9,10 @@ export const GAME_VERSION = "1.14.7";
 
 export const GAME_EDITION = "Mystic Paradox";
 
+export const DEFAULT_BUILD_ID = "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
+
+export const DEFAULT_BUILD_NAME = "Nacroleps";
+
 export const BUILDER_ORIGIN = "https://reforged.dauntless-builder.com";
 
 export const getSiteUrl = (): string => {
@@ -20,6 +24,9 @@ export const getSiteUrl = (): string => {
     }
     if (process.env.APP_URL) {
         return process.env.APP_URL.replace(/\/$/, "");
+    }
+    if (process.env.NODE_ENV === "production") {
+        return "https://builder.mysticparadox.com";
     }
     const port = process.env.PORT || process.env.SERVER_PORT || "3000";
     return `http://localhost:${port}`;
