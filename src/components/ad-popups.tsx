@@ -241,7 +241,7 @@ const AdPopups = () => {
                 {phase === "visible" ? (
                     <div
                         aria-hidden
-                        className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-[var(--aether)] to-[var(--gold)]"
+                        className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-gradient-to-r from-[var(--aether)] to-[var(--aether-hi)]"
                         style={{
                             animation: `ad-progress ${AD_CONFIG.visibleMs}ms linear forwards`,
                             animationPlayState: paused ? "paused" : "running",
