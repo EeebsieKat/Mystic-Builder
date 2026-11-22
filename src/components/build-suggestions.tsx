@@ -428,7 +428,7 @@ const WeaponHoverTooltip = ({ name, isBond = false, children }: WeaponHoverToolt
                         )}
 
                         <Badge variant="outline" className="text-[10px] border-border/60 text-muted-foreground">
-                            {weapon.power?.powerSurged ?? 120} Power (Surged)
+                            Power {weapon.power?.base ?? 100}{weapon.power?.powerSurged ? ` (${weapon.power.powerSurged} Surged)` : ""}
                         </Badge>
 
                         {cellsList.length > 0 && (
@@ -557,7 +557,7 @@ const ArmourHoverTooltip = ({ name, piece, slottedCell, children }: ArmourHoverT
                     {/* Stats Row: Defence & Elemental Affinities */}
                     <div className="flex items-center gap-2 flex-wrap text-xs">
                         <Badge variant="outline" className="text-[10px] border-border/60 text-muted-foreground">
-                            +{armour.resistance?.powerSurged ?? 30} Defence
+                            +{armour.resistance?.base ?? 25} Defence{armour.resistance?.powerSurged ? ` (+${armour.resistance.powerSurged} Surged)` : ""}
                         </Badge>
 
                         {armour.strength && (

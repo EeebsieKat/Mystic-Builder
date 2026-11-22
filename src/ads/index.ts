@@ -28,15 +28,15 @@ export interface AdItem {
 /** Tune the popup behaviour here — everything else is per-ad in ads.json. */
 export const AD_CONFIG = {
     /** Delay after page load before the first popup slides in. */
-    firstDelayMs: 5000,
+    firstDelayMs: 2000,
     /** How long a popup stays on screen before sliding away. */
     visibleMs: 14000,
     /** Quiet time between one popup sliding away and the next sliding in. */
-    gapMs: 60000,
+    gapMs: 30000,
     /** After someone closes a popup, hide all promos for this long. */
-    suppressHoursAfterClose: 12,
+    suppressHoursAfterClose: 1,
     /** localStorage key for the dismissal memory. */
-    storageKey: "mystic-builder-ads-suppressed-until",
+    storageKey: "mystic-builder-ads-suppressed-v2",
     /** Paths where popups never show (e.g. ["/about"]). */
     disabledOnPaths: [] as string[],
 };

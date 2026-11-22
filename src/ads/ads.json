@@ -23,7 +23,21 @@
         "icon": "/assets/awakening-ui/logo/icon.png",
         "image": null,
         "accent": "aether",
-        "weight": 1,
+        "weight": 2,
+        "startsAt": null,
+        "endsAt": null
+    },
+    {
+        "id": "gilded-wings",
+        "enabled": true,
+        "title": "Gilded Wings Await",
+        "message": "Forge your loadout. Plan your next awakening build in the planner and preview every perk threshold.",
+        "ctaLabel": "Open Builder",
+        "href": "/builder",
+        "icon": "/assets/awakening-ui/logo/icon.png",
+        "image": "/assets/awakening-ui/loadout/GildWings.png",
+        "accent": "aether",
+        "weight": 2,
         "startsAt": null,
         "endsAt": null
     }

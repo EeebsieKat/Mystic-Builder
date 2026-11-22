@@ -51,6 +51,8 @@ const AdPopups = () => {
 
     const isSuppressed = useCallback((): boolean => {
         try {
+            // Clear legacy 12-hour dismissal lock if present
+            window.localStorage.removeItem("mystic-builder-ads-suppressed-until");
             const raw = window.localStorage.getItem(AD_CONFIG.storageKey);
             if (!raw) return false;
             return Date.now() < Number(raw);

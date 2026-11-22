@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 
 import BuildSuggestions from "@/components/build-suggestions";
 import DatabaseBrowser from "@/components/browse-database";
-import LoadoutScreen from "@/components/loadout/loadout-screen";
+import LandingPage from "@/components/landing-page";
 import { Footer } from "@/components/site-footer";
 import { gameData } from "@/game/data";
 import { GAME_VERSION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
@@ -11,14 +12,34 @@ import { GAME_VERSION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 export const metadata: Metadata = {
     title: `${SITE_NAME} - Dauntless build planner`,
     description: SITE_TAGLINE,
+    openGraph: {
+        title: "mystic Builder",
+        description: SITE_TAGLINE,
+        siteName: "mystic Builder",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "mystic Builder",
+        description: SITE_TAGLINE,
+    },
 };
 
 interface HomeProps {
-    searchParams: Promise<{ tab?: string }>;
+    searchParams: Promise<{ tab?: string; b?: string; name?: string; n?: string }>;
 }
 
 const Home = async ({ searchParams }: HomeProps) => {
-    const { tab } = await searchParams;
+    const { tab, b, name, n } = await searchParams;
+    const customName = name || n;
+    const nameParam = customName ? `name=${encodeURIComponent(customName)}` : "";
+
+    if (tab === "builder") {
+        redirect(nameParam ? `/builder?${nameParam}` : "/builder");
+    }
+    if (b) {
+        redirect(`/builder?b=${b}${nameParam ? `&${nameParam}` : ""}`);
+    }
+
     const isDatabase = tab === "database";
     const isSuggestions = tab === "suggestions";
     const isLiked = tab === "liked";
@@ -54,15 +75,7 @@ const Home = async ({ searchParams }: HomeProps) => {
                     <Footer />
                 </>
             ) : (
-                <Suspense
-                    fallback={
-                        <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">
-                            Loading loadout…
-                        </div>
-                    }
-                >
-                    <LoadoutScreen />
-                </Suspense>
+                <LandingPage />
             )}
         </main>
     );

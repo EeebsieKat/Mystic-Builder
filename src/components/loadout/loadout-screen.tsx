@@ -6,7 +6,7 @@
  * with the complete 1.14.7 item database wired in.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Check, Copy, Dices, Eraser, Link2 } from "lucide-react";
 
@@ -33,6 +33,7 @@ import type {
     Omnicell,
     Part,
     PerkValue,
+    Weapon,
     WeaponType,
 } from "@/game/types";
 import { cellTypeColor, cellTypeLabel, elementColor, extractBuildId, localBuildPath } from "@/lib/site";
@@ -59,8 +60,11 @@ import type {
 import { interpolate, type PerkRow } from "./loadout-types";
 
 /* ------------------------------------------------------------------ */
-/* Draft                                                               */
+/* Defaults and Draft                                                  */
 /* ------------------------------------------------------------------ */
+
+export const DEFAULT_BUILD_ID = "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
+export const DEFAULT_BUILD_NAME = "Nacroleps";
 
 const EMPTY_DRAFT: LoadoutDraft = {
     weaponName: null,
@@ -89,7 +93,7 @@ const EMPTY_DRAFT: LoadoutDraft = {
     consumable1: null,
     consumable2: null,
     consumable3: null,
-    buildName: "SLAYER",
+    buildName: DEFAULT_BUILD_NAME,
 };
 
 const draftFromModel = (model: BuildModel): LoadoutDraft => ({
@@ -131,6 +135,36 @@ const draftToModel = (draft: LoadoutDraft): BuildModel => {
     const { buildName: _buildName, ...rest } = draft;
     Object.assign(model, rest);
     return model;
+};
+
+const RANDOM_SLAYER_NAMES = [
+    "AETHER SLAYER",
+    "STORM HUNTER",
+    "VOID STALKER",
+    "FROST BINDER",
+    "EMBER KNIGHT",
+    "RAMSGATE SLAYER",
+    "DAWN CHASER",
+    "SHADOW STRIDER",
+    "THUNDER LORD",
+    "RIFT WALKER",
+    "CHAOS REAPER",
+    "IRON WARDEN",
+    "TITAN SLAYER",
+    "BEHEMOTH BANE",
+    "WILD SLAYER",
+    "SOLAR FLARE",
+];
+
+const pickRandomBuildName = (weapon: Weapon): string => {
+    const element = weapon.elemental ? weapon.elemental.toUpperCase() : "AETHER";
+    const templates = [
+        `${element} ${weapon.type.toUpperCase()}`,
+        `${element} SLAYER`,
+        `${element} HUNTER`,
+        randomOf(RANDOM_SLAYER_NAMES),
+    ];
+    return randomOf(templates).slice(0, 24);
 };
 
 const hasAnyItem = (draft: LoadoutDraft): boolean =>
@@ -239,31 +273,53 @@ const ARMOUR_SLOTS: { id: ArmourSlotId; nameKey: "headName" | "torsoName" | "arm
 
 export interface LoadoutScreenProps {
     initialBuildId?: string;
+    initialName?: string;
 }
 
-export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
+export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProps = {}) => {
     const searchParams = useSearchParams();
     const { toast } = useToast();
 
     const [draft, setDraft] = useState<LoadoutDraft>(() => {
-        const id = initialBuildId || searchParams.get("b");
+        const id = initialBuildId || searchParams.get("b") || DEFAULT_BUILD_ID;
+        const nameParam = initialName || searchParams.get("name") || searchParams.get("n");
+        let initialDraft = EMPTY_DRAFT;
         if (id) {
             const parsed = tryDeserialize(id);
             if (parsed) {
-                return draftFromModel(parsed);
+                const defaultNameForId = id === DEFAULT_BUILD_ID ? DEFAULT_BUILD_NAME : "SLAYER";
+                initialDraft = draftFromModel(parsed);
+                initialDraft.buildName = nameParam || defaultNameForId;
             }
         }
-        return EMPTY_DRAFT;
+        if (nameParam) {
+            initialDraft.buildName = nameParam;
+        }
+        return initialDraft;
     });
 
+    const lastLoadedBuildId = useRef(initialBuildId);
+    const lastLoadedName = useRef(initialName);
+
     useEffect(() => {
-        if (initialBuildId) {
-            const parsed = tryDeserialize(initialBuildId);
-            if (parsed) {
-                setDraft(draftFromModel(parsed));
+        if (
+            (initialBuildId && initialBuildId !== lastLoadedBuildId.current) ||
+            (initialName && initialName !== lastLoadedName.current)
+        ) {
+            lastLoadedBuildId.current = initialBuildId;
+            lastLoadedName.current = initialName;
+            if (initialBuildId) {
+                const parsed = tryDeserialize(initialBuildId);
+                if (parsed) {
+                    const defaultNameForId = initialBuildId === DEFAULT_BUILD_ID ? DEFAULT_BUILD_NAME : "SLAYER";
+                    setDraft(prev => ({
+                        ...draftFromModel(parsed),
+                        buildName: initialName || (prev.buildName && prev.buildName !== "SLAYER" && prev.buildName !== DEFAULT_BUILD_NAME ? prev.buildName : defaultNameForId),
+                    }));
+                }
             }
         }
-    }, [initialBuildId]);
+    }, [initialBuildId, initialName]);
 
     const [selectedSlot, setSelectedSlot] = useState<SelectionId>("weapon");
     /* The center detail card always shows the last inspected gear slot, even
@@ -290,7 +346,25 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             return;
         }
         const isBRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/b/");
-        const url = hasAnyItem(draft) ? (isBRoute ? `/b/${buildId}` : `/?b=${buildId}`) : "/";
+        const currentName = draft.buildName?.trim() ?? "";
+        const isDefault = buildId === DEFAULT_BUILD_ID;
+        const isDefaultName = currentName === DEFAULT_BUILD_NAME;
+        const hasCustomName = Boolean(currentName && !isDefaultName);
+        const nameQuery = currentName ? `name=${encodeURIComponent(currentName)}` : "";
+
+        let url: string;
+        if (isBRoute) {
+            url = `/b/${buildId}${nameQuery ? `?${nameQuery}` : ""}`;
+        } else {
+            if (isDefault) {
+                // If it is the default build and default name (Nacroleps), keep the URL cleanly as /builder
+                url = hasCustomName ? `/builder?${nameQuery}` : "/builder";
+            } else if (hasAnyItem(draft)) {
+                url = `/builder?b=${buildId}${nameQuery ? `&${nameQuery}` : ""}`;
+            } else {
+                url = hasCustomName ? `/builder?${nameQuery}` : "/builder";
+            }
+        }
         window.history.replaceState(null, "", url);
     }, [buildId, draft]);
 
@@ -419,10 +493,11 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
 
         const options = consumableOptions();
         const pickConsumable = () => (Math.random() < 0.75 ? randomOf(options).name : null);
+        const randomName = pickRandomBuildName(weapon);
 
         setDraft({
             ...EMPTY_DRAFT,
-            buildName: draft.buildName,
+            buildName: randomName,
             weaponName: weapon.name,
             weaponSurged: Math.random() >= 0.5,
             weaponPart1:
@@ -464,7 +539,8 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             consumable2: pickConsumable(),
             consumable3: pickConsumable(),
         });
-    }, [draft.buildName]);
+        toast({ title: "Build randomized", description: randomName });
+    }, [toast]);
 
     const importBuild = useCallback(() => {
         const id = extractBuildId(importValue);
@@ -485,7 +561,23 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
             });
             return;
         }
-        setDraft(draftFromModel(parsed));
+
+        let importedName: string | null = null;
+        try {
+            const raw = importValue.trim();
+            if (raw.includes("name=") || raw.includes("n=")) {
+                const urlObj = new URL(raw.startsWith("http") ? raw : `http://dummy.com/${raw.replace(/^\//, "")}`);
+                importedName = urlObj.searchParams.get("name") || urlObj.searchParams.get("n");
+            }
+        } catch {
+            // Ignore URL parsing errors
+        }
+
+        const nextDraft = draftFromModel(parsed);
+        if (importedName) {
+            nextDraft.buildName = importedName.slice(0, 24);
+        }
+        setDraft(nextDraft);
         setImportValue("");
         setImportOpen(false);
         toast({ title: "Build loaded into the loadout" });
@@ -495,7 +587,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
         if (!buildId) {
             return;
         }
-        const url = `${window.location.origin}${localBuildPath(buildId)}`;
+        const url = `${window.location.origin}${localBuildPath(buildId, draft.buildName)}`;
         try {
             await navigator.clipboard.writeText(url);
             setCopied(true);
@@ -504,7 +596,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
         } catch {
             toast({ title: "Could not copy", description: url, variant: "destructive" });
         }
-    }, [buildId, toast]);
+    }, [buildId, draft.buildName, toast]);
 
     const selectSlot = useCallback((slot: SelectionId) => {
         setSelectedSlot(slot);
@@ -803,7 +895,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     group: entry.type,
                     behemoth: entry.behemoth ?? null,
                     hint: entry.elemental ?? undefined,
-                    meta: String(entry.power.powerSurged ?? entry.power.base),
+                    meta: `Power ${entry.power.base}${entry.power.powerSurged ? ` (${entry.power.powerSurged})` : ""}`,
                     color: entry.elemental ? elementColor(entry.elemental) : undefined,
                 }));
             return {
@@ -830,7 +922,7 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     behemoth: entry.behemoth ?? null,
                     strength: entry.strength ?? null,
                     hint: (entry.perks ?? []).map(perk => `${perk.name} +${perk.value}`).join(", "),
-                    meta: String(entry.resistance.powerSurged ?? entry.resistance.base),
+                    meta: `Res ${entry.resistance.base}${entry.resistance.powerSurged ? ` (${entry.resistance.powerSurged})` : ""}`,
                     color: entry.strength ? elementColor(entry.strength) : undefined,
                 }));
             return {
@@ -1174,10 +1266,11 @@ export const LoadoutScreen = ({ initialBuildId }: LoadoutScreenProps = {}) => {
                     <button
                         type="button"
                         onClick={() => {
-                            setDraft(previous => ({ ...EMPTY_DRAFT, buildName: previous.buildName }));
+                            setDraft({ ...EMPTY_DRAFT, buildName: "SLAYER" });
                             selectSlot("weapon");
+                            toast({ title: "Build reset to Slayer" });
                         }}
-                        disabled={!hasAnyItem(draft)}
+                        disabled={!hasAnyItem(draft) && draft.buildName === "SLAYER"}
                         className="lo-button-text flex items-center gap-2"
                     >
                         <Eraser className="h-4 w-4" aria-hidden />

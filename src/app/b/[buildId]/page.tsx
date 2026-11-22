@@ -14,10 +14,13 @@ export const revalidate = 86400;
 
 interface BuildPageProps {
     params: Promise<{ buildId: string }>;
+    searchParams?: Promise<{ name?: string; n?: string }>;
 }
 
-export async function generateMetadata({ params }: BuildPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: BuildPageProps): Promise<Metadata> {
     const { buildId } = await params;
+    const sp = await searchParams;
+    const customName = sp?.name || sp?.n;
     const parsed = parseBuildId(buildId);
 
     if (!parsed) {
@@ -27,7 +30,7 @@ export async function generateMetadata({ params }: BuildPageProps): Promise<Meta
         };
     }
 
-    const title = buildTitle(parsed.view);
+    const title = customName ? customName : buildTitle(parsed.view);
     const description = buildSummary(parsed.view);
     const themeColor = parsed.view.weapon ? elementColor(parsed.view.weapon.elemental) : OG_GOLD;
 
@@ -51,8 +54,10 @@ export async function generateMetadata({ params }: BuildPageProps): Promise<Meta
     };
 }
 
-const BuildPage = async ({ params }: BuildPageProps) => {
+const BuildPage = async ({ params, searchParams }: BuildPageProps) => {
     const { buildId } = await params;
+    const sp = await searchParams;
+    const customName = sp?.name || sp?.n;
     const parsed = parseBuildId(buildId);
 
     if (!parsed) {
@@ -65,7 +70,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
                     along the way. Double-check that the whole <code>/b/...</code> part is intact.
                 </p>
                 <Button asChild>
-                    <Link href="/">
+                    <Link href="/builder">
                         <ArrowLeft className="mr-2 h-4 w-4" aria-hidden />
                         Back to the builder
                     </Link>
@@ -88,7 +93,7 @@ const BuildPage = async ({ params }: BuildPageProps) => {
                     </div>
                 }
             >
-                <LoadoutScreen initialBuildId={buildId} />
+                <LoadoutScreen initialBuildId={buildId} initialName={customName} />
             </Suspense>
         </main>
     );

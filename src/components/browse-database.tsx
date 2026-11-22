@@ -324,7 +324,7 @@ const ItemCard = ({
 
             <div className="mt-3 flex items-center justify-between border-t border-border/40 pt-2 text-[11px] font-medium text-muted-foreground transition-colors group-hover:text-primary">
                 <span>View details</span>
-                <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                <span className="transition-transform group-hover:translate-x-0.5"> </span>
             </div>
         </div>
     );
@@ -336,7 +336,7 @@ const ItemCard = ({
 
 const WeaponRow = ({ weapon, onSelect }: { weapon: Weapon; onSelect: () => void }) => {
     const hasUnique = Boolean(weapon.unique_effects && weapon.unique_effects.length > 0);
-    const power = weapon.power.powerSurged ?? weapon.power.base;
+    const power = weapon.power.base;
     const glowColor = weapon.elemental ? elementColor(weapon.elemental) : "#e2e8f0";
 
     return (
@@ -349,7 +349,7 @@ const WeaponRow = ({ weapon, onSelect }: { weapon: Weapon; onSelect: () => void 
             onClick={onSelect}
             badge={
                 <span className="rounded-md border border-primary/45 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    Power {power}
+                    Power {power}{weapon.power.powerSurged ? ` (${weapon.power.powerSurged} Surged)` : ""}
                 </span>
             }
             footerNotice={
@@ -370,7 +370,7 @@ const WeaponRow = ({ weapon, onSelect }: { weapon: Weapon; onSelect: () => void 
 
 const ArmourRow = ({ armour, onSelect }: { armour: Armour; onSelect: () => void }) => {
     const hasUnique = Boolean(armour.unique_effects && armour.unique_effects.length > 0);
-    const res = armour.resistance.powerSurged ?? armour.resistance.base;
+    const res = armour.resistance.base;
     const glowColor = armour.strength ? elementColor(armour.strength) : "#e2e8f0";
 
     return (
@@ -383,7 +383,7 @@ const ArmourRow = ({ armour, onSelect }: { armour: Armour; onSelect: () => void 
             onClick={onSelect}
             badge={
                 <span className="rounded-md border border-primary/45 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    Res {res}
+                    Res {res}{armour.resistance.powerSurged ? ` (${armour.resistance.powerSurged} Surged)` : ""}
                 </span>
             }
             footerNotice={
@@ -617,7 +617,7 @@ const ItemDetailDialog = ({
                                             {weapon.name}
                                         </DialogTitle>
                                         <span className="rounded-md border border-primary/45 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                                            Power {weapon.power.powerSurged ?? weapon.power.base}
+                                            Power {weapon.power.base}{weapon.power.powerSurged ? ` (${weapon.power.powerSurged} Surged)` : ""}
                                         </span>
                                     </div>
                                     <DialogDescription className="text-xs text-muted-foreground">
@@ -895,19 +895,17 @@ const ItemDetailDialog = ({
                                         return (
                                             <div
                                                 key={rank}
-                                                className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${
-                                                    isMax
+                                                className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${isMax
                                                         ? "border-primary/50 bg-primary/[0.07] shadow-xs"
                                                         : "border-border/60 bg-muted/15"
-                                                }`}
+                                                    }`}
                                             >
                                                 <div className="flex shrink-0 items-center gap-1.5">
                                                     <span
-                                                        className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${
-                                                            isMax
+                                                        className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${isMax
                                                                 ? "bg-primary text-primary-foreground"
                                                                 : "border border-border/70 bg-card text-foreground"
-                                                        }`}
+                                                            }`}
                                                     >
                                                         +{rank}
                                                     </span>
@@ -1000,13 +998,12 @@ const ItemDetailDialog = ({
                                         return (
                                             <div
                                                 key={variantName}
-                                                className={`flex items-center justify-between rounded-lg border p-3 text-xs ${
-                                                    isEpic
+                                                className={`flex items-center justify-between rounded-lg border p-3 text-xs ${isEpic
                                                         ? "border-purple-500/40 bg-purple-500/10 text-purple-300"
                                                         : isRare
-                                                          ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
-                                                          : "border-border/60 bg-muted/20 text-muted-foreground"
-                                                }`}
+                                                            ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
+                                                            : "border-border/60 bg-muted/20 text-muted-foreground"
+                                                    }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-base font-bold">{tier}</span>
@@ -1341,11 +1338,10 @@ const SearchWithFilters = ({
                                     <button
                                         type="button"
                                         onClick={() => group.onChange(null)}
-                                        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-all ${
-                                            group.selected === null
+                                        className={`rounded-full px-2.5 py-1 text-xs font-medium transition-all ${group.selected === null
                                                 ? "bg-primary text-primary-foreground shadow-xs"
                                                 : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                                        }`}
+                                            }`}
                                     >
                                         All
                                     </button>
@@ -1356,11 +1352,10 @@ const SearchWithFilters = ({
                                                 key={opt.value}
                                                 type="button"
                                                 onClick={() => group.onChange(isSelected ? null : opt.value)}
-                                                className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all ${
-                                                    isSelected
+                                                className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all ${isSelected
                                                         ? "bg-primary text-primary-foreground shadow-xs"
                                                         : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                                                }`}
+                                                    }`}
                                             >
                                                 {opt.icon ? (
                                                     <Image
@@ -1466,11 +1461,10 @@ const Pagination = ({
                                 variant={currentPage === p ? "default" : "outline"}
                                 size="sm"
                                 onClick={() => onPageChange(Number(p))}
-                                className={`h-8 min-w-8 px-2 text-xs ${
-                                    currentPage === p
+                                className={`h-8 min-w-8 px-2 text-xs ${currentPage === p
                                         ? "bg-primary font-semibold text-primary-foreground shadow-xs"
                                         : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                                }`}
+                                    }`}
                             >
                                 {p}
                             </Button>
@@ -1711,11 +1705,10 @@ const DatabaseBrowser = () => {
                         <TabsTrigger
                             key={tab.value}
                             value={tab.value}
-                            className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${
-                                isActive
+                            className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${isActive
                                     ? "text-primary font-semibold drop-shadow-[0_0_8px_rgba(91,163,255,0.4)]"
                                     : "text-muted-foreground hover:text-foreground"
-                            }`}
+                                }`}
                         >
                             <span>{tab.label}</span>
                             {isActive && (

@@ -7,7 +7,7 @@ const DESIGN_H = 1080;
 
 export const LoadoutStage = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [scale, setScale] = useState(0);
+    const [scale, setScale] = useState(1);
     const [stageWidth, setStageWidth] = useState(MIN_DESIGN_W);
 
     useEffect(() => {

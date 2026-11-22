@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Database, Hammer, Heart, Info, Lightbulb } from "lucide-react";
+import { Database, ExternalLink, Globe, Hammer, Heart, Info, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,35 +16,60 @@ const NavLinks = () => {
     const suggestionsActive = pathname === "/" && searchParams.get("tab") === "suggestions";
     const likedActive = pathname === "/" && searchParams.get("tab") === "liked";
     const builderActive =
-        (pathname === "/" || pathname.startsWith("/b/")) && !databaseActive && !suggestionsActive && !likedActive;
+        pathname === "/builder" ||
+        pathname === "/builer" ||
+        (pathname === "/" && (searchParams.get("tab") === "builder" || searchParams.has("b"))) ||
+        pathname.startsWith("/b/");
     const aboutActive = pathname === "/about";
 
     const navItems = [
-        { href: "/?tab=liked", label: "Liked", icon: Heart, active: likedActive },
-        { href: "/?tab=database", label: "Database", icon: Database, active: databaseActive },
-        { href: "/", label: "Builder", icon: Hammer, active: builderActive },
-        { href: "/?tab=suggestions", label: "Suggestions", icon: Lightbulb, active: suggestionsActive },
+        { href: "/builder", label: "Builder", icon: Hammer, active: builderActive },
+        { href: "/?tab=database", label: "Item Database", icon: Database, active: databaseActive },
+        { href: "/?tab=suggestions", label: "Meta Builds", icon: Lightbulb, active: suggestionsActive },
+        { href: "/?tab=liked", label: "Liked Builds", icon: Heart, active: likedActive },
         { href: "/about", label: "About", icon: Info, active: aboutActive },
+        {
+            href: "https://mysticparadox.com",
+            label: "Main Website",
+            icon: Globe,
+            external: true,
+        },
     ];
 
     return (
         <>
-            {navItems.map(({ href, label, icon: Icon, active }) => (
-                <Link
-                    key={href}
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                        "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border",
-                        active
-                            ? "border-[var(--aether-line)] bg-[var(--aether-a10)] text-white shadow-xs [&>svg]:text-[var(--aether-hi)]"
-                            : "border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)]",
-                    )}
-                >
-                    <Icon className="h-3.5 w-3.5 transition-colors" />
-                    <span>{label}</span>
-                </Link>
-            ))}
+            {navItems.map(({ href, label, icon: Icon, active, external }) =>
+                external ? (
+                    <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)] group cursor-pointer"
+                        )}
+                    >
+                        <Icon className="h-3.5 w-3.5 transition-colors group-hover:text-[var(--gold)]" />
+                        <span>{label}</span>
+                        <ExternalLink className="h-3 w-3 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                    </a>
+                ) : (
+                    <Link
+                        key={href}
+                        href={href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                            "flex items-center gap-1.5 rounded-[12px] px-3.5 py-1.5 text-[13.5px] font-[560] transition-all duration-200 border",
+                            active
+                                ? "border-[var(--aether-line)] bg-[var(--aether-a10)] text-white shadow-xs [&>svg]:text-[var(--aether-hi)]"
+                                : "border-transparent text-[var(--ink-2)] hover:border-[var(--line)] hover:bg-white/[0.045] hover:text-white [&>svg]:text-[var(--ink-3)]",
+                        )}
+                    >
+                        <Icon className="h-3.5 w-3.5 transition-colors" />
+                        <span>{label}</span>
+                    </Link>
+                )
+            )}
         </>
     );
 };
