@@ -205,6 +205,17 @@ body::before {
   background-repeat: no-repeat;
 }
 
+/* Authentic film grain texture overlay from assets */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  background-image: url("/assets/texture/grain.png");
+  background-repeat: repeat;
+}
+
 /* Radial glow behind hero / editor header: luminous aether bloom. */
 .mystic-glow {
   background-image:
