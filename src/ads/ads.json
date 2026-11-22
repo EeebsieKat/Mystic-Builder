@@ -1,0 +1,44 @@
+[
+    {
+        "id": "join-discord",
+        "enabled": true,
+        "title": "Join Mystic Paradox",
+        "message": "Play on the official server! Hop into the Discord for patch notes, events, hunt parties and support.",
+        "ctaLabel": "Join the Discord",
+        "href": "https://discord.gg/mystic-paradox",
+        "icon": "/assets/awakening-ui/logo/icon.png",
+        "image": null,
+        "accent": "gold",
+        "weight": 3,
+        "startsAt": null,
+        "endsAt": null
+    },
+    {
+        "id": "gilded-wings",
+        "enabled": true,
+        "title": "Gilded Wings Await",
+        "message": "Forge the look. Plan your next awakening loadout in the builder and see every perk before you commit.",
+        "ctaLabel": "Open the builder",
+        "href": "/",
+        "icon": "/assets/awakening-ui/logo/icon.png",
+        "image": "/assets/awakening-ui/loadout/GildWings.png",
+        "accent": "aether",
+        "weight": 1,
+        "startsAt": null,
+        "endsAt": null
+    },
+    {
+        "id": "meta-builds",
+        "enabled": true,
+        "title": "This Week's Meta",
+        "message": "Fresh meta builds from the community are live. Browse, like, and import them straight into your planner.",
+        "ctaLabel": "Browse builds",
+        "href": "/?tab=suggestions",
+        "icon": "/assets/awakening-ui/logo/icon.png",
+        "image": null,
+        "accent": "aether",
+        "weight": 1,
+        "startsAt": null,
+        "endsAt": null
+    }
+]
