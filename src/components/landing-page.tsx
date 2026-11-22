@@ -121,8 +121,18 @@ export default function LandingPage() {
             {/* Ambient Background Aura */}
             <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.06)_45%,transparent_70%)] blur-3xl" />
 
-            {/* HERO SECTION - Full First Viewport */}
-            <section className="relative flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-6 pt-16 pb-16 lg:px-12 lg:pt-20 lg:pb-20">
+            {/* Subtle Noise Texture Overlay */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none fixed inset-0 z-0 opacity-[0.038] mix-blend-overlay"
+                style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: "repeat",
+                }}
+            />
+
+            {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
+            <section className="relative z-10 flex min-h-[calc(100vh-3.5rem)] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 pt-16 pb-16 lg:pt-20 lg:pb-20">
                 {/* Golden Wing Crest Backdrop */}
                 <div className="pointer-events-none absolute top-1/2 right-0 -z-10 flex -translate-y-1/2 items-center justify-center opacity-25 select-none">
                     <img
@@ -133,7 +143,7 @@ export default function LandingPage() {
                     />
                 </div>
 
-                <div className="mx-auto w-full max-w-6xl">
+                <div className="mx-auto w-full max-w-5xl">
                     <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
                         {/* Left Column: Headlines & Actions */}
                         <div className="flex flex-col items-start text-left lg:col-span-7">
@@ -195,11 +205,11 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            <div className="gold-rule mx-auto max-w-6xl w-full" aria-hidden="true" />
+            <div className="gold-rule mx-auto max-w-5xl w-full" aria-hidden="true" />
 
             {/* THREE CORE PILLARS / BENTO SHOWCASE */}
-            <section className="relative px-6 py-14 lg:px-12 lg:py-20">
-                <div className="mx-auto max-w-6xl">
+            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14 lg:py-20">
+                <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-start text-left max-w-2xl">
                         <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[var(--gold)]/80">
                             Core Capabilities
@@ -292,8 +302,8 @@ export default function LandingPage() {
             </section>
 
             {/* OMNICELL ARCHETYPES SHOWCASE */}
-            <section className="relative border-y border-[var(--line)] bg-[var(--bg-raise)]/40 px-6 py-16 lg:px-12 lg:py-24">
-                <div className="mx-auto max-w-6xl">
+            <section className="relative z-10 border-y border-[var(--line)] bg-[var(--bg-raise)]/40 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
+                <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <div className="inline-flex items-center gap-2 rounded-full border border-[var(--aether-line)] bg-[var(--aether-a10)] px-3.5 py-1 text-xs font-semibold text-[var(--aether-hi)]">
                             <Sparkles className="h-3.5 w-3.5" />
@@ -349,8 +359,8 @@ export default function LandingPage() {
             </section>
 
             {/* WEAPON CLASSES RAIL */}
-            <section className="relative px-6 py-16 lg:px-12 lg:py-24">
-                <div className="mx-auto max-w-6xl">
+            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
+                <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <p className="panel-label">Weapon Armory</p>
                         <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
@@ -388,8 +398,8 @@ export default function LandingPage() {
             </section>
 
             {/* ELEMENTAL MATCHUP MATRIX */}
-            <section className="relative border-t border-[var(--line)] bg-[var(--bg-raise)]/30 px-6 py-16 lg:px-12">
-                <div className="mx-auto max-w-6xl">
+            <section className="relative z-10 border-t border-[var(--line)] bg-[var(--bg-raise)]/30 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-14">
+                <div className="mx-auto max-w-5xl">
                     <div className="flex flex-col items-center text-center">
                         <p className="panel-label">Elemental Affinity</p>
                         <h3 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
@@ -426,7 +436,7 @@ export default function LandingPage() {
             </section>
 
             {/* DISCORD PREVIEWS & LINK SHARING */}
-            <section className="relative px-6 py-16 lg:px-12 lg:py-24">
+            <section className="relative z-10 px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-16 lg:py-20">
                 <div className="mx-auto max-w-5xl rounded-2xl border border-[var(--line-2)] bg-gradient-to-b from-[var(--bg-raise)] to-[#070e17] p-8 shadow-2xl lg:p-12">
                     <div className="grid items-center gap-8 md:grid-cols-2">
                         <div>
