@@ -9,9 +9,11 @@ export const GAME_VERSION = "1.14.7";
 
 export const GAME_EDITION = "Mystic Paradox";
 
-export const DEFAULT_BUILD_ID = "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
+export const DEFAULT_BUILD_ID = "8UVpm5gdNlCTQIxQNRMBNdjFfa4DUn4bh-HMLT0T0vs1XCIl9nXEudtuklNhXMDM5";
 
 export const DEFAULT_BUILD_NAME = "Nacroleps";
+
+export const DISCORD_URL = "https://discord.gg/F4XQNRZWC3";
 
 export const BUILDER_ORIGIN = "https://reforged.dauntless-builder.com";
 
@@ -63,8 +65,8 @@ export const localBuildPath = (buildId: string, name?: string | null): string =>
 
 /** Local editor link that opens a build in the Mystic Builder editor. */
 export const localEditPath = (buildId: string, name?: string | null): string => {
-    const isDefault = buildId === "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC";
-    const isDefaultName = !name || name.trim() === "" || name.trim() === "Nacroleps";
+    const isDefault = buildId === DEFAULT_BUILD_ID;
+    const isDefaultName = !name || name.trim() === "" || name.trim() === DEFAULT_BUILD_NAME;
     if (isDefault && isDefaultName) {
         return "/builder";
     }

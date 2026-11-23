@@ -7,7 +7,6 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import SiteHeader from "@/components/site-header";
 import PageTransition from "@/components/page-transition";
-import AdPopups from "@/components/ad-popups";
 import { SITE_NAME, SITE_TAGLINE, getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -71,7 +70,6 @@ export default function RootLayout({
                     {children}
                 </PageTransition>
                 <Toaster />
-                <AdPopups />
             </body>
         </html>
     );
