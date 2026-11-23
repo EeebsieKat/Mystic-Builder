@@ -14,11 +14,11 @@ This Pull Request delivers a comprehensive visual and functional overhaul to **M
 ## 🚀 Key Changes & Features
 
 ### 1. Dedicated `/builder` Route with Server-Side Rendered Default Build (`Nacroleps`)
-- **SSR Default Loadout**: Navigating to `/builder` now immediately hydrates the full Galvanic Impact Shock Hammer build (`mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC`) under the Slayer name **"Nacroleps"** on the server side (SSR), eliminating empty container layout shifts on load.
+- **SSR Default Loadout**: Navigating to `/builder` now immediately hydrates the default loadout (`8UVpm5gdNlCTQIxQNRMBNdjFfa4DUn4bh-HMLT0T0vs1XCIl9nXEudtuklNhXMDM5`) under the Slayer name **"Nacroleps"** on the server side (SSR), eliminating empty container layout shifts on load.
 - **Clean URL Management**: When viewing the default build at `/builder`, the address bar remains cleanly `/builder` without appending `?b=...` query parameters.
 - **Custom Name Sharing via URL (`?name=...`)**:
   - Editing the loadout nameplate dynamically syncs `?name=<BuildName>` into the URL.
-  - The "COPY" share link automatically appends `?name=${encodeURIComponent(draft.buildName)}` (e.g. `/b/mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC?name=Nacroleps`).
+  - The "COPY" share link automatically appends `?name=${encodeURIComponent(draft.buildName)}` (e.g. `/b/8UVpm5gdNlCTQIxQNRMBNdjFfa4DUn4bh-HMLT0T0vs1XCIl9nXEudtuklNhXMDM5?name=Nacroleps`).
   - Loading `/b/<id>?name=...` extracts and populates both page metadata `<title>` and loadout draft state.
   - The **Import** modal parses links containing `name=` or `n=` query parameters.
 - **Fixed `RANDOMIZE` and `RESET` Actions**:

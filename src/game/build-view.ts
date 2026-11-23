@@ -6,7 +6,7 @@ import { BuildModel, BuildFlags, doesCellFitIntoSlot, findCellByVariantName, fin
 import { upgradeBuild } from "./upgrade-build";
 import { gameData } from "./data";
 import { HEALING_FLASK } from "./consumables";
-import { GAME_VERSION } from "@/lib/site";
+import { DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, GAME_VERSION } from "@/lib/site";
 import type { Armour, CellType, Consumable, Lantern, Omnicell, Part, Weapon } from "./types";
 
 export interface CellSlotView {
@@ -342,8 +342,8 @@ export const buildTitle = (view: BuildView): string => {
 };
 
 export const buildNameplate = (view: BuildView, buildId?: string): string => {
-    if (buildId === "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC") {
-        return "Nacroleps";
+    if (buildId === DEFAULT_BUILD_ID || buildId === "8UVpm5gdNlCTQIxQNRMBNdjFfa4DUn4bh-HMLT0T0vs1XCIl9nXEudtuklNhXMDM5" || buildId === "mczaOqYl60ZdgmRXePKDiMBgFnyuRcVwGsq085AktuUg7jUAO84NyPqlw19n9k-TC") {
+        return DEFAULT_BUILD_NAME;
     }
     if (view.weapon) {
         const element = view.weapon.elemental ? view.weapon.elemental.toUpperCase() : "";
