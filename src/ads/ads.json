@@ -28,16 +28,30 @@
         "endsAt": null
     },
     {
-        "id": "gilded-wings",
+        "id": "item-database",
         "enabled": true,
-        "title": "Gilded Wings Await",
-        "message": "Forge your loadout. Plan your next awakening build in the planner and preview every perk threshold.",
-        "ctaLabel": "Open Builder",
-        "href": "/builder",
+        "title": "Explore 1.14.7 Data",
+        "message": "Check out the full item database featuring every weapon, armour piece, cell, and perk extracted directly from the game data.",
+        "ctaLabel": "Explore Database",
+        "href": "/?tab=database",
         "icon": "/assets/awakening-ui/logo/icon.png",
-        "image": "/assets/awakening-ui/loadout/GildWings.png",
+        "image": null,
         "accent": "aether",
         "weight": 2,
+        "startsAt": null,
+        "endsAt": null
+    },
+    {
+        "id": "loadout-planner",
+        "enabled": true,
+        "title": "Forge Your Loadout",
+        "message": "Build your ultimate Slayer loadout with live Power Surge scaling, perk threshold calculations, and instant URL sharing.",
+        "ctaLabel": "Launch Planner",
+        "href": "/?tab=builder",
+        "icon": "/assets/awakening-ui/logo/icon.png",
+        "image": null,
+        "accent": "gold",
+        "weight": 3,
         "startsAt": null,
         "endsAt": null
     }
