@@ -6,6 +6,7 @@
     "dev": "next dev -p 3000",
     "build": "next build && node scripts/copy-standalone.js",
     "start": "node server.js",
+    "test:security": "node scripts/test-security.js",
     "lint": "eslint .",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",

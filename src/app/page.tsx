@@ -56,8 +56,7 @@ const Home = async ({ searchParams }: HomeProps) => {
                             </h1>
                             <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
                                 {Object.keys(gameData.weapons).length} weapons, {Object.keys(gameData.armours).length}{" "}
-                                armour pieces, {Object.keys(gameData.cells).length} cells and{" "}
-                                {Object.keys(gameData.perks).length} perks from the 1.14.7 game data.
+                                armour pieces, and {Object.keys(gameData.cells).length} cells from the 1.14.7 game data.
                             </p>
                         </div>
                         <div className="mt-8">

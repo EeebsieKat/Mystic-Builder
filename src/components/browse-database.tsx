@@ -133,7 +133,6 @@ interface OmnicellItem extends Omnicell {
 type SelectedItem =
     | { kind: "weapon"; data: Weapon }
     | { kind: "armour"; data: Armour }
-    | { kind: "perk"; data: PerkData }
     | { kind: "cell"; data: Cell }
     | { kind: "lantern"; data: LanternItem }
     | { kind: "omnicell"; data: OmnicellItem };
@@ -471,44 +470,6 @@ const ArmourRow = ({ armour, onSelect }: { armour: Armour; onSelect: () => void 
     );
 };
 
-const PerkRow = ({ perk, onSelect }: { perk: PerkData; onSelect: () => void }) => (
-    <ItemCard
-        icon={`/assets/icons/perks/${perk.type}.png`}
-        name={perk.name}
-        titleColor={cellTypeColor(perk.type)}
-        subtitle={`${cellTypeLabel(perk.type)} Perk`}
-        cellType={perk.type}
-        onClick={onSelect}
-        badge={
-            <span
-                className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border"
-                style={{
-                    borderColor: `${cellTypeColor(perk.type)}40`,
-                    backgroundColor: `${cellTypeColor(perk.type)}15`,
-                    color: cellTypeColor(perk.type),
-                }}
-            >
-                <Image
-                    src={cellTypeIcon(perk.type)}
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="h-4 w-4 shrink-0 object-contain"
-                    aria-hidden
-                />
-                <span className="leading-none">{cellTypeLabel(perk.type)}</span>
-            </span>
-        }
-    >
-        <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-            {perk.description}
-        </p>
-
-        <div className="flex items-center gap-1.5 text-[11px] font-medium text-primary">
-            <span>Ranks +1 to +6 progression</span>
-        </div>
-    </ItemCard>
-);
 
 const CellRow = ({ cell, onSelect }: { cell: Cell; onSelect: () => void }) => {
     const firstVariant = Object.values(cell.variants)[0];
@@ -903,106 +864,6 @@ const ItemDetailDialog = ({
                 );
             }
 
-            case "perk": {
-                const perk = item.data;
-                const ranks = [1, 2, 3, 4, 5, 6];
-
-                return (
-                    <>
-                        <DialogHeader className="gap-2 border-b border-border/50 pb-4 pr-12 text-left">
-                            <div className="flex items-start gap-4">
-                                <IconBox
-                                    src={`/assets/icons/perks/${perk.type}.png`}
-                                    name={perk.name}
-                                    cellType={perk.type}
-                                    size="lg"
-                                />
-                                <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <DialogTitle
-                                            className="text-xl font-bold tracking-tight text-foreground"
-                                            style={getTextGlowStyle(cellTypeColor(perk.type))}
-                                        >
-                                            {perk.name}
-                                        </DialogTitle>
-                                        <span
-                                            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold border"
-                                            style={{
-                                                borderColor: `${cellTypeColor(perk.type)}40`,
-                                                backgroundColor: `${cellTypeColor(perk.type)}15`,
-                                                color: cellTypeColor(perk.type),
-                                            }}
-                                        >
-                                            <Image
-                                                src={cellTypeIcon(perk.type)}
-                                                alt=""
-                                                width={18}
-                                                height={18}
-                                                className="h-4.5 w-4.5 shrink-0 object-contain"
-                                                aria-hidden
-                                            />
-                                            <span className="leading-none">{cellTypeLabel(perk.type)}</span>
-                                        </span>
-                                    </div>
-                                    <DialogDescription className="text-xs text-muted-foreground">
-                                        {cellTypeLabel(perk.type)} Perk Progression
-                                    </DialogDescription>
-                                </div>
-                            </div>
-                        </DialogHeader>
-
-                        <div className="flex max-h-[75vh] flex-col gap-4 overflow-y-auto pr-1 text-sm">
-                            <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-foreground/90">
-                                <span className="font-semibold text-primary block mb-0.5">Overview</span>
-                                {perk.description}
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <h4 className="text-xs font-bold uppercase tracking-wider text-primary">
-                                    Rank Progression (+1 to +6)
-                                </h4>
-                                <div className="flex flex-col gap-2">
-                                    {ranks.map(rank => {
-                                        const eff = perk.effects?.[String(rank)];
-                                        const formatted = eff ? formatPerkEffect(eff) : null;
-                                        const isMax = rank === 6;
-
-                                        return (
-                                            <div
-                                                key={rank}
-                                                className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${isMax
-                                                        ? "border-primary/50 bg-primary/[0.07] shadow-xs"
-                                                        : "border-border/60 bg-muted/15"
-                                                    }`}
-                                            >
-                                                <div className="flex shrink-0 items-center gap-1.5">
-                                                    <span
-                                                        className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${isMax
-                                                                ? "bg-primary text-primary-foreground"
-                                                                : "border border-border/70 bg-card text-foreground"
-                                                            }`}
-                                                    >
-                                                        +{rank}
-                                                    </span>
-                                                    {isMax ? (
-                                                        <span className="rounded-sm bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase">
-                                                            Max
-                                                        </span>
-                                                    ) : null}
-                                                </div>
-                                                <p className="min-w-0 flex-1 leading-relaxed text-foreground/90 pt-0.5">
-                                                    {formatted ? cleanText(formatted) : perk.description}
-                                                </p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                );
-            }
-
             case "cell": {
                 const cell = item.data;
                 const firstVariant = Object.values(cell.variants)[0];
@@ -1123,6 +984,52 @@ const ItemDetailDialog = ({
                                     })}
                                 </div>
                             </div>
+
+                            {perk?.effects ? (
+                                <div className="flex flex-col gap-2">
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-primary">
+                                        Perk Rank Progression (+1 to +6)
+                                    </h4>
+                                    <div className="flex flex-col gap-2">
+                                        {[1, 2, 3, 4, 5, 6].map(rank => {
+                                            const eff = perk.effects?.[String(rank)];
+                                            const formatted = eff ? formatPerkEffect(eff) : null;
+                                            const isMax = rank === 6;
+
+                                            return (
+                                                <div
+                                                    key={rank}
+                                                    className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${
+                                                        isMax
+                                                            ? "border-primary/50 bg-primary/[0.07] shadow-xs"
+                                                            : "border-border/60 bg-muted/15"
+                                                    }`}
+                                                >
+                                                    <div className="flex shrink-0 items-center gap-1.5">
+                                                        <span
+                                                            className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${
+                                                                isMax
+                                                                    ? "bg-primary text-primary-foreground"
+                                                                    : "border border-border/70 bg-card text-foreground"
+                                                            }`}
+                                                        >
+                                                            +{rank}
+                                                        </span>
+                                                        {isMax ? (
+                                                            <span className="rounded-sm bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase">
+                                                                Max
+                                                            </span>
+                                                        ) : null}
+                                                    </div>
+                                                    <p className="min-w-0 flex-1 leading-relaxed text-foreground/90 pt-0.5">
+                                                        {formatted ? cleanText(formatted) : perk.description}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ) : null}
                         </div>
                     </>
                 );
@@ -1622,7 +1529,6 @@ const DatabaseBrowser = () => {
     // Search queries
     const [weaponQuery, setWeaponQuery] = useState("");
     const [armourQuery, setArmourQuery] = useState("");
-    const [perkQuery, setPerkQuery] = useState("");
     const [cellQuery, setCellQuery] = useState("");
     const [miscQuery, setMiscQuery] = useState("");
 
@@ -1633,7 +1539,6 @@ const DatabaseBrowser = () => {
     const [armourSlot, setArmourSlot] = useState<string | null>(null);
     const [armourElement, setArmourElement] = useState<string | null>(null);
 
-    const [perkSlot, setPerkSlot] = useState<string | null>(null);
     const [cellSlot, setCellSlot] = useState<string | null>(null);
 
     const [miscKind, setMiscKind] = useState<string | null>(null);
@@ -1641,21 +1546,18 @@ const DatabaseBrowser = () => {
     // Collapsible drawer toggle states
     const [weaponFiltersOpen, setWeaponFiltersOpen] = useState(false);
     const [armourFiltersOpen, setArmourFiltersOpen] = useState(false);
-    const [perkFiltersOpen, setPerkFiltersOpen] = useState(false);
     const [cellFiltersOpen, setCellFiltersOpen] = useState(false);
     const [miscFiltersOpen, setMiscFiltersOpen] = useState(false);
 
     // Pagination states (1-based index)
     const [weaponPage, setWeaponPage] = useState(1);
     const [armourPage, setArmourPage] = useState(1);
-    const [perkPage, setPerkPage] = useState(1);
     const [cellPage, setCellPage] = useState(1);
     const [miscPage, setMiscPage] = useState(1);
 
     // Reset pagination to 1 whenever search query or filters change
     useEffect(() => { setWeaponPage(1); }, [weaponQuery, weaponElement, weaponType]);
     useEffect(() => { setArmourPage(1); }, [armourQuery, armourSlot, armourElement]);
-    useEffect(() => { setPerkPage(1); }, [perkQuery, perkSlot]);
     useEffect(() => { setCellPage(1); }, [cellQuery, cellSlot]);
     useEffect(() => { setMiscPage(1); }, [miscQuery, miscKind]);
 
@@ -1706,28 +1608,15 @@ const DatabaseBrowser = () => {
             .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
     }, [armourQuery, armourSlot, armourElement]);
 
-    const perks = useMemo(() => {
-        return Object.values(gameData.perks)
-            .filter(perk => {
-                if (perkQuery) {
-                    const q = normalize(perkQuery);
-                    const text = normalize(`${perk.name} ${perk.type} ${perk.description}`);
-                    if (!text.includes(q)) return false;
-                }
-                if (perkSlot && perk.type !== perkSlot) {
-                    return false;
-                }
-                return true;
-            })
-            .sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
-    }, [perkQuery, perkSlot]);
-
     const cells = useMemo(() => {
         return Object.values(gameData.cells)
             .filter(cell => {
                 if (cellQuery) {
                     const q = normalize(cellQuery);
-                    const text = normalize(`${cell.name} ${cell.slot}`);
+                    const firstVariant = Object.values(cell.variants)[0];
+                    const perkName = firstVariant ? Object.keys(firstVariant.perks)[0] : "";
+                    const perk = perkName ? ((gameData.perks as Record<string, PerkData>)[perkName] ?? null) : null;
+                    const text = normalize(`${cell.name} ${cell.slot} ${perkName} ${perk?.description ?? ""}`);
                     if (!text.includes(q)) return false;
                 }
                 if (cellSlot && cell.slot !== cellSlot) {
@@ -1772,11 +1661,6 @@ const DatabaseBrowser = () => {
         return armours.slice(start, start + PAGE_SIZE);
     }, [armours, armourPage]);
 
-    const paginatedPerks = useMemo(() => {
-        const start = (perkPage - 1) * PAGE_SIZE;
-        return perks.slice(start, start + PAGE_SIZE);
-    }, [perks, perkPage]);
-
     const paginatedCells = useMemo(() => {
         const start = (cellPage - 1) * PAGE_SIZE;
         return cells.slice(start, start + PAGE_SIZE);
@@ -1790,7 +1674,6 @@ const DatabaseBrowser = () => {
     // Total page counts
     const totalWeaponPages = Math.max(1, Math.ceil(weapons.length / PAGE_SIZE));
     const totalArmourPages = Math.max(1, Math.ceil(armours.length / PAGE_SIZE));
-    const totalPerkPages = Math.max(1, Math.ceil(perks.length / PAGE_SIZE));
     const totalCellPages = Math.max(1, Math.ceil(cells.length / PAGE_SIZE));
     const totalMiscPages = Math.max(1, Math.ceil(miscItems.length / PAGE_SIZE));
 
@@ -1799,7 +1682,6 @@ const DatabaseBrowser = () => {
     const databaseTabs = [
         { value: "weapons", label: `Weapons (${weapons.length})` },
         { value: "armour", label: `Armour (${armours.length})` },
-        { value: "perks", label: `Perks (${perks.length})` },
         { value: "cells", label: `Cells (${cells.length})` },
         { value: "misc", label: `Lanterns & Omnicells (${miscItems.length})` },
     ];
@@ -1973,70 +1855,12 @@ const DatabaseBrowser = () => {
                 )}
             </TabsContent>
 
-            {/* Perks Tab */}
-            <TabsContent value="perks" className="mt-4">
-                <SearchWithFilters
-                    value={perkQuery}
-                    onChange={setPerkQuery}
-                    placeholder="Search perks by name, category or description…"
-                    isOpen={perkFiltersOpen}
-                    onOpen={() => setPerkFiltersOpen(true)}
-                    onToggle={() => setPerkFiltersOpen(prev => !prev)}
-                    onClearAll={() => setPerkSlot(null)}
-                    filters={[
-                        {
-                            title: "Category",
-                            options: CELL_SLOTS,
-                            selected: perkSlot,
-                            onChange: setPerkSlot,
-                        },
-                    ]}
-                />
-
-                {paginatedPerks.length === 0 ? (
-                    <EmptyState
-                        onReset={() => {
-                            setPerkQuery("");
-                            setPerkSlot(null);
-                        }}
-                    />
-                ) : (
-                    <>
-                        <Pagination
-                            position="top"
-                            currentPage={perkPage}
-                            totalPages={totalPerkPages}
-                            totalItems={perks.length}
-                            pageSize={PAGE_SIZE}
-                            onPageChange={setPerkPage}
-                        />
-                        <Grid>
-                            {paginatedPerks.map(perk => (
-                                <PerkRow
-                                    key={perk.name}
-                                    perk={perk}
-                                    onSelect={() => setSelectedItem({ kind: "perk", data: perk })}
-                                />
-                            ))}
-                        </Grid>
-                        <Pagination
-                            position="bottom"
-                            currentPage={perkPage}
-                            totalPages={totalPerkPages}
-                            totalItems={perks.length}
-                            pageSize={PAGE_SIZE}
-                            onPageChange={setPerkPage}
-                        />
-                    </>
-                )}
-            </TabsContent>
-
             {/* Cells Tab */}
             <TabsContent value="cells" className="mt-4">
                 <SearchWithFilters
                     value={cellQuery}
                     onChange={setCellQuery}
-                    placeholder="Search cells by name or slot…"
+                    placeholder="Search cells by name, slot, or perk effect…"
                     isOpen={cellFiltersOpen}
                     onOpen={() => setCellFiltersOpen(true)}
                     onToggle={() => setCellFiltersOpen(prev => !prev)}
