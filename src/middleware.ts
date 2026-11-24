@@ -18,7 +18,8 @@ const BLOCKED_PATTERNS = [
     /\/actuator/i,
     /\/telescope/i,
     /\/webconsole/i,
-    /\.(php|asp|aspx|jsp|cgi)$/i,
+    /\/etc\/(passwd|shadow|hosts)/i,
+    /\.(php|asp|aspx|jsp|cgi|sql|bak|tar|gz|zip|sh|bash)$/i,
 ];
 
 // Standard security headers applied across all responses
@@ -40,7 +41,11 @@ export function middleware(request: NextRequest) {
     }
 
     // 2. Path Traversal & Suspicious Probe Blocking
-    if (pathname.includes("..") || pathname.includes("//")) {
+    if (
+        pathname.includes("..") ||
+        search.includes("..") ||
+        request.url.toLowerCase().includes("%2e%2e")
+    ) {
         return new NextResponse("Bad Request", { status: 400 });
     }
 
