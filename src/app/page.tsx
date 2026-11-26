@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
-import BuildSuggestions from "@/components/build-suggestions";
+import UnifiedBuildsHub from "@/components/builds/unified-builds-hub";
 import DatabaseBrowser from "@/components/browse-database";
 import LandingPage from "@/components/landing-page";
 import { Footer } from "@/components/site-footer";
@@ -69,7 +69,7 @@ const Home = async ({ searchParams }: HomeProps) => {
             ) : (isSuggestions || isLiked) ? (
                 <>
                     <Suspense fallback={null}>
-                        <BuildSuggestions defaultLikedOnly={isLiked} />
+                        <UnifiedBuildsHub initialTab={isLiked ? "liked" : "meta"} />
                     </Suspense>
                     <Footer />
                 </>

@@ -41,14 +41,20 @@ export const extractBuildId = (input: string): string | null => {
         return null;
     }
 
-    // full URL form: https://some.host/b/<id> (extra query/hash tolerated)
-    const match = trimmed.match(/\/b\/([A-Za-z0-9_.\-~]{40,})/);
+    // full URL form: https://reforged.dauntless-builder.com/b/<id> or any /b/<id> link
+    const match = trimmed.match(/\/b\/([A-Za-z0-9_.\-~]{16,})/);
     if (match) {
         return match[1];
     }
 
+    // query param form: /builder?b=<id>
+    const queryMatch = trimmed.match(/[?&]b=([A-Za-z0-9_.\-~]{16,})/);
+    if (queryMatch) {
+        return queryMatch[1];
+    }
+
     // raw id form
-    if (/^[A-Za-z0-9_.\-~]{40,}$/.test(trimmed)) {
+    if (/^[A-Za-z0-9_.\-~]{16,}$/.test(trimmed)) {
         return trimmed;
     }
 

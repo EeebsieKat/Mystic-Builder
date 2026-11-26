@@ -61,15 +61,18 @@ export function middleware(request: NextRequest) {
     // 3. Rate Limiting for API routes
     if (pathname.startsWith("/api/")) {
         const clientIp = getClientIp(request.headers);
+        const isAuthAttempt =
+            pathname === "/api/auth/login" || pathname === "/api/auth/register";
         const isMutation =
-            request.method !== "GET" && request.method !== "HEAD" ||
+            (request.method !== "GET" && request.method !== "HEAD") ||
             pathname.includes("/like") ||
             pathname.includes("/views");
 
-        // Stricter limit for mutation/vote/view tracking (30/min), standard for general API (120/min)
-        const limit = isMutation ? 30 : 120;
+        // Strictest limit for auth brute-force defense (10/min), mutation/tracking (30/min), general API (120/min)
+        const limit = isAuthAttempt ? 10 : isMutation ? 30 : 120;
         const windowMs = 60_000;
-        const key = `${isMutation ? "mutation" : "api"}:${clientIp}`;
+        const bucket = isAuthAttempt ? "auth" : isMutation ? "mutation" : "api";
+        const key = `${bucket}:${clientIp}`;
 
         const rateLimitResult = rateLimiter.check(key, limit, windowMs);
 

@@ -23,18 +23,20 @@ const PERK_ICON = (perkRow: PerkRow): string =>
     perkRow.cellSlot ? `/assets/icons/perks/${perkRow.cellSlot}.png` : "/assets/icons/perks/Prismatic.png";
 
 const DetailPerkRow = ({ perk }: { perk: PerkRow }) => (
-    <div className="flex gap-4 py-[7px]">
-        <ItemIcon icon={PERK_ICON(perk)} alt="" size={40} className="mt-[3px] shrink-0" />
-        <div className="flex w-[210px] shrink-0 flex-col gap-[2px] pt-[2px]">
-            <span className="text-[16.5px] font-bold leading-tight text-[#e8e4da]">
-                {perk.name}
-                {perk.fromCell ? " Cell" : ""}
-            </span>
-            <span className="text-[12px] tracking-[0.05em] text-[#9a9a94]">PERK POINTS: {perk.points}</span>
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 py-[9px] sm:py-[7px]">
+        <div className="flex items-start gap-3 sm:contents">
+            <ItemIcon icon={PERK_ICON(perk)} alt="" size={40} className="mt-[2px] sm:mt-[3px] shrink-0" />
+            <div className="flex min-w-0 flex-1 sm:flex-none sm:w-[210px] sm:shrink-0 flex-col gap-[2px] pt-[2px]">
+                <span className="text-[15.5px] sm:text-[16.5px] font-bold leading-tight text-[#e8e4da]">
+                    {perk.name}
+                    {perk.fromCell ? " Cell" : ""}
+                </span>
+                <span className="text-[12px] tracking-[0.05em] text-[#9a9a94]">PERK POINTS: {perk.points}</span>
+            </div>
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-[3px] pt-[2px]">
-            <p className="text-[14.5px] leading-[1.38] text-[#cfcfc9]">{highlightGameText(perk.description)}</p>
-            <span className="text-[12px] tracking-[0.05em] text-[#84888f]">
+            <p className="text-[13.5px] sm:text-[14.5px] leading-[1.38] text-[#cfcfc9]">{highlightGameText(perk.description)}</p>
+            <span className="text-[11.5px] sm:text-[12px] tracking-[0.05em] text-[#84888f]">
                 ACTIVATES AT: {perk.activatesAt} PERK POINT{perk.activatesAt === 1 ? "" : "S"}
             </span>
         </div>
@@ -71,8 +73,8 @@ const DetailHeader = ({
     armour?: Armour | null;
     appearance: string;
 }) => (
-    <div className="flex items-start justify-between gap-6 border-b border-[#3a3f47]/70 pb-[12px]">
-        <div className="flex min-w-0 flex-col gap-[6px]">
+    <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-6 border-b border-[#3a3f47]/70 pb-[12px]">
+        <div className="flex min-w-0 w-full sm:w-auto flex-col gap-[6px]">
             <span className="flex items-center gap-2">
                 {weapon?.elemental && (
                     <ItemIcon icon={`/assets/icons/elements/${weapon.elemental}.png`} alt={weapon.elemental} size={22} />
@@ -80,10 +82,10 @@ const DetailHeader = ({
                 {armour?.strength && (
                     <ItemIcon icon={`/assets/icons/elements/${armour.strength}.png`} alt={armour.strength} size={22} />
                 )}
-                <span className="text-[15px] italic text-[#9a9a94]">Appearance: {appearance}</span>
+                <span className="text-[14px] sm:text-[15px] italic text-[#9a9a94]">Appearance: {appearance}</span>
             </span>
             <span
-                className="lo-serif text-[27px] font-semibold leading-none tracking-[0.03em]"
+                className="lo-serif text-[22px] sm:text-[27px] font-semibold leading-tight sm:leading-none tracking-[0.03em] break-words"
                 style={getTextGlowStyle(
                     weapon?.elemental
                         ? elementColor(weapon.elemental)
@@ -94,7 +96,7 @@ const DetailHeader = ({
             >
                 {item.name}
             </span>
-            <span className="lo-gold-rule mt-[3px] block w-[290px]" aria-hidden />
+            <span className="lo-gold-rule mt-[3px] block w-full max-w-[290px]" aria-hidden />
         </div>
         {statValue !== null && (
             <div className="flex shrink-0 items-stretch gap-[10px]">

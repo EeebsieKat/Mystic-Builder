@@ -64,7 +64,7 @@ export const PerkTierHoverTooltip = ({
                 side={side || (inline ? "top" : "left")}
                 align="center"
                 sideOffset={14}
-                className="z-[100] w-[340px] sm:w-[400px] max-h-[82vh] overflow-y-auto rounded-xl border border-border/80 bg-[#070c14]/98 p-4 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-2xl"
+                className="z-[100] w-[calc(100vw-24px)] max-w-[400px] sm:w-[400px] max-h-[82vh] overflow-y-auto rounded-xl border border-border/80 bg-[#070c14]/98 p-4 shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-2xl"
             >
                 <div className="flex flex-col gap-3 text-left">
                     {/* Header */}

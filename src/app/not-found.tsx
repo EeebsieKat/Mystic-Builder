@@ -33,12 +33,6 @@ export default function NotFound() {
                     </div>
                 </div>
 
-                {/* Status Code Badge */}
-                <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-amber-300">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping" />
-                    Error 404 • Lost In The Aetheric Void
-                </div>
-
                 {/* Big stylized 404 */}
                 <h1 className="font-display text-7xl font-extrabold tracking-wider sm:text-8xl md:text-9xl bg-gradient-to-b from-amber-100 via-amber-300 to-amber-600 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(245,158,11,0.25)]">
                     404
@@ -64,9 +58,9 @@ export default function NotFound() {
                     </Button>
 
                     <Button asChild variant="outline" size="lg" className="gap-2">
-                        <Link href="/?tab=suggestions">
+                        <Link href="/builds">
                             <Flame className="h-4 w-4 text-amber-400" />
-                            Browse Meta Builds
+                            Browse Builds & Community
                         </Link>
                     </Button>
 

@@ -181,10 +181,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     color-scheme: dark;
     overflow-x: clip;
+    scrollbar-gutter: stable;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body), "Inter", "Segoe UI", system-ui, sans-serif;
@@ -230,14 +233,12 @@ body::after {
 
 /* Gold gradient rule used under the site header and section titles. */
 .gold-rule {
-  background-image: linear-gradient(
-    to right,
-    transparent,
-    rgba(224, 194, 135, 0.3) 20%,
-    rgba(224, 194, 135, 0.75) 50%,
-    rgba(224, 194, 135, 0.3) 80%,
-    transparent
-  );
+  background-image: linear-gradient(to right,
+      transparent,
+      rgba(224, 194, 135, 0.3) 20%,
+      rgba(224, 194, 135, 0.75) 50%,
+      rgba(224, 194, 135, 0.3) 80%,
+      transparent);
   height: 1px;
 }
 
@@ -252,13 +253,11 @@ body::after {
 
 /* Lantern-gold gradient headline text. */
 @utility text-gold-gradient {
-  background-image: linear-gradient(
-    100deg,
-    #e0c287 0%,
-    #f4e5c3 35%,
-    #b8955a 70%,
-    #e0c287 100%
-  );
+  background-image: linear-gradient(100deg,
+      #e0c287 0%,
+      #f4e5c3 35%,
+      #b8955a 70%,
+      #e0c287 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -279,10 +278,12 @@ body::after {
 /* ------------------------------------------------------------------ */
 
 @keyframes mystic-pulse {
+
   0%,
   100% {
     box-shadow: 0 0 18px 2px rgba(91, 163, 255, 0.3), 0 0 46px 8px rgba(91, 163, 255, 0.12);
   }
+
   50% {
     box-shadow: 0 0 26px 6px rgba(91, 163, 255, 0.45), 0 0 60px 14px rgba(91, 163, 255, 0.2);
   }
@@ -381,6 +382,7 @@ body::after {
 .lo-serif {
   font-family: var(--font-display), "Cinzel", "Times New Roman", serif;
 }
+
 .lo-sans {
   font-family: var(--font-body), "Inter", "Segoe UI", sans-serif;
 }
@@ -408,12 +410,10 @@ body::after {
   height: 1600px;
   top: -260px;
   transform: rotate(30deg);
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 251, 240, 0.035) 0%,
-    rgba(255, 251, 240, 0.018) 45%,
-    transparent 80%
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 251, 240, 0.035) 0%,
+      rgba(255, 251, 240, 0.018) 45%,
+      transparent 80%);
   filter: blur(6px);
   pointer-events: none;
 }
@@ -422,12 +422,10 @@ body::after {
 .lo-pedestal {
   position: absolute;
   border-radius: 9999px;
-  background: radial-gradient(
-    closest-side,
-    rgba(120, 140, 170, 0.14) 0%,
-    rgba(90, 110, 150, 0.07) 45%,
-    transparent 75%
-  );
+  background: radial-gradient(closest-side,
+      rgba(120, 140, 170, 0.14) 0%,
+      rgba(90, 110, 150, 0.07) 45%,
+      transparent 75%);
   pointer-events: none;
 }
 
@@ -462,6 +460,7 @@ body::after {
   position: absolute;
   inset: 0;
 }
+
 .lo-selected-frame::before,
 .lo-selected-frame::after {
   content: "";
@@ -470,12 +469,14 @@ body::after {
   height: 18px;
   border: 2px solid var(--lo-gold);
 }
+
 .lo-selected-frame::before {
   left: 3px;
   top: 3px;
   border-right: none;
   border-bottom: none;
 }
+
 .lo-selected-frame::after {
   right: 3px;
   bottom: 3px;
@@ -506,6 +507,7 @@ body::after {
   background: var(--lo-gauge-track);
   overflow: hidden;
 }
+
 .lo-gauge-fill {
   height: 100%;
   border-radius: 2px;
@@ -537,11 +539,13 @@ body::after {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
   transition: color 150ms ease, text-shadow 150ms ease;
 }
+
 .lo-button-text:hover,
 .lo-button-text:focus-visible {
   color: var(--lo-gold);
   text-shadow: 0 0 14px rgba(224, 163, 62, 0.5);
 }
+
 .lo-button-text:disabled {
   opacity: 0.35;
   pointer-events: none;
@@ -550,12 +554,10 @@ body::after {
 /* Gold gradient rule under item names in the detail card. */
 .lo-gold-rule {
   height: 1px;
-  background: linear-gradient(
-    to right,
-    rgba(224, 163, 62, 0.85) 0%,
-    rgba(200, 149, 90, 0.45) 65%,
-    transparent 100%
-  );
+  background: linear-gradient(to right,
+      rgba(224, 163, 62, 0.85) 0%,
+      rgba(200, 149, 90, 0.45) 65%,
+      transparent 100%);
 }
 
 /* Diamond-ended flourish rules flanking section headers. */
@@ -564,6 +566,7 @@ body::after {
   flex: 1 1 0%;
   background: linear-gradient(to right, transparent, rgba(190, 186, 174, 0.55));
 }
+
 .lo-flourish-r {
   background: linear-gradient(to left, transparent, rgba(190, 186, 174, 0.55));
 }
@@ -576,9 +579,11 @@ body::after {
   border-radius: 3px;
   transition: border-color 150ms ease;
 }
+
 .lo-perk-row:hover {
   border-color: #565d68;
 }
+
 .lo-perk-row-inactive {
   opacity: 0.78;
 }
@@ -591,6 +596,7 @@ body::after {
   border-radius: 3px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.5);
 }
+
 .lo-plaque-blue {
   background: linear-gradient(180deg, #41517c 0%, #2c3a5e 100%);
   border: 1px solid rgba(224, 163, 62, 0.4);
@@ -616,9 +622,11 @@ body::after {
   border-radius: 4px;
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
+
 .lo-consumable:hover {
   border-color: #565d68;
 }
+
 .lo-consumable-locked {
   cursor: not-allowed;
 }
@@ -629,12 +637,14 @@ body::after {
   background: rgba(4, 5, 7, 0.88);
   backdrop-filter: blur(3px);
 }
+
 .lo-picker-card {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0) 45%), var(--lo-card);
   border: 1px solid var(--lo-border);
   border-radius: 4px;
   transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
 }
+
 .lo-picker-card:hover,
 .lo-picker-card[data-active="true"] {
   border-color: var(--lo-gold);
@@ -649,11 +659,13 @@ body::after {
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .lo-fade-in {
   animation: lo-fade-in 220ms ease-out;
 }
@@ -662,20 +674,24 @@ body::after {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 .lo-overlay-in {
   animation: lo-overlay-in 160ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .lo-fade-in,
   .lo-overlay-in {
     animation: none;
   }
-  .card-focus-grid:has(> *:hover) > *:not(:hover) {
+
+  .card-focus-grid:has(> *:hover)>*:not(:hover) {
     transform: none;
   }
 }
@@ -686,12 +702,9 @@ body::after {
   /* container for card hover spotlight */
 }
 
-.card-focus-grid:has(> *:hover) > *:not(:hover),
-.card-focus-grid:has(> *:focus-visible) > *:not(:focus-visible) {
+.card-focus-grid:has(> *:hover)>*:not(:hover),
+.card-focus-grid:has(> *:focus-visible)>*:not(:focus-visible) {
   opacity: 0.70;
   transform: scale(0.99);
   filter: brightness(0.94);
 }
-
-
-

@@ -2,50 +2,33 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import {
     Check,
     Compass,
     Copy,
     ExternalLink,
-    Eye,
     Heart,
+    MessageSquare,
     Plus,
     RotateCcw,
     Search,
-    Sparkles,
-    Zap,
+    User,
     X,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import metaBuildsData from "@/game/meta-builds-indexed.json";
 import { gameData } from "@/game/data";
-import { parseBuildId } from "@/game/build-view";
-import type { CellType } from "@/game/types";
-import { cellTypeColor, cellTypeIcon, cellTypeLabel, elementColor, getTextGlowStyle } from "@/lib/site";
-import { highlightGameText } from "@/lib/game-text-highlighter";
-import { getClientId, getClientFingerprint } from "@/lib/client-id";
-import { PerkTierHoverTooltip } from "@/components/loadout/perk-summary-dialog";
+import type { CommunityBuildRecord } from "@/lib/community-types";
+import { elementColor } from "@/lib/site";
+import { toast } from "@/hooks/use-toast";
+import type { AuthUser } from "@/components/auth/auth-card";
 
 /* ------------------------------------------------------------------ */
 /* Types & Configurations                                             */
@@ -125,637 +108,21 @@ const POPULAR_PERK_FILTERS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* Hover Tooltip Helpers (Omnicells, Lanterns, Perks)                 */
-/* ------------------------------------------------------------------ */
-
-const interpolate = (
-    text: string | null | undefined,
-    values?: Record<string, string | number> | null,
-): string =>
-    String(text ?? "")
-        .replace(/\{\{(\w+)\}\}/g, (_match, key: string) =>
-            values && key in values ? String(values[key]) : "",
-        )
-        .replace(/\{\{NL\}\}/g, " ")
-        .replace(/<[^>]+>/g, "")
-        .replace(/\s*\n\s*/g, " ")
-        .trim();
-
-const formatPerkEffect = (eff?: { description: string | (string | null)[]; values?: Record<string, string | number> }): string => {
-    if (!eff) return "";
-    const descs = Array.isArray(eff.description) ? eff.description.filter(Boolean) : [eff.description];
-    return descs
-        .map(str => interpolate(str as string, eff.values))
-        .filter(Boolean)
-        .join(", ");
-};
-
-interface OmnicellHoverTooltipProps {
-    name?: string | null;
-    children: React.ReactNode;
-}
-
-const OmnicellHoverTooltip = ({ name, children }: OmnicellHoverTooltipProps) => {
-    if (!name) return <>{children}</>;
-    const omnicell = gameData.omnicells[name];
-    if (!omnicell) return <>{children}</>;
-
-    const passiveText = interpolate(omnicell.passive, omnicell.passive_values);
-    const activeText = interpolate(omnicell.active, omnicell.active_values);
-
-    return (
-        <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help w-full">{children}</div>
-            </HoverCardTrigger>
-            <HoverCardContent
-                side="top"
-                align="center"
-                className="z-50 w-80 sm:w-96 rounded-xl border border-border/80 bg-card/98 p-4 shadow-2xl backdrop-blur-xl"
-            >
-                <div className="flex flex-col gap-3.5 text-left">
-                    {/* Passive Ability */}
-                    <div className="flex items-start gap-3">
-                        <div className="relative h-9 w-9 flex-shrink-0 rounded-lg border border-border/60 bg-muted/30 p-1">
-                            <Image
-                                src={omnicell.icon}
-                                alt={omnicell.name}
-                                fill
-                                sizes="36px"
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-foreground">{omnicell.name}</h4>
-                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                                <strong className="text-foreground font-semibold">Passive: </strong>
-                                {highlightGameText(passiveText)}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="h-px w-full bg-border/40" />
-
-                    {/* Active Ability */}
-                    <div className="flex items-start gap-3">
-                        <div className="relative h-9 w-9 flex-shrink-0 rounded-lg border border-primary/30 bg-primary/10 p-1">
-                            <Image
-                                src={omnicell.ability_icon || omnicell.icon}
-                                alt={`${omnicell.name} Active`}
-                                fill
-                                sizes="36px"
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-foreground">
-                                {omnicell.name} Active Ability
-                            </h4>
-                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                                <strong className="text-foreground font-semibold">Active: </strong>
-                                {highlightGameText(activeText)}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </HoverCardContent>
-        </HoverCard>
-    );
-};
-
-interface LanternHoverTooltipProps {
-    name?: string | null;
-    children: React.ReactNode;
-}
-
-const LanternHoverTooltip = ({ name, children }: LanternHoverTooltipProps) => {
-    if (!name) return <>{children}</>;
-    const lantern = gameData.lanterns[name];
-    if (!lantern) return <>{children}</>;
-
-    const instantText = lantern.lantern_ability?.instant
-        ? interpolate(lantern.lantern_ability.instant, lantern.values)
-        : null;
-    const holdText = lantern.lantern_ability?.hold
-        ? interpolate(lantern.lantern_ability.hold, lantern.values)
-        : null;
-
-    return (
-        <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help w-full">{children}</div>
-            </HoverCardTrigger>
-            <HoverCardContent
-                side="top"
-                align="center"
-                className="z-50 w-80 sm:w-96 rounded-xl border border-border/80 bg-card/98 p-4 shadow-2xl backdrop-blur-xl"
-            >
-                <div className="flex flex-col gap-2.5 text-left">
-                    <div className="flex items-start gap-3">
-                        <div className="relative h-9 w-9 flex-shrink-0 rounded-lg border border-border/60 bg-muted/30 p-1">
-                            <Image
-                                src={lantern.icon}
-                                alt={lantern.name}
-                                fill
-                                sizes="36px"
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-bold text-foreground">{lantern.name}</h4>
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground">
-                                Lantern Ability
-                            </span>
-                        </div>
-                    </div>
-
-                    {instantText && (
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                            <strong className="text-foreground font-semibold">Instant (Tap): </strong>
-                            {highlightGameText(instantText)}
-                        </p>
-                    )}
-
-                    {holdText && (
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                            <strong className="text-foreground font-semibold">Hold: </strong>
-                            {highlightGameText(holdText)}
-                        </p>
-                    )}
-                </div>
-            </HoverCardContent>
-        </HoverCard>
-    );
-};
-
-interface PerkHoverTooltipProps {
-    name: string;
-    rank?: number;
-    children: React.ReactNode;
-}
-
-const PerkHoverTooltip = ({ name, rank = 6, children }: PerkHoverTooltipProps) => {
-    const perk = gameData.perks[name];
-    if (!perk) return <>{children}</>;
-
-    const clampedRank = Math.max(1, Math.min(6, rank));
-    const effect = perk.effects?.[String(clampedRank)];
-    const effectDesc = effect
-        ? interpolate(effect.description, effect.values)
-        : perk.description;
-
-    return (
-        <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help inline-flex">{children}</div>
-            </HoverCardTrigger>
-            <HoverCardContent
-                side="top"
-                align="center"
-                className="z-50 w-72 rounded-xl border border-border/80 bg-card/98 p-3 shadow-2xl backdrop-blur-xl"
-            >
-                <div className="flex flex-col gap-1.5 text-left">
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-foreground">{perk.name}</span>
-                        <Badge variant="outline" className="text-[10px] border-primary/40 text-primary">
-                            +{clampedRank} ({perk.type})
-                        </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                        {highlightGameText(effectDesc)}
-                    </p>
-                </div>
-            </HoverCardContent>
-        </HoverCard>
-    );
-};
-
-interface WeaponHoverTooltipProps {
-    name?: string | null;
-    isBond?: boolean;
-    slottedCells?: { cellName?: string | null; slot?: string | null }[] | null;
-    children: React.ReactNode;
-}
-
-const WeaponHoverTooltip = ({ name, isBond = false, slottedCells, children }: WeaponHoverTooltipProps) => {
-    if (!name) return <>{children}</>;
-
-    const weapon =
-        gameData.weapons[name] ||
-        Object.values(gameData.weapons).find(w => w.name.toLowerCase() === name.toLowerCase());
-
-    if (!weapon) return <>{children}</>;
-
-    const surgedPerk = weapon.perks?.find(p => p.powerSurged) || weapon.perks?.[0];
-    const perkDef = surgedPerk ? gameData.perks[surgedPerk.name] : null;
-    const perkTier = surgedPerk ? Math.min(6, Math.max(1, surgedPerk.value)) : null;
-    const perkEffect = perkTier && perkDef?.effects?.[String(perkTier)]
-        ? interpolate(perkDef.effects[String(perkTier)].description, perkDef.effects[String(perkTier)].values)
-        : perkDef?.description;
-
-    const surgedEffect = weapon.unique_effects?.find(e => e.powerSurged) || weapon.unique_effects?.[0];
-    const uniqueEffectText = surgedEffect
-        ? interpolate(surgedEffect.description, surgedEffect.values)
-        : null;
-
-    const cellsList: CellType[] = Array.isArray(weapon.cells)
-        ? (weapon.cells.filter(Boolean) as CellType[])
-        : weapon.cells
-            ? [weapon.cells]
-            : [];
-
-    return (
-        <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help inline-flex w-full">{children}</div>
-            </HoverCardTrigger>
-            <HoverCardContent
-                side="top"
-                align="center"
-                className="z-50 w-80 sm:w-96 rounded-xl border border-border/80 bg-card/98 p-4 shadow-2xl backdrop-blur-xl"
-            >
-                <div className="flex flex-col gap-3 text-left">
-                    {/* Header */}
-                    <div className="flex items-start gap-3">
-                        <div
-                            className="relative h-11 w-11 flex-shrink-0 rounded-lg border bg-muted/30 p-1"
-                            style={{
-                                borderColor: weapon.elemental ? `${elementColor(weapon.elemental)}60` : undefined,
-                            }}
-                        >
-                            <Image
-                                src={weapon.icon}
-                                alt={weapon.name}
-                                fill
-                                sizes="44px"
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                                <h4 className="text-sm font-bold text-foreground leading-tight">{weapon.name}</h4>
-                                {isBond && (
-                                    <Badge
-                                        variant="outline"
-                                        className="text-[9px] border-primary/50 bg-primary/15 text-primary uppercase font-bold py-0 h-4"
-                                    >
-                                        Bond
-                                    </Badge>
-                                )}
-                            </div>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {weapon.type} {weapon.behemoth ? `• Forged from ${weapon.behemoth}` : ""}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Meta row: Element, Power, Sockets */}
-                    <div className="flex items-center gap-2 flex-wrap text-xs">
-                        {weapon.elemental ? (
-                            <div
-                                className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-bold border"
-                                style={{
-                                    borderColor: `${elementColor(weapon.elemental)}70`,
-                                    backgroundColor: `${elementColor(weapon.elemental)}18`,
-                                    color: elementColor(weapon.elemental),
-                                }}
-                            >
-                                <div className="relative h-3 w-3 flex-shrink-0">
-                                    <Image
-                                        src={`/assets/icons/elements/${weapon.elemental}.png`}
-                                        alt={weapon.elemental}
-                                        fill
-                                        sizes="12px"
-                                        className="object-contain"
-                                    />
-                                </div>
-                                <span>{weapon.elemental}</span>
-                            </div>
-                        ) : (
-                            <Badge variant="secondary" className="text-[10px]">
-                                Neutral
-                            </Badge>
-                        )}
-
-                        <Badge variant="outline" className="text-[10px] border-border/60 text-muted-foreground">
-                            Power {weapon.power?.base ?? 100}{weapon.power?.powerSurged ? ` (${weapon.power.powerSurged} Surged)` : ""}
-                        </Badge>
-
-                        {cellsList.length > 0 && (
-                            <div className="flex items-center gap-1 ml-auto">
-                                <span className="text-[10px] text-muted-foreground font-medium">Slots:</span>
-                                {cellsList.map((slot, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="relative h-4 w-4 flex-shrink-0"
-                                        title={`${slot} slot`}
-                                    >
-                                        <Image
-                                            src={cellTypeIcon(slot)}
-                                            alt={slot}
-                                            fill
-                                            sizes="16px"
-                                            className="object-contain"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Inherent Perk */}
-                    {surgedPerk && (
-                        <div className="rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-2.5 flex flex-col gap-1">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[10px] uppercase font-bold text-amber-300 flex items-center gap-1">
-                                    <Sparkles className="h-3 w-3 text-amber-400" />
-                                    Inherent Perk
-                                </span>
-                                <Badge
-                                    variant="outline"
-                                    className="border-amber-400/50 bg-amber-400/20 text-amber-300 text-[10px] font-bold py-0 h-4"
-                                >
-                                    +{surgedPerk.value} {surgedPerk.name}
-                                </Badge>
-                            </div>
-                            {perkEffect && (
-                                <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-                                    {highlightGameText(perkEffect)}
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Slotted Cells info if present */}
-                    {slottedCells && slottedCells.length > 0 && (
-                        <div className="rounded-lg border border-border/60 bg-muted/20 p-2.5 flex flex-col gap-2">
-                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                                Slotted Cells
-                            </span>
-                            <div className="flex flex-col gap-2">
-                                {slottedCells.map((sc, idx) => {
-                                    if (!sc.cellName) return null;
-                                    const pName = sc.cellName.replace(/\s+Cell$/i, "");
-                                    const pDef = (gameData.perks as Record<string, any>)[pName];
-                                    const cellEff = pDef?.effects?.["3"];
-                                    const cellDesc = cellEff ? formatPerkEffect(cellEff) : pDef?.description;
-
-                                    return (
-                                        <div key={idx} className="flex flex-col gap-1">
-                                            <div className="flex items-center justify-between gap-2">
-                                                <div className="flex items-center gap-2 min-w-0">
-                                                    {sc.slot ? (
-                                                        <div className="relative h-4 w-4 flex-shrink-0">
-                                                            <Image
-                                                                src={cellTypeIcon(sc.slot)}
-                                                                alt={sc.slot}
-                                                                fill
-                                                                sizes="16px"
-                                                                className="object-contain"
-                                                            />
-                                                        </div>
-                                                    ) : null}
-                                                    <span className="text-xs font-semibold text-foreground truncate">
-                                                        {sc.cellName}
-                                                    </span>
-                                                </div>
-                                                <Badge variant="outline" className="text-[9px] text-muted-foreground border-border/50">
-                                                    {sc.slot} (+3)
-                                                </Badge>
-                                            </div>
-                                            {cellDesc && (
-                                                <p className="text-xs text-muted-foreground leading-relaxed">
-                                                    {highlightGameText(cellDesc)}
-                                                </p>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Unique Effect */}
-                    {uniqueEffectText && (
-                        <div className="rounded-lg border border-primary/30 bg-primary/[0.07] p-2.5 flex flex-col gap-1">
-                            <span className="text-[10px] uppercase font-bold text-primary flex items-center gap-1">
-                                <Zap className="h-3 w-3 text-primary" />
-                                Unique Effect
-                            </span>
-                            <p className="text-xs text-foreground/90 leading-relaxed">
-                                {highlightGameText(uniqueEffectText)}
-                            </p>
-                        </div>
-                    )}
-                </div>
-            </HoverCardContent>
-        </HoverCard>
-    );
-};
-
-interface ArmourHoverTooltipProps {
-    name: string;
-    piece: "Head" | "Torso" | "Arms" | "Legs" | string;
-    slottedCell?: { cellName: string; slot: string } | null;
-    children: React.ReactNode;
-}
-
-const ArmourHoverTooltip = ({ name, piece, slottedCell, children }: ArmourHoverTooltipProps) => {
-    const armour = gameData.armours[name];
-    if (!armour) return <>{children}</>;
-
-    const surgedPerk = armour.perks?.find(p => p.powerSurged) || armour.perks?.[0];
-    const perkDef = surgedPerk ? gameData.perks[surgedPerk.name] : null;
-    const perkTier = surgedPerk ? Math.min(6, Math.max(1, surgedPerk.value)) : null;
-    const perkEffect = perkTier && perkDef?.effects?.[String(perkTier)]
-        ? interpolate(perkDef.effects[String(perkTier)].description, perkDef.effects[String(perkTier)].values)
-        : perkDef?.description;
-
-    const cellSlot = armour.cells ? (Array.isArray(armour.cells) ? armour.cells[0] : armour.cells) : null;
-
-    const uniqueEffect = armour.unique_effects?.find(e => e.powerSurged) || armour.unique_effects?.[0];
-    const uniqueEffectText = uniqueEffect
-        ? interpolate(uniqueEffect.description, uniqueEffect.values)
-        : null;
-
-    return (
-        <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger asChild onClick={e => e.stopPropagation()}>
-                <div className="cursor-help w-full">{children}</div>
-            </HoverCardTrigger>
-            <HoverCardContent
-                side="top"
-                align="center"
-                className="z-50 w-80 sm:w-96 rounded-xl border border-border/80 bg-card/98 p-4 shadow-2xl backdrop-blur-xl"
-            >
-                <div className="flex flex-col gap-3 text-left">
-                    {/* Header */}
-                    <div className="flex items-start gap-3">
-                        <div className="relative h-11 w-11 flex-shrink-0 rounded-lg border border-border/60 bg-muted/30 p-1">
-                            <Image
-                                src={armour.icon}
-                                alt={armour.name}
-                                fill
-                                sizes="44px"
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                                <h4 className="text-sm font-bold text-foreground leading-tight">{armour.name}</h4>
-                                <Badge variant="secondary" className="text-[9px] uppercase font-bold py-0 h-4">
-                                    {piece}
-                                </Badge>
-                            </div>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {armour.behemoth ? `Forged from ${armour.behemoth}` : `${piece} Armour`}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Stats Row: Defence & Elemental Affinities */}
-                    <div className="flex items-center gap-2 flex-wrap text-xs">
-                        <Badge variant="outline" className="text-[10px] border-border/60 text-muted-foreground">
-                            +{armour.resistance?.base ?? 25} Defence{armour.resistance?.powerSurged ? ` (+${armour.resistance.powerSurged} Surged)` : ""}
-                        </Badge>
-
-                        {armour.strength && (
-                            <div
-                                className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold border"
-                                style={{
-                                    borderColor: `${elementColor(armour.strength)}70`,
-                                    backgroundColor: `${elementColor(armour.strength)}18`,
-                                    color: elementColor(armour.strength),
-                                }}
-                            >
-                                <span>+{armour.strength}</span>
-                            </div>
-                        )}
-
-                        {armour.weakness && (
-                            <div
-                                className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold border"
-                                style={{
-                                    borderColor: `${elementColor(armour.weakness)}40`,
-                                    backgroundColor: `${elementColor(armour.weakness)}10`,
-                                    color: elementColor(armour.weakness),
-                                }}
-                            >
-                                <span className="opacity-80">-{armour.weakness}</span>
-                            </div>
-                        )}
-
-                        {cellSlot && (
-                            <div className="flex items-center gap-1 ml-auto">
-                                <div className="relative h-3.5 w-3.5 flex-shrink-0">
-                                    <Image
-                                        src={cellTypeIcon(cellSlot)}
-                                        alt={cellSlot}
-                                        fill
-                                        sizes="14px"
-                                        className="object-contain"
-                                    />
-                                </div>
-                                <span className="text-[10px] text-muted-foreground font-semibold">
-                                    {cellSlot} Slot
-                                </span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Inherent Perk */}
-                    {surgedPerk && (
-                        <div className="rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-2.5 flex flex-col gap-1">
-                            <div className="flex items-center justify-between">
-                                <span className="text-[10px] uppercase font-bold text-amber-300 flex items-center gap-1">
-                                    <Sparkles className="h-3 w-3 text-amber-400" />
-                                    Inherent Perk
-                                </span>
-                                <Badge
-                                    variant="outline"
-                                    className="border-amber-400/50 bg-amber-400/20 text-amber-300 text-[10px] font-bold py-0 h-4"
-                                >
-                                    +{surgedPerk.value} {surgedPerk.name}
-                                </Badge>
-                            </div>
-                            {perkEffect && (
-                                <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-                                    {highlightGameText(perkEffect)}
-                                </p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Slotted Cell info if present */}
-                    {slottedCell && (() => {
-                        const pName = slottedCell.cellName.replace(/\s+Cell$/i, "");
-                        const pDef = (gameData.perks as Record<string, any>)[pName];
-                        const cellEff = pDef?.effects?.["3"];
-                        const cellDesc = cellEff ? formatPerkEffect(cellEff) : pDef?.description;
-
-                        return (
-                            <div className="rounded-lg border border-border/60 bg-muted/20 p-2.5 flex flex-col gap-1.5">
-                                <div className="flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2 min-w-0">
-                                        <div className="relative h-4 w-4 flex-shrink-0">
-                                            <Image
-                                                src={cellTypeIcon(slottedCell.slot)}
-                                                alt={slottedCell.slot}
-                                                fill
-                                                sizes="16px"
-                                                className="object-contain"
-                                            />
-                                        </div>
-                                        <div className="min-w-0">
-                                            <span className="text-[9px] uppercase font-bold text-muted-foreground block leading-tight">
-                                                Slotted Cell
-                                            </span>
-                                            <span className="text-xs font-semibold text-foreground truncate block">
-                                                {slottedCell.cellName}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <Badge variant="outline" className="text-[9px] text-muted-foreground border-border/50">
-                                        {slottedCell.slot} (+3)
-                                    </Badge>
-                                </div>
-                                {cellDesc && (
-                                    <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
-                                        {highlightGameText(cellDesc)}
-                                    </p>
-                                )}
-                            </div>
-                        );
-                    })()}
-
-                    {/* Unique Effect if present (Exotic gear) */}
-                    {uniqueEffectText && (
-                        <div className="rounded-lg border border-primary/30 bg-primary/[0.07] p-2.5 flex flex-col gap-1">
-                            <span className="text-[10px] uppercase font-bold text-primary flex items-center gap-1">
-                                <Zap className="h-3 w-3 text-primary" />
-                                Unique Effect
-                            </span>
-                            <p className="text-xs text-foreground/90 leading-relaxed">
-                                {highlightGameText(uniqueEffectText)}
-                            </p>
-                        </div>
-                    )}
-                </div>
-            </HoverCardContent>
-        </HoverCard>
-    );
-};
-
-/* ------------------------------------------------------------------ */
 /* Main Component                                                     */
 /* ------------------------------------------------------------------ */
 
 interface BuildSuggestionsProps {
     defaultLikedOnly?: boolean;
+    embedded?: boolean;
+    onBrowseMeta?: () => void;
 }
 
-const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) => {
+const BuildSuggestions = ({
+    defaultLikedOnly = false,
+    embedded = false,
+    onBrowseMeta,
+}: BuildSuggestionsProps) => {
+    const router = useRouter();
     const searchParams = useSearchParams();
 
     /* -------------------------------------------------------------- */
@@ -814,22 +181,25 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
     const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
     const [likedBuilds, setLikedBuilds] = useState<Set<string>>(new Set());
     const [likeCounts, setLikeCounts] = useState<Record<string, number>>({});
+    const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+    const [communityBuilds, setCommunityBuilds] = useState<CommunityBuildRecord[]>([]);
+    const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
-    // Fetch real like counts and user's liked status from database
-    useEffect(() => {
-        const clientId = getClientId();
-        const fingerprint = getClientFingerprint();
-        fetch(
-            `/api/builds/likes?clientId=${encodeURIComponent(clientId)}&fingerprint=${encodeURIComponent(fingerprint)}`,
-        )
+    const loadLikes = useCallback(() => {
+        fetch("/api/builds/likes")
             .then(res => res.json())
             .then(data => {
                 if (data && typeof data === "object") {
                     if (data.likes && typeof data.likes === "object") {
                         setLikeCounts(data.likes);
                     }
+                    if (data.commentCounts && typeof data.commentCounts === "object") {
+                        setCommentCounts(data.commentCounts);
+                    }
                     if (Array.isArray(data.userLikes)) {
                         setLikedBuilds(new Set(data.userLikes));
+                    } else {
+                        setLikedBuilds(new Set());
                     }
                 }
             })
@@ -838,9 +208,47 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
             });
     }, []);
 
+    useEffect(() => {
+        if (!showLikedOnly) return;
+        fetch("/api/community/builds", { cache: "no-store" })
+            .then((res) => (res.ok ? res.json() : { builds: [] }))
+            .then((data: { builds?: CommunityBuildRecord[] }) => {
+                setCommunityBuilds(data.builds || []);
+            })
+            .catch(() => {});
+    }, [showLikedOnly]);
+
+    // Track auth state and re-sync account-bound likes on login/logout
+    useEffect(() => {
+        fetch("/api/auth/me")
+            .then(res => (res.ok ? res.json() : { user: null }))
+            .then((data: { user?: AuthUser | null }) => {
+                setAuthUser(data.user ?? null);
+            })
+            .catch(() => {});
+
+        loadLikes();
+
+        const onAuthChanged = (event: Event) => {
+            const customEvent = event as CustomEvent<AuthUser | null>;
+            setAuthUser(customEvent.detail ?? null);
+            loadLikes();
+        };
+
+        window.addEventListener("mystic-auth-changed", onAuthChanged);
+        return () => window.removeEventListener("mystic-auth-changed", onAuthChanged);
+    }, [loadLikes]);
+
     const toggleLike = useCallback(async (buildId: string) => {
-        const clientId = getClientId();
-        const fingerprint = getClientFingerprint();
+        if (!authUser) {
+            toast({
+                title: "Sign in required",
+                description: "Please sign in with your Discord username to like builds.",
+            });
+            window.dispatchEvent(new CustomEvent("mystic-open-auth"));
+            return;
+        }
+
         const currentlyLiked = likedBuilds.has(buildId);
         const nextLiked = !currentlyLiked;
 
@@ -862,8 +270,28 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
             const res = await fetch(`/api/builds/${encodeURIComponent(buildId)}/like`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ clientId, fingerprint }),
             });
+
+            if (res.status === 401) {
+                // Session missing/expired -> revert and prompt sign-in
+                setLikedBuilds(prev => {
+                    const next = new Set(prev);
+                    if (currentlyLiked) next.add(buildId);
+                    else next.delete(buildId);
+                    return next;
+                });
+                setLikeCounts(prev => {
+                    const currentCount = prev[buildId] ?? 0;
+                    const revertedCount = currentlyLiked ? currentCount + 1 : Math.max(0, currentCount - 1);
+                    return { ...prev, [buildId]: revertedCount };
+                });
+                toast({
+                    title: "Sign in required",
+                    description: "Please sign in with your Discord username to like builds.",
+                });
+                window.dispatchEvent(new CustomEvent("mystic-open-auth"));
+                return;
+            }
 
             if (res.ok) {
                 const data = (await res.json()) as { liked: boolean; count: number };
@@ -890,7 +318,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                 return { ...prev, [buildId]: revertedCount };
             });
         }
-    }, [likedBuilds]);
+    }, [likedBuilds, authUser]);
     const allBuilds = useMemo(() => {
         return (metaBuildsData.builds as IndexedMetaBuild[]).filter(
             b => CATEGORY_ORDER.includes(b.category) && Boolean(b.weaponName),
@@ -898,20 +326,13 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
     }, []);
     const categoryDescriptions = metaBuildsData.categories as { name: string; description: string }[];
 
-    const [inspectingBuild, setInspectingBuild] = useState<IndexedMetaBuild | null>(null);
-
-    const inspectingParsedBuild = useMemo(() => {
-        if (!inspectingBuild) return null;
-        return parseBuildId(inspectingBuild.buildId);
-    }, [inspectingBuild]);
-
     useEffect(() => {
         const tab = searchParams.get("tab");
         if (tab === "liked") {
             setShowLikedOnly(true);
             setSelectedWeapon("all");
             setSelectedCategory("all");
-        } else if (tab === "suggestions") {
+        } else if (tab === "suggestions" || tab === "meta") {
             setShowLikedOnly(false);
         }
 
@@ -929,15 +350,23 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
 
         const viewId = searchParams.get("view");
         if (viewId) {
-            const found = allBuilds.find(b => b.buildId === viewId);
-            if (found) setInspectingBuild(found);
+            router.replace(`/builds/${encodeURIComponent(viewId)}`);
         }
-    }, [searchParams, allBuilds]);
+    }, [searchParams, router]);
+
+    const likedMetaBuilds = useMemo(() => {
+        return allBuilds.filter(b => likedBuilds.has(b.buildId));
+    }, [allBuilds, likedBuilds]);
+
+    const likedCommunityBuilds = useMemo(() => {
+        if (!showLikedOnly) return [];
+        return communityBuilds.filter(b => likedBuilds.has(b.buildId));
+    }, [communityBuilds, showLikedOnly, likedBuilds]);
 
     const baseBuilds = useMemo(() => {
         if (!showLikedOnly) return allBuilds;
-        return allBuilds.filter(b => likedBuilds.has(b.buildId));
-    }, [allBuilds, showLikedOnly, likedBuilds]);
+        return likedMetaBuilds;
+    }, [allBuilds, showLikedOnly, likedMetaBuilds]);
 
     // Current category description
     const currentCategoryInfo = useMemo(() => {
@@ -1072,7 +501,10 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
 
     const handleCopyLink = async (buildId: string) => {
         try {
-            const url = typeof window !== "undefined" ? `${window.location.origin}/b/${buildId}` : `/b/${buildId}`;
+            const url =
+                typeof window !== "undefined"
+                    ? `${window.location.origin}/builds/${encodeURIComponent(buildId)}`
+                    : `/builds/${encodeURIComponent(buildId)}`;
             await navigator.clipboard.writeText(url);
             setCopiedBuildId(buildId);
             setTimeout(() => setCopiedBuildId(null), 2200);
@@ -1093,58 +525,159 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
         return Object.keys(gameData.perks).sort();
     }, []);
 
-    return (
-        <section className="mystic-glow w-full flex-1 px-4 sm:px-8 md:px-[100px] py-10">
-            {/* Header */}
-            <div className="flex flex-col items-center gap-4 text-center">
-                <p className="panel-label">
-                    {showLikedOnly
-                        ? "Dauntless 1.14.7 - Your Saved Builds"
-                        : "Dauntless 1.14.7 - Official Meta Builds & Suggestions"}
-                </p>
-                <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-4xl flex items-center justify-center gap-3">
-                    {showLikedOnly ? (
-                        <>
-                            <span>Liked Builds</span>
-                            <Heart className="h-7 w-7 sm:h-8 sm:w-8 fill-rose-500 text-rose-500 inline-block drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]" />
-                        </>
-                    ) : (
-                        "Builds & Loadout Suggestions"
-                    )}
-                </h1>
-                <p className="max-w-2xl text-sm leading-relaxed text-[#c2d0e2] sm:text-base">
-                    {showLikedOnly
-                        ? `Viewing your personal collection of liked loadouts (${likedBuilds.size} saved). Filter by weapon, omnicell, or perks, or 1-click open any build in the planner.`
-                        : "Explore all 517 curated Dauntless meta loadouts from the official Reforged meta index. Filter by weapon, omnicell, and elemental matchup, or 1-click open any build in the planner."}
-                </p>
-            </div>
+    const hasNoLikedBuilds =
+        showLikedOnly && likedMetaBuilds.length === 0 && likedCommunityBuilds.length === 0;
 
-            <div className="mt-8">
-                <div className="gold-rule mb-8" aria-hidden />
+    return (
+        <section
+            className={cn(
+                "w-full flex-1 px-4 sm:px-8 md:px-[100px]",
+                embedded ? "pt-4 pb-10" : "mystic-glow py-10"
+            )}
+        >
+            {/* Header */}
+            {!embedded && (
+                <div className="flex flex-col items-center gap-4 text-center">
+                    <p className="panel-label">
+                        {showLikedOnly
+                            ? "Dauntless 1.14.7 - Your Saved Builds"
+                            : "Dauntless 1.14.7 - Official Meta Builds & Suggestions"}
+                    </p>
+                    <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-4xl flex items-center justify-center gap-3">
+                        {showLikedOnly ? (
+                            <>
+                                <span>Liked Builds</span>
+                                <Heart className="h-7 w-7 sm:h-8 sm:w-8 fill-rose-500 text-rose-500 inline-block drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]" />
+                            </>
+                        ) : (
+                            "Builds & Loadout Suggestions"
+                        )}
+                    </h1>
+                    <p className="max-w-2xl text-sm leading-relaxed text-[#c2d0e2] sm:text-base">
+                        {showLikedOnly
+                            ? `Viewing your personal collection of liked loadouts (${likedMetaBuilds.length + likedCommunityBuilds.length} saved).`
+                            : "Explore all 517 curated Dauntless meta loadouts from the official Reforged meta index. Filter by weapon, omnicell, and elemental matchup, or 1-click open any build in the planner."}
+                    </p>
+                </div>
+            )}
+
+            <div className={embedded ? "mt-4" : "mt-8"}>
+                {!embedded && <div className="gold-rule mb-8" aria-hidden />}
 
                 {/* Official Reforged Meta Builds Browser */}
-                {showLikedOnly && likedBuilds.size === 0 ? (
+                {hasNoLikedBuilds ? (
                     <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--line-2)] bg-[rgba(10,19,32,0.7)] py-20 px-6 text-center shadow-lg backdrop-blur-sm max-w-2xl mx-auto my-6">
                         <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-rose-500/40 bg-rose-500/10 text-rose-400 shadow-[0_0_30px_rgba(244,63,94,0.3)] mb-5">
                             <Heart className="h-10 w-10 text-rose-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">No Liked Builds Yet</h3>
+                        <h3 className="text-2xl font-bold text-white mb-2">
+                            {authUser ? "No Liked Builds Yet" : "Sign In to View Liked Builds"}
+                        </h3>
                         <p className="max-w-md text-sm text-[#b8c7db] leading-relaxed mb-6">
-                            You haven't liked any builds yet. Click the heart icon on any build card while exploring to save it to your personal liked collection.
+                            {authUser
+                                ? "You haven't liked any builds yet. Click the heart icon on any Meta or Community build card while exploring to save it here."
+                                : "Liked builds are saved to your account. Sign in with Discord or your account to like builds and access your collection anywhere."}
                         </p>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setShowLikedOnly(false);
-                                window.history.replaceState(null, "", "/?tab=suggestions");
-                            }}
-                            className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-all cursor-pointer"
-                        >
-                            <span>Browse Suggestions</span>
-                        </button>
+                        <div className="flex flex-wrap items-center justify-center gap-3">
+                            {!authUser && (
+                                <button
+                                    type="button"
+                                    onClick={() => window.dispatchEvent(new CustomEvent("mystic-open-auth"))}
+                                    className="flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 transition-all cursor-pointer"
+                                >
+                                    <span>Sign In</span>
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (onBrowseMeta) {
+                                        onBrowseMeta();
+                                    } else {
+                                        setShowLikedOnly(false);
+                                        window.history.replaceState(null, "", "/builds");
+                                    }
+                                }}
+                                className={cn(
+                                    "flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all cursor-pointer",
+                                    authUser
+                                        ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90"
+                                        : "border border-[var(--line-2)] bg-white/[0.045] text-white hover:bg-white/[0.08]"
+                                )}
+                            >
+                                <span>Browse Meta Builds</span>
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-6">
+                        {showLikedOnly && likedCommunityBuilds.length > 0 && (
+                            <div className="flex flex-col gap-3 rounded-2xl border border-[var(--gold)]/25 bg-[rgba(10,19,32,0.7)] p-5">
+                                <div className="flex items-center justify-between gap-2">
+                                    <h2 className="text-sm font-bold uppercase tracking-wider text-[#f5dfb0]">
+                                        Liked Community Builds ({likedCommunityBuilds.length})
+                                    </h2>
+                                </div>
+                                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                    {likedCommunityBuilds.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            onClick={() => router.push(`/builds/${encodeURIComponent(item.id)}`)}
+                                            className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/35 p-4 transition-all hover:border-[var(--aether-line)] cursor-pointer"
+                                        >
+                                            <div>
+                                                <div className="mb-2 flex items-center justify-between gap-2 text-xs">
+                                                    <Badge variant="outline" className="border-[var(--gold)]/35 text-[#f5dfb0]">
+                                                        {item.category}
+                                                    </Badge>
+                                                    <span className="inline-flex items-center gap-1 text-[var(--ink-3)] truncate">
+                                                        <User className="h-3 w-3 text-[var(--aether-hi)]" />
+                                                        <span className="truncate">{item.authorDisplayName}</span>
+                                                    </span>
+                                                </div>
+                                                <h3 className="truncate text-sm font-bold text-white">
+                                                    {item.title}
+                                                </h3>
+                                                <p className="mt-0.5 truncate text-xs text-[var(--ink-3)]">
+                                                    {item.weaponName} • {item.weaponType}
+                                                </p>
+                                            </div>
+                                            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5">
+                                                <div className="flex items-center gap-1.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleLike(item.buildId);
+                                                        }}
+                                                        className="inline-flex items-center gap-1 rounded-lg border border-rose-500/40 bg-rose-500/15 px-2.5 py-1 text-xs font-semibold text-rose-300 cursor-pointer"
+                                                    >
+                                                        <Heart className="h-3.5 w-3.5 fill-rose-400 text-rose-400" />
+                                                        <span>{likeCounts[item.buildId] ?? item.likes}</span>
+                                                    </button>
+                                                    <Link
+                                                        href={`/builds/${encodeURIComponent(item.id)}#discussion`}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-[var(--ink-3)] hover:text-white"
+                                                    >
+                                                        <MessageSquare className="h-3.5 w-3.5" />
+                                                        <span>{item.commentCount ?? 0}</span>
+                                                    </Link>
+                                                </div>
+                                                <Link
+                                                    href={`/builder?b=${encodeURIComponent(item.buildId)}&name=${encodeURIComponent(item.title)}`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1 text-xs font-semibold text-primary-foreground"
+                                                >
+                                                    <span>Builder</span>
+                                                    <ExternalLink className="h-3 w-3" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {/* 1. Weapon Selector Bar */}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center justify-between">
@@ -1636,7 +1169,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                     return (
                                         <div
                                             key={build.buildId}
-                                            onClick={() => setInspectingBuild(build)}
+                                            onClick={() => router.push(`/builds/${encodeURIComponent(build.buildId)}`)}
                                             onMouseEnter={() => setHoveredCardId(build.buildId)}
                                             onMouseLeave={() => setHoveredCardId(null)}
                                             className={`group relative flex flex-col justify-between rounded-xl border border-border/70 bg-gradient-to-b from-card/95 via-card/85 to-card/75 p-4 shadow-sm transition-all duration-300 cursor-pointer ${isDimmed
@@ -1792,7 +1325,7 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                                             handleCopyLink(build.buildId);
                                                         }}
                                                         className="p-1 rounded-lg border border-border/50 text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors cursor-pointer"
-                                                        title="Copy share link"
+                                                        title="Copy build page link"
                                                     >
                                                         {copiedBuildId === build.buildId ? (
                                                             <Check className="h-3.5 w-3.5 text-emerald-400" />
@@ -1800,6 +1333,16 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                                                             <Copy className="h-3.5 w-3.5" />
                                                         )}
                                                     </button>
+
+                                                    <Link
+                                                        href={`/builds/${encodeURIComponent(build.buildId)}#discussion`}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="inline-flex items-center gap-1 rounded-lg border border-border/50 bg-muted/20 px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                                                        title="View details & comments"
+                                                    >
+                                                        <MessageSquare className="h-3.5 w-3.5" />
+                                                        <span className="tabular-nums">{commentCounts[build.buildId] ?? 0}</span>
+                                                    </Link>
 
                                                     <Link
                                                         href={`/b/${build.buildId}`}
@@ -1849,456 +1392,6 @@ const BuildSuggestions = ({ defaultLikedOnly = false }: BuildSuggestionsProps) =
                         )}
                     </div>
                 )}
-
-                {/* 7. Detailed Build Breakdown Dialog */}
-                <Dialog
-                    open={!!inspectingBuild}
-                    onOpenChange={open => {
-                        if (!open) setInspectingBuild(null);
-                    }}
-                >
-                    <DialogContent className="max-w-3xl sm:max-w-4xl max-h-[88vh] overflow-y-auto border-border/80 bg-card/95 backdrop-blur-xl p-6 sm:p-7 shadow-2xl">
-                        {inspectingBuild && (
-                            <div className="flex flex-col gap-5">
-                                {/* Dialog Header */}
-                                <DialogHeader className="gap-1 border-b border-border/40 pb-4 text-left">
-                                    <div className="flex items-center gap-2">
-                                        {inspectingBuild.vsElement ? (
-                                            <div
-                                                className="flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold border"
-                                                style={{
-                                                    borderColor: `${elementColor(inspectingBuild.vsElement)}80`,
-                                                    backgroundColor: `${elementColor(inspectingBuild.vsElement)}18`,
-                                                    color: elementColor(inspectingBuild.vsElement),
-                                                }}
-                                            >
-                                                <div className="relative h-3.5 w-3.5 flex-shrink-0">
-                                                    <Image
-                                                        src={`/assets/icons/elements/${inspectingBuild.vsElement}.png`}
-                                                        alt={inspectingBuild.vsElement}
-                                                        fill
-                                                        sizes="14px"
-                                                        className="object-contain"
-                                                    />
-                                                </div>
-                                                <span>VS {inspectingBuild.vsElement.toUpperCase()}</span>
-                                            </div>
-                                        ) : (
-                                            <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary text-xs">
-                                                {inspectingBuild.category}
-                                            </Badge>
-                                        )}
-                                        <Badge variant="secondary" className="text-xs">
-                                            {inspectingBuild.weaponType}
-                                        </Badge>
-                                    </div>
-                                    <DialogTitle className="text-xl font-bold text-foreground mt-1">
-                                        {inspectingBuild.title}
-                                    </DialogTitle>
-                                    <DialogDescription className="text-xs text-muted-foreground">
-                                        {inspectingBuild.category} Meta Loadout • Dauntless 1.14.7 Mystic Paradox
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                {/* Weapon & Bond Setup */}
-                                <div className="rounded-xl border border-border/60 bg-muted/20 p-3.5">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">
-                                            Weapon & Legendary Bond (Hover for details)
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                        <WeaponHoverTooltip
-                                            name={inspectingBuild.weaponName}
-                                            slottedCells={inspectingParsedBuild?.view.weapon?.cells}
-                                        >
-                                            <div className="flex items-center gap-3 rounded-lg p-1.5 hover:bg-muted/30 transition-colors">
-                                                <div className="relative h-11 w-11 flex-shrink-0 rounded-lg border border-border/60 bg-muted/40 p-1">
-                                                    <Image
-                                                        src={inspectingBuild.weaponIcon}
-                                                        alt={inspectingBuild.weaponName}
-                                                        fill
-                                                        sizes="44px"
-                                                        className="object-contain"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-foreground hover:text-primary transition-colors">
-                                                        {inspectingBuild.weaponName}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        Element: <span className="text-foreground/90 font-medium">{inspectingBuild.weaponElement}</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </WeaponHoverTooltip>
-
-                                        {inspectingBuild.bondName && (
-                                            <WeaponHoverTooltip name={inspectingBuild.bondName} isBond>
-                                                <div className="flex items-center gap-2.5 rounded-lg border border-primary/40 bg-primary/10 px-3.5 py-2 hover:border-primary/80 hover:bg-primary/20 hover:shadow-[0_0_12px_rgba(234,179,8,0.2)] transition-all cursor-help">
-                                                    {inspectingBuild.bondIcon && (
-                                                        <div className="relative h-7 w-7 flex-shrink-0">
-                                                            <Image
-                                                                src={inspectingBuild.bondIcon}
-                                                                alt={inspectingBuild.bondName}
-                                                                fill
-                                                                sizes="28px"
-                                                                className="object-contain"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div>
-                                                        <div className="flex items-center gap-1.5">
-                                                            <span className="text-[9px] uppercase font-bold text-primary block leading-none">
-                                                                Bonded Weapon
-                                                            </span>
-                                                            <span className="text-[9px] text-muted-foreground leading-none">
-                                                                (Hover)
-                                                            </span>
-                                                        </div>
-                                                        <span className="text-xs font-bold text-foreground">
-                                                            {inspectingBuild.bondName}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </WeaponHoverTooltip>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Omnicell & Lantern with Hover Tooltips */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    {inspectingBuild.omnicellName ? (
-                                        <OmnicellHoverTooltip name={inspectingBuild.omnicellName}>
-                                            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/20 p-3 hover:border-primary/50 transition-colors">
-                                                <div className="relative h-8 w-8 flex-shrink-0">
-                                                    {inspectingBuild.omnicellIcon ? (
-                                                        <Image
-                                                            src={inspectingBuild.omnicellIcon}
-                                                            alt={inspectingBuild.omnicellName}
-                                                            fill
-                                                            sizes="32px"
-                                                            className="object-contain"
-                                                        />
-                                                    ) : (
-                                                        <div className="h-full w-full rounded-full bg-muted/40" />
-                                                    )}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <span className="text-[10px] uppercase font-bold text-muted-foreground block">
-                                                        Omnicell (Hover for details)
-                                                    </span>
-                                                    <p className="font-bold text-sm text-foreground truncate">
-                                                        {inspectingBuild.omnicellName}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </OmnicellHoverTooltip>
-                                    ) : (
-                                        <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/20 p-3">
-                                            <div className="min-w-0 flex-1">
-                                                <span className="text-[10px] uppercase font-bold text-muted-foreground block">
-                                                    Omnicell
-                                                </span>
-                                                <p className="font-bold text-sm text-muted-foreground truncate">
-                                                    None Equipped
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <LanternHoverTooltip name={inspectingBuild.lanternName}>
-                                        <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/20 p-3 hover:border-primary/50 transition-colors">
-                                            <div className="relative h-8 w-8 flex-shrink-0">
-                                                <Image
-                                                    src={inspectingBuild.lanternIcon}
-                                                    alt={inspectingBuild.lanternName}
-                                                    fill
-                                                    sizes="32px"
-                                                    className="object-contain"
-                                                />
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <span className="text-[10px] uppercase font-bold text-muted-foreground block">
-                                                    Lantern (Hover for details)
-                                                </span>
-                                                <p className="font-bold text-sm text-foreground truncate">
-                                                    {inspectingBuild.lanternName}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </LanternHoverTooltip>
-                                </div>
-
-                                {/* Armour Pieces Grid (Head, Torso, Arms, Legs) */}
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                                            Armour Loadout & Inherent Perks (Hover for details)
-                                        </span>
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-                                        {[
-                                            { piece: "Head", data: inspectingBuild.head, buildPiece: inspectingParsedBuild?.view.armour.head },
-                                            { piece: "Torso", data: inspectingBuild.torso, buildPiece: inspectingParsedBuild?.view.armour.torso },
-                                            { piece: "Arms", data: inspectingBuild.arms, buildPiece: inspectingParsedBuild?.view.armour.arms },
-                                            { piece: "Legs", data: inspectingBuild.legs, buildPiece: inspectingParsedBuild?.view.armour.legs },
-                                        ].map(({ piece, data, buildPiece }) => {
-                                            const armourData = gameData.armours[data.name];
-                                            const inherentPerk =
-                                                buildPiece?.perks?.[0] ||
-                                                armourData?.perks?.find(p => p.powerSurged) ||
-                                                armourData?.perks?.[0];
-                                            const slottedCell = buildPiece?.cells?.[0] || null;
-                                            const slotType =
-                                                slottedCell?.slot ||
-                                                (armourData?.cells
-                                                    ? Array.isArray(armourData.cells)
-                                                        ? armourData.cells[0]
-                                                        : armourData.cells
-                                                    : null);
-
-                                            return (
-                                                <ArmourHoverTooltip
-                                                    key={piece}
-                                                    name={data.name}
-                                                    piece={piece}
-                                                    slottedCell={
-                                                        slottedCell
-                                                            ? {
-                                                                cellName: slottedCell.cellName || "",
-                                                                slot: slottedCell.slot || "",
-                                                            }
-                                                            : null
-                                                    }
-                                                >
-                                                    <div className="flex flex-col justify-between rounded-xl border border-border/60 bg-muted/15 p-2.5 hover:border-primary/60 hover:bg-muted/25 transition-all h-full gap-2.5">
-                                                        {/* Top: Piece icon & name */}
-                                                        <div className="flex items-center gap-2.5 min-w-0">
-                                                            <div className="relative h-8 w-8 flex-shrink-0 rounded-md border border-border/50 bg-muted/30 p-0.5">
-                                                                <Image
-                                                                    src={data.icon}
-                                                                    alt={data.name}
-                                                                    fill
-                                                                    sizes="32px"
-                                                                    className="object-contain"
-                                                                />
-                                                            </div>
-                                                            <div className="min-w-0 flex-1">
-                                                                <span className="text-[9px] uppercase font-bold text-muted-foreground block leading-none">
-                                                                    {piece}
-                                                                </span>
-                                                                <p className="text-xs font-bold text-foreground leading-tight truncate mt-0.5">
-                                                                    {data.name}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* What it is giving: Inherent perk + Slotted cell */}
-                                                        <div className="flex flex-col gap-1.5 pt-1.5 border-t border-border/30">
-                                                            {inherentPerk && (
-                                                                <div className="flex items-center justify-between gap-1 text-[11px] font-semibold text-amber-300 bg-amber-400/10 border border-amber-400/25 rounded px-2 py-0.5">
-                                                                    <span className="text-[9px] uppercase font-bold text-amber-400/80">Inherent</span>
-                                                                    <span className="truncate font-bold">+{inherentPerk.value} {inherentPerk.name}</span>
-                                                                </div>
-                                                            )}
-
-                                                            {slottedCell ? (
-                                                                <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-foreground/90 bg-muted/30 border border-border/40 rounded px-2 py-0.5">
-                                                                    <div className="flex items-center gap-1 min-w-0">
-                                                                        {slottedCell.slot && (
-                                                                            <div className="relative h-3 w-3 flex-shrink-0">
-                                                                                <Image
-                                                                                    src={cellTypeIcon(slottedCell.slot)}
-                                                                                    alt={slottedCell.slot}
-                                                                                    fill
-                                                                                    sizes="12px"
-                                                                                    className="object-contain"
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                        <span className="truncate">{slottedCell.cellName}</span>
-                                                                    </div>
-                                                                    {slottedCell.perks?.[0] && (
-                                                                        <span className="text-[10px] text-primary font-bold shrink-0">
-                                                                            +{slottedCell.perks[0].value}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            ) : slotType ? (
-                                                                <div className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted/20 border border-border/30 rounded px-2 py-0.5">
-                                                                    <div className="relative h-3 w-3 flex-shrink-0">
-                                                                        <Image
-                                                                            src={cellTypeIcon(slotType)}
-                                                                            alt={slotType}
-                                                                            fill
-                                                                            sizes="12px"
-                                                                            className="object-contain"
-                                                                        />
-                                                                    </div>
-                                                                    <span>{slotType} Slot</span>
-                                                                </div>
-                                                            ) : null}
-                                                        </div>
-                                                    </div>
-                                                </ArmourHoverTooltip>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* Active Perks Breakdown with Hover Tooltips */}
-                                <div className="flex flex-col gap-2">
-                                    <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                                        Active Perks Breakdown (Hover for tier stats)
-                                    </span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {inspectingBuild.perks.map(perk => {
-                                            const rank = Math.min(6, perk.value);
-                                            const isMax = rank >= 6;
-                                            return (
-                                                <PerkTierHoverTooltip key={perk.name} name={perk.name} value={rank} inline>
-                                                    <div
-                                                        className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold hover:scale-105 transition-transform ${isMax
-                                                            ? "border-amber-400/50 bg-amber-400/15 text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.15)]"
-                                                            : "border-primary/40 bg-primary/10 text-primary"
-                                                            }`}
-                                                    >
-                                                        <span>+{rank}</span>
-                                                        <span>{perk.name}</span>
-                                                    </div>
-                                                </PerkTierHoverTooltip>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* Slotted Cells */}
-                                {inspectingBuild.cells && inspectingBuild.cells.length > 0 && (
-                                    <div className="flex flex-col gap-2 mt-1">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                                                Slotted Cells & Perk Stats
-                                            </span>
-                                            <span className="text-[10px] text-muted-foreground font-medium">
-                                                {inspectingBuild.cells.length} cells slotted (+3 each)
-                                            </span>
-                                        </div>
-                                        <div className="flex flex-col divide-y divide-border/30 rounded-xl border border-border/60 bg-muted/20 overflow-hidden">
-                                            {inspectingBuild.cells.map((cell, idx) => {
-                                                const perkName = cell.cellName.replace(/\s+Cell$/i, "");
-                                                const perkDef = (gameData.perks as Record<string, any>)[perkName];
-                                                const eff = perkDef?.effects?.["3"];
-                                                const effDesc = eff ? formatPerkEffect(eff) : perkDef?.description || "Empowers your Slayer with specialized combat abilities.";
-                                                const slotColor = cellTypeColor(cell.slot);
-
-                                                return (
-                                                    <div
-                                                        key={idx}
-                                                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 hover:bg-muted/30 transition-colors"
-                                                    >
-                                                        <div className="flex items-start sm:items-center gap-3 min-w-0 sm:w-[220px] shrink-0">
-                                                            <div
-                                                                className="relative h-9 w-9 shrink-0 rounded-lg border bg-muted/40 p-1 flex items-center justify-center"
-                                                                style={{
-                                                                    borderColor: `${slotColor}60`,
-                                                                    backgroundColor: `${slotColor}15`,
-                                                                }}
-                                                            >
-                                                                <Image
-                                                                    src={`/assets/icons/perks/${cell.slot}.png`}
-                                                                    alt={cell.slot}
-                                                                    width={24}
-                                                                    height={24}
-                                                                    className="object-contain"
-                                                                />
-                                                            </div>
-                                                            <div className="flex flex-col min-w-0">
-                                                                <span className="text-sm font-bold text-foreground truncate">
-                                                                    {cell.cellName}
-                                                                </span>
-                                                                <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                                                                    PERK POINTS: 3
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="flex flex-1 flex-col gap-0.5 min-w-0 sm:pl-2">
-                                                            <p className="text-xs sm:text-[13px] leading-relaxed text-foreground/90 font-medium">
-                                                                {highlightGameText(effDesc)}
-                                                            </p>
-                                                            <span className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground/80">
-                                                                ACTIVATES AT: 3 PERK POINTS
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Dialog Footer Actions */}
-                                <DialogFooter className="mt-3 pt-4 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-                                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleCopyLink(inspectingBuild.buildId)}
-                                            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 rounded-lg border border-border/60 bg-muted/30 px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted/50 transition-colors cursor-pointer"
-                                        >
-                                            {copiedBuildId === inspectingBuild.buildId ? (
-                                                <>
-                                                    <Check className="h-4 w-4 text-emerald-400" />
-                                                    <span className="text-emerald-400">Link Copied!</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Copy className="h-4 w-4 text-muted-foreground" />
-                                                    <span>Copy Share Link</span>
-                                                </>
-                                            )}
-                                        </button>
-
-                                        {(() => {
-                                            const isLiked = likedBuilds.has(inspectingBuild.buildId);
-                                            const likeCount = likeCounts[inspectingBuild.buildId] ?? 0;
-
-                                            return (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => toggleLike(inspectingBuild.buildId)}
-                                                    className={cn(
-                                                        "inline-flex items-center justify-center gap-1.5 rounded-lg border px-3.5 py-2 text-xs font-medium transition-all duration-200 cursor-pointer",
-                                                        isLiked
-                                                            ? "border-rose-500/40 bg-rose-500/15 text-rose-400 hover:bg-rose-500/25 shadow-[0_0_12px_rgba(244,63,94,0.2)]"
-                                                            : "border-border/60 bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                                    )}
-                                                    title={isLiked ? "Unlike build" : "Like build"}
-                                                >
-                                                    <Heart
-                                                        className={cn(
-                                                            "h-4 w-4 transition-transform duration-200",
-                                                            isLiked ? "fill-rose-500 text-rose-500 scale-110" : ""
-                                                        )}
-                                                    />
-                                                    <span className="font-semibold tabular-nums text-xs">{likeCount}</span>
-                                                </button>
-                                            );
-                                        })()}
-                                    </div>
-
-                                    <Link
-                                        href={`/b/${inspectingBuild.buildId}`}
-                                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(91,163,255,0.3)] cursor-pointer"
-                                    >
-                                        <span>Open in Loadout Builder</span>
-                                        <ExternalLink className="h-4 w-4" />
-                                    </Link>
-                                </DialogFooter>
-                            </div>
-                        )}
-                    </DialogContent>
-                </Dialog>
             </div>
         </section>
     );

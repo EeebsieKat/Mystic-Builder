@@ -3442,12 +3442,12 @@
    "type": "Legs",
    "weakness": "Frost"
   },
-  "W\u00fclf Claws": {
-   "behemoth": "Frostw\u00fclf",
+  "Wülf Claws": {
+   "behemoth": "Frostwülf",
    "cells": "Fortitude",
    "description": "{{typeAlt}} protection forged from {{behemoth}} trophies.",
    "icon": "/assets/icons/armours/frostwulf/WulfClaws.png",
-   "name": "W\u00fclf Claws",
+   "name": "Wülf Claws",
    "perks": [
     {
      "name": "Galvanized",
@@ -3468,12 +3468,12 @@
    "type": "Arms",
    "weakness": "Blaze"
   },
-  "W\u00fclf Mane": {
-   "behemoth": "Frostw\u00fclf",
+  "Wülf Mane": {
+   "behemoth": "Frostwülf",
    "cells": "Brutality",
    "description": "{{typeAlt}} protection forged from {{behemoth}} trophies.",
    "icon": "/assets/icons/armours/frostwulf/WulfMane.png",
-   "name": "W\u00fclf Mane",
+   "name": "Wülf Mane",
    "perks": [
     {
      "name": "Aegis",
@@ -3494,12 +3494,12 @@
    "type": "Head",
    "weakness": "Blaze"
   },
-  "W\u00fclf Paws": {
-   "behemoth": "Frostw\u00fclf",
+  "Wülf Paws": {
+   "behemoth": "Frostwülf",
    "cells": "Brutality",
    "description": "{{typeAlt}} protection forged from {{behemoth}} trophies.",
    "icon": "/assets/icons/armours/frostwulf/WulfPaws.png",
-   "name": "W\u00fclf Paws",
+   "name": "Wülf Paws",
    "perks": [
     {
      "name": "Cascade",
@@ -3520,12 +3520,12 @@
    "type": "Legs",
    "weakness": "Blaze"
   },
-  "W\u00fclf Plate": {
-   "behemoth": "Frostw\u00fclf",
+  "Wülf Plate": {
+   "behemoth": "Frostwülf",
    "cells": "Fortitude",
    "description": "{{typeAlt}} protection forged from {{behemoth}} trophies.",
    "icon": "/assets/icons/armours/frostwulf/WulfPlate.png",
-   "name": "W\u00fclf Plate",
+   "name": "Wülf Plate",
    "perks": [
     {
      "name": "Aegis",
@@ -5487,6 +5487,30 @@
     "+3 Zeal Cell": {
      "perks": {
       "Zeal": 3
+     },
+     "rarity": "epic"
+    }
+   }
+  },
+  "Generosity": {
+   "name": "Generosity Cell",
+   "slot": "Insight",
+   "variants": {
+    "+1 Generosity Cell": {
+     "perks": {
+      "Generosity": 1
+     },
+     "rarity": "uncommon"
+    },
+    "+2 Generosity Cell": {
+     "perks": {
+      "Generosity": 2
+     },
+     "rarity": "rare"
+    },
+    "+3 Generosity Cell": {
+     "perks": {
+      "Generosity": 3
      },
      "rarity": "epic"
     }
@@ -10789,6 +10813,70 @@
    },
    "name": "Zeal",
    "type": "Insight"
+  },
+  "Generosity": {
+   "description": "Shares a portion of the healing you receive with nearby Slayers. Within 25 m: flasks, lifesteal, orbs, and teammate heals count (another Generosity share, revives, and respawns do not).",
+   "effects": {
+    "1": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      null
+     ],
+     "values": {
+      "percentHealShare": 20
+     }
+    },
+    "2": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      null
+     ],
+     "values": {
+      "percentHealShare": 25
+     }
+    },
+    "3": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      null
+     ],
+     "values": {
+      "percentHealShare": 35
+     }
+    },
+    "4": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      "After sharing healing, gain +{{percentDamage}}% damage for 5 seconds. Sharing again refreshes the duration."
+     ],
+     "values": {
+      "percentHealShare": 40,
+      "percentDamage": 10
+     }
+    },
+    "5": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      "After sharing healing, gain +{{percentDamage}}% damage for 5 seconds. Sharing again refreshes the duration."
+     ],
+     "values": {
+      "percentHealShare": 45,
+      "percentDamage": 15
+     }
+    },
+    "6": {
+     "description": [
+      "Heals nearby Slayers for {{percentHealShare}}% of the healing you receive.",
+      "After sharing healing, gain +{{percentDamage}}% damage for 5 seconds. Sharing again refreshes the duration."
+     ],
+     "values": {
+      "percentHealShare": 55,
+      "percentDamage": 20
+     }
+    }
+   },
+   "name": "Generosity",
+   "type": "Insight"
   }
  },
  "weapons": {
@@ -13244,8 +13332,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Bite": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Bite": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13254,7 +13342,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsBite.png",
-   "name": "Frostw\u00fclf's Bite",
+   "name": "Frostwülf's Bite",
    "perks": [
     {
      "name": "Galvanized",
@@ -13297,8 +13385,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Chillers": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Chillers": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13307,7 +13395,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsChillers.png",
-   "name": "Frostw\u00fclf's Chillers",
+   "name": "Frostwülf's Chillers",
    "perks": [
     {
      "name": "Galvanized",
@@ -13350,8 +13438,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Chomp": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Chomp": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13360,7 +13448,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsChomp.png",
-   "name": "Frostw\u00fclf's Chomp",
+   "name": "Frostwülf's Chomp",
    "perks": [
     {
      "name": "Galvanized",
@@ -13403,8 +13491,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Rip": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Rip": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13413,7 +13501,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsRip.png",
-   "name": "Frostw\u00fclf's Rip",
+   "name": "Frostwülf's Rip",
    "perks": [
     {
      "name": "Galvanized",
@@ -13456,8 +13544,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Skinners": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Skinners": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13466,7 +13554,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsSkinners.png",
-   "name": "Frostw\u00fclf's Skinners",
+   "name": "Frostwülf's Skinners",
    "perks": [
     {
      "name": "Galvanized",
@@ -13509,8 +13597,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Slam": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Slam": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13519,7 +13607,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsSlam.png",
-   "name": "Frostw\u00fclf's Slam",
+   "name": "Frostwülf's Slam",
    "perks": [
     {
      "name": "Galvanized",
@@ -13562,8 +13650,8 @@
     }
    ]
   },
-  "Frostw\u00fclf's Tacklers": {
-   "behemoth": "Frostw\u00fclf",
+  "Frostwülf's Tacklers": {
+   "behemoth": "Frostwülf",
    "cells": [
     "Insight",
     "Fortitude"
@@ -13572,7 +13660,7 @@
    "description": "A Slayer's {{type}} forged with {{behemoth}} trophies.",
    "elemental": "Frost",
    "icon": "/assets/icons/weapons/frostwulf/FrostwulfsTacklers.png",
-   "name": "Frostw\u00fclf's Tacklers",
+   "name": "Frostwülf's Tacklers",
    "perks": [
     {
      "name": "Galvanized",

@@ -35,17 +35,17 @@ model Post {
 model BuildLike {
   id          String   @id @default(cuid())
   buildId     String
-  clientId    String
-  fingerprint String
+  accountId   String?
+  clientId    String?
+  fingerprint String?
   ip          String?
   userAgent   String?
   createdAt   DateTime @default(now())
 
+  @@unique([buildId, accountId])
   @@unique([buildId, fingerprint])
   @@index([buildId])
-  @@index([clientId])
-  @@index([fingerprint])
-  @@index([ip])
+  @@index([accountId])
 }
 
 model BuildStat {
@@ -53,4 +53,86 @@ model BuildStat {
   likes     Int      @default(0)
   views     Int      @default(0)
   updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  usernameLower String   @unique
+  displayName   String?
+  discordId     String?  @unique
+  passwordHash  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([usernameLower])
+}
+
+model CommunityBuild {
+  id                String   @id @default(cuid())
+  buildId           String   @unique
+  title             String
+  description       String?
+  category          String   @default("General")
+  visibility        String   @default("public")
+  weaponType        String
+  weaponName        String
+  element           String?
+  omnicell          String?
+  accountId         String
+  authorUsername    String
+  authorDisplayName String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([accountId])
+  @@index([weaponType])
+  @@index([category])
+  @@index([visibility])
+  @@index([createdAt])
+}
+
+model CommunityComment {
+  id                String   @id @default(cuid())
+  communityBuildId  String
+  parentId          String?
+  accountId         String
+  authorUsername    String
+  authorDisplayName String
+  content           String
+  gifUrl            String?
+  createdAt         DateTime @default(now())
+
+  @@index([communityBuildId])
+  @@index([parentId])
+  @@index([accountId])
+  @@index([createdAt])
+}
+
+model CommunityCommentLike {
+  id        String   @id @default(cuid())
+  commentId String
+  accountId String
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, accountId])
+  @@index([commentId])
+  @@index([accountId])
+}
+
+model Notification {
+  id               String   @id @default(cuid())
+  accountId        String
+  actorId          String
+  actorUsername    String
+  actorDisplayName String
+  type             String
+  title            String
+  message          String
+  href             String
+  read             Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  @@index([accountId, read])
+  @@index([accountId, createdAt])
 }

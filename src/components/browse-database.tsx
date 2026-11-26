@@ -604,10 +604,10 @@ const WeaponSuggestedBuilds = ({
             </div>
 
             <Link
-                href={`/?tab=suggestions&weapon=${encodeURIComponent(weaponType)}&q=${encodeURIComponent(weaponName)}&category=all`}
+                href={`/builds?tab=meta&weapon=${encodeURIComponent(weaponType)}&q=${encodeURIComponent(weaponName)}&category=all`}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(91,163,255,0.25)] cursor-pointer shrink-0"
             >
-                <span>Open in Suggestions</span>
+                <span>Open in Meta Builds</span>
                 <ExternalLink className="h-3.5 w-3.5" />
             </Link>
         </div>
@@ -958,10 +958,10 @@ const ItemDetailDialog = ({
                                             <div
                                                 key={variantName}
                                                 className={`flex items-start justify-between gap-3 rounded-lg border p-3 text-xs ${isEpic
-                                                        ? "border-purple-500/40 bg-purple-500/10 text-purple-300"
-                                                        : isRare
-                                                            ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
-                                                            : "border-border/60 bg-muted/20 text-muted-foreground"
+                                                    ? "border-purple-500/40 bg-purple-500/10 text-purple-300"
+                                                    : isRare
+                                                        ? "border-sky-500/40 bg-sky-500/10 text-sky-300"
+                                                        : "border-border/60 bg-muted/20 text-muted-foreground"
                                                     }`}
                                             >
                                                 <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -999,19 +999,17 @@ const ItemDetailDialog = ({
                                             return (
                                                 <div
                                                     key={rank}
-                                                    className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${
-                                                        isMax
-                                                            ? "border-primary/50 bg-primary/[0.07] shadow-xs"
-                                                            : "border-border/60 bg-muted/15"
-                                                    }`}
+                                                    className={`flex items-start gap-3 rounded-lg border p-2.5 text-xs transition-colors ${isMax
+                                                        ? "border-primary/50 bg-primary/[0.07] shadow-xs"
+                                                        : "border-border/60 bg-muted/15"
+                                                        }`}
                                                 >
                                                     <div className="flex shrink-0 items-center gap-1.5">
                                                         <span
-                                                            className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${
-                                                                isMax
-                                                                    ? "bg-primary text-primary-foreground"
-                                                                    : "border border-border/70 bg-card text-foreground"
-                                                            }`}
+                                                            className={`flex h-6 min-w-8 items-center justify-center rounded-md font-bold px-1.5 ${isMax
+                                                                ? "bg-primary text-primary-foreground"
+                                                                : "border border-border/70 bg-card text-foreground"
+                                                                }`}
                                                         >
                                                             +{rank}
                                                         </span>
@@ -1354,8 +1352,8 @@ const SearchWithFilters = ({
                                         type="button"
                                         onClick={() => group.onChange(null)}
                                         className={`rounded-full px-2.5 py-1 text-xs font-medium transition-all ${group.selected === null
-                                                ? "bg-primary text-primary-foreground shadow-xs"
-                                                : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                                            ? "bg-primary text-primary-foreground shadow-xs"
+                                            : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                                             }`}
                                     >
                                         All
@@ -1368,8 +1366,8 @@ const SearchWithFilters = ({
                                                 type="button"
                                                 onClick={() => group.onChange(isSelected ? null : opt.value)}
                                                 className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all ${isSelected
-                                                        ? "bg-primary text-primary-foreground shadow-xs"
-                                                        : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                                                    ? "bg-primary text-primary-foreground shadow-xs"
+                                                    : "border border-border/60 bg-muted/30 text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                                                     }`}
                                             >
                                                 {opt.icon ? (
@@ -1477,8 +1475,8 @@ const Pagination = ({
                                 size="sm"
                                 onClick={() => onPageChange(Number(p))}
                                 className={`h-8 min-w-8 px-2 text-xs ${currentPage === p
-                                        ? "bg-primary font-semibold text-primary-foreground shadow-xs"
-                                        : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
+                                    ? "bg-primary font-semibold text-primary-foreground shadow-xs"
+                                    : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                                     }`}
                             >
                                 {p}
@@ -1688,16 +1686,16 @@ const DatabaseBrowser = () => {
 
     return (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="relative flex w-full flex-wrap justify-center items-center gap-2 bg-transparent border-none shadow-none p-0">
+            <TabsList className="relative flex h-auto min-h-10 w-full flex-wrap justify-center items-center gap-x-1.5 gap-y-1 sm:gap-2 bg-transparent border-none shadow-none p-0">
                 {databaseTabs.map(tab => {
                     const isActive = activeTab === tab.value;
                     return (
                         <TabsTrigger
                             key={tab.value}
                             value={tab.value}
-                            className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${isActive
-                                    ? "text-primary font-semibold drop-shadow-[0_0_8px_rgba(91,163,255,0.4)]"
-                                    : "text-muted-foreground hover:text-foreground"
+                            className={`relative h-9 sm:h-10 px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors duration-200 cursor-pointer ${isActive
+                                ? "text-primary font-semibold drop-shadow-[0_0_8px_rgba(91,163,255,0.4)]"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             <span>{tab.label}</span>
