@@ -641,7 +641,7 @@ export const ItemPickerOverlay = ({
 
     return (
         <div
-            className="lo-picker-backdrop lo-overlay-in absolute inset-0 z-40 flex flex-col outline-none"
+            className="lo-picker-backdrop lo-overlay-in fixed inset-0 z-50 lg:top-14 flex flex-col outline-none"
             role="dialog"
             aria-modal="true"
             aria-label={`${title} picker`}
@@ -649,15 +649,15 @@ export const ItemPickerOverlay = ({
             tabIndex={-1}
         >
             {/* header: cleaned up without upper slot switcher */}
-            <div className="flex flex-wrap items-center gap-6 border-b border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-[56px] py-[16px]">
-                <span className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 lg:gap-6 border-b border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-3.5 py-3 sm:px-6 lg:px-[56px] lg:py-[16px]">
+                <span className="flex items-center gap-2.5 sm:gap-3 shrink-0 min-w-0">
                     <DiamondPip size={8} color="#bfae85" />
-                    <span className="lo-serif text-[24px] font-semibold tracking-[0.16em] text-[#dcd8cc]">
+                    <span className="lo-serif text-base sm:text-[22px] lg:text-[24px] font-semibold tracking-[0.14em] sm:tracking-[0.16em] text-[#dcd8cc] truncate">
                         {title.toUpperCase()}
                     </span>
                 </span>
 
-                <div className="relative ml-auto w-[380px]">
+                <div className="relative order-last w-full sm:order-none sm:ml-auto sm:w-[260px] lg:w-[380px]">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7c828c]" aria-hidden />
                     <input
                         ref={searchRef}
@@ -669,28 +669,28 @@ export const ItemPickerOverlay = ({
                         }}
                         placeholder={`Search ${title.toLowerCase()}…`}
                         aria-label={`Search ${title}`}
-                        className="lo-card h-[42px] w-full rounded-[4px] pl-10 pr-4 text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                        className="lo-card h-[40px] sm:h-[42px] w-full rounded-[4px] pl-10 pr-4 text-[14px] sm:text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
                     />
                 </div>
                 <button
                     type="button"
                     onClick={onClose}
                     aria-label="Close picker (Escape)"
-                    className="lo-card flex h-[42px] w-[42px] items-center justify-center text-[#9a9a94] transition-colors hover:text-[#e0a33e]"
+                    className="lo-card ml-auto sm:ml-0 flex h-[38px] w-[38px] sm:h-[42px] sm:w-[42px] shrink-0 items-center justify-center text-[#9a9a94] transition-colors hover:text-[#e0a33e]"
                 >
                     <X className="h-5 w-5" aria-hidden />
                 </button>
             </div>
 
             {/* body */}
-            <div className="flex min-h-0 flex-1">
+            <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
                 {/* filter rail */}
                 {((filterValues && filterValues.length > 0) || (armourSlot && onSwitchArmourSlot) || isWeaponPicker) && (
-                    <nav className="flex w-[200px] shrink-0 flex-col gap-[6px] overflow-y-auto border-r border-[#3a3f47] bg-[rgba(8,10,13,0.85)] p-[16px]" aria-label={filterLabel}>
+                    <nav className="flex shrink-0 flex-row items-center gap-2 overflow-x-auto border-b border-[#3a3f47] bg-[rgba(8,10,13,0.85)] px-3 py-2 lg:w-[200px] lg:flex-col lg:items-stretch lg:gap-[6px] lg:overflow-x-visible lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-[16px]" aria-label={filterLabel}>
                         {/* Armour slot switcher in rail */}
                         {armourSlot && onSwitchArmourSlot && (
-                            <div className="mb-4 flex flex-col gap-[4px] border-b border-[#3a3f47]/70 pb-3">
-                                <span className="lo-sublabel mb-1">ARMOUR PIECE</span>
+                            <div className="flex shrink-0 flex-row items-center gap-1.5 lg:mb-4 lg:flex-col lg:items-stretch lg:gap-[4px] lg:border-b lg:border-[#3a3f47]/70 lg:pb-3">
+                                <span className="lo-sublabel hidden lg:block lg:mb-1">ARMOUR PIECE</span>
                                 {ARMOUR_SLOT_TABS.map(slot => {
                                     const isActive = armourSlot === slot.id;
                                     return (
@@ -703,7 +703,7 @@ export const ItemPickerOverlay = ({
                                                 onSwitchArmourSlot(slot.id);
                                             }}
                                             aria-pressed={isActive}
-                                            className={`lo-perk-row flex items-center gap-2.5 px-[12px] py-[8px] text-left text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
+                                            className={`lo-perk-row flex shrink-0 items-center gap-2 whitespace-nowrap px-2.5 py-1.5 lg:px-[12px] lg:py-[8px] text-left text-xs lg:text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
                                                 isActive
                                                     ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
                                                     : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
@@ -719,8 +719,8 @@ export const ItemPickerOverlay = ({
 
                         {/* Weapon class switcher in rail */}
                         {isWeaponPicker && (
-                            <div className="mb-4 flex flex-col gap-[4px] border-b border-[#3a3f47]/70 pb-3">
-                                <span className="lo-sublabel mb-1">WEAPON CLASS</span>
+                            <div className="flex shrink-0 flex-row items-center gap-1.5 border-r border-[#3a3f47]/70 pr-2.5 lg:mb-4 lg:flex-col lg:items-stretch lg:gap-[4px] lg:border-b lg:border-r-0 lg:border-[#3a3f47]/70 lg:pb-3 lg:pr-0">
+                                <span className="lo-sublabel hidden lg:block lg:mb-1">WEAPON CLASS</span>
                                 {WEAPON_CLASS_TABS.map(tab => {
                                     const isActive = weaponClass === tab.id;
                                     return (
@@ -732,7 +732,7 @@ export const ItemPickerOverlay = ({
                                                 setNavIndex(null);
                                             }}
                                             aria-pressed={isActive}
-                                            className={`lo-perk-row flex items-center gap-2.5 px-[12px] py-[8px] text-left text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
+                                            className={`lo-perk-row flex shrink-0 items-center gap-2 whitespace-nowrap px-2.5 py-1.5 lg:px-[12px] lg:py-[8px] text-left text-xs lg:text-[13px] font-semibold tracking-[0.04em] cursor-pointer transition-all ${
                                                 isActive
                                                     ? "!border-[#e0a33e] text-[#e0a33e] bg-[#e0a33e]/15 shadow-[0_0_8px_rgba(224,163,62,0.25)]"
                                                     : "text-[#b9bcc2] hover:text-white hover:bg-white/[0.03]"
@@ -747,13 +747,13 @@ export const ItemPickerOverlay = ({
                         )}
 
                         {filterValues && filterValues.length > 0 && (
-                            <>
-                                <span className="lo-sublabel mb-1">{(filterLabel ?? "Filter").toUpperCase()}</span>
+                            <div className="flex shrink-0 flex-row items-center gap-1.5 lg:flex-col lg:items-stretch lg:gap-[6px]">
+                                <span className="lo-sublabel hidden lg:block lg:mb-1">{(filterLabel ?? "Filter").toUpperCase()}</span>
                                 <button
                                     type="button"
                                     onClick={() => setFilter(null)}
                                     aria-pressed={filter === null}
-                                    className={`lo-perk-row px-[12px] py-[8px] text-left text-[13.5px] font-semibold tracking-[0.04em] ${
+                                    className={`lo-perk-row shrink-0 whitespace-nowrap px-2.5 py-1.5 lg:px-[12px] lg:py-[8px] text-left text-xs lg:text-[13.5px] font-semibold tracking-[0.04em] ${
                                         filter === null ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
                                     }`}
                                 >
@@ -765,7 +765,7 @@ export const ItemPickerOverlay = ({
                                         type="button"
                                         onClick={() => setFilter(current => (current === value ? null : value))}
                                         aria-pressed={filter === value}
-                                        className={`lo-perk-row flex items-center gap-2 px-[12px] py-[8px] text-left text-[13.5px] font-semibold tracking-[0.04em] ${
+                                        className={`lo-perk-row flex shrink-0 items-center gap-2 whitespace-nowrap px-2.5 py-1.5 lg:px-[12px] lg:py-[8px] text-left text-xs lg:text-[13.5px] font-semibold tracking-[0.04em] ${
                                             filter === value ? "!border-[#e0a33e] text-[#e0a33e]" : "text-[#b9bcc2]"
                                         }`}
                                     >
@@ -773,13 +773,13 @@ export const ItemPickerOverlay = ({
                                         {value}
                                     </button>
                                 ))}
-                            </>
+                            </div>
                         )}
                     </nav>
                 )}
 
                 {/* grid */}
-                <div ref={gridRef} className="min-h-0 flex-1 overflow-y-auto p-[28px]">
+                <div ref={gridRef} className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-5 lg:p-[28px]">
                     {flat.length === 0 && (
                         <p className="pt-16 text-center text-[15px] text-[#84888f]">Nothing matches your search.</p>
                     )}
@@ -793,7 +793,7 @@ export const ItemPickerOverlay = ({
                                     <span className="lo-flourish" aria-hidden />
                                 </div>
                             )}
-                            <div className="grid grid-cols-[repeat(auto-fill,minmax(158px,1fr))] gap-[12px]">
+                            <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(158px,1fr))] gap-2.5 sm:gap-[12px]">
                                 {list.map(item => {
                                     runningIndex += 1;
                                     const index = runningIndex;
@@ -809,9 +809,8 @@ export const ItemPickerOverlay = ({
                                                     onMouseEnter={() => setNavIndex(index)}
                                                     aria-label={`${item.label}${item.hint ? ` - ${item.hint}` : ""}${item.behemoth ? ` (Crafted from ${item.behemoth})` : ""}`}
                                                     aria-pressed={isSelected}
-                                                    className={`lo-picker-card group relative flex h-[178px] flex-col items-center justify-between p-[12px] text-center overflow-hidden transition-all duration-150 cursor-pointer ${
-                                                        isSelected ? "!border-[#e0a33e] shadow-[0_0_12px_rgba(224,163,62,0.4)]" : ""
-                                                    }`}
+                                                    className={`lo-picker-card group relative flex h-[178px] flex-col items-center justify-between p-[12px] text-center overflow-hidden transition-all duration-150 cursor-pointer ${isSelected ? "!border-[#e0a33e] shadow-[0_0_12px_rgba(224,163,62,0.4)]" : ""
+                                                        }`}
                                                 >
                                                     {/* Top bar: Level/stat chip + Behemoth tag */}
                                                     <div className="flex w-full items-center justify-between min-h-[20px]">
@@ -853,7 +852,7 @@ export const ItemPickerOverlay = ({
                                                 align="center"
                                                 sideOffset={8}
                                                 avoidCollisions
-                                                className="pointer-events-none z-50 w-80 sm:w-96 rounded-xl border border-[var(--line-2)] bg-[#0a101c]/95 p-4 shadow-2xl backdrop-blur-xl"
+                                                className="pointer-events-none z-50 w-[calc(100vw-24px)] max-w-80 sm:w-96 rounded-xl border border-[var(--line-2)] bg-[#0a101c]/95 p-4 shadow-2xl backdrop-blur-xl"
                                             >
                                                 <ItemPickerTooltipContent item={item} pickerKind={pickerKind} />
                                             </HoverCardContent>
@@ -867,15 +866,18 @@ export const ItemPickerOverlay = ({
             </div>
 
             {/* footer */}
-            <div className="flex items-center justify-between border-t border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-[56px] py-[12px]">
-                <span className="text-[12.5px] tracking-[0.06em] text-[#84888f]">
+            <div className="flex items-center justify-between border-t border-[#3a3f47] bg-[rgba(10,12,16,0.92)] px-4 py-3 lg:px-[56px] lg:py-[12px]">
+                <span className="hidden sm:inline text-[12.5px] tracking-[0.06em] text-[#84888f]">
                     ARROWS to navigate · ENTER to equip · ESC to close
+                </span>
+                <span className="sm:hidden text-[11px] tracking-[0.06em] text-[#84888f]">
+                    Tap an item to equip
                 </span>
                 {allowClear && (
                     <button
                         type="button"
                         onClick={() => commit(null)}
-                        className="lo-button-text !text-[15px] tracking-[0.16em]"
+                        className="lo-button-text ml-auto !text-[14px] sm:!text-[15px] tracking-[0.16em]"
                     >
                         CLEAR SLOT
                     </button>

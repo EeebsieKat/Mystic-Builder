@@ -238,6 +238,18 @@ export const CURATED_PERK_TIERS: Record<string, { baseEffect: string; tiers: Rec
             6: "-300 max health, +3.5% damage per stack",
         },
     },
+    Generosity: {
+        baseEffect:
+            "Shares a portion of the healing you receive with nearby Slayers (25 m range). All self/teammate heals, flasks, lifesteal, and orbs count; shared Generosity heals and revives/respawns do not.",
+        tiers: {
+            1: "20% healing shared to nearby Slayers",
+            2: "25% healing shared to nearby Slayers",
+            3: "35% healing shared to nearby Slayers",
+            4: "40% healing shared + +10% damage for 5s",
+            5: "45% healing shared + +15% damage for 5s",
+            6: "55% healing shared + +20% damage for 5s",
+        },
+    },
 };
 
 /**

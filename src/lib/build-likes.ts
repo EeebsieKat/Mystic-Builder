@@ -1,56 +1,48 @@
-import crypto from "crypto";
 import { db } from "@/lib/db";
+import { allowLocalFallback, d1Request, isD1Mode } from "@/lib/d1-client";
+import { createLocalNotification } from "@/lib/notifications";
 
 export interface LikeResult {
     liked: boolean;
     count: number;
 }
 
-export function computeServerFingerprint(
-    clientFp: string | null | undefined,
-    ip: string | null | undefined,
-    userAgent: string | null | undefined,
-    acceptLanguage: string | null | undefined,
-): string {
-    const payload = [
-        clientFp?.trim() || "unknown_client_fp",
-        userAgent?.trim() || "",
-        acceptLanguage?.trim() || "",
-        ip?.trim() || "",
-    ].join(":::");
-
-    return crypto.createHash("sha256").update(payload).digest("hex");
+export interface AllLikesResult {
+    likes: Record<string, number>;
+    userLikes: string[];
+    commentCounts?: Record<string, number>;
 }
 
 export async function toggleBuildLike(
     buildId: string,
-    clientId: string,
-    fingerprint: string,
-    ip?: string | null,
-    userAgent?: string | null,
+    accountId: string,
+    actor?: { username: string; displayName: string }
 ): Promise<LikeResult> {
-    // Check if a like already exists by fingerprint, clientId, or (ip + userAgent)
+    if (isD1Mode()) {
+        try {
+            return await d1Request<LikeResult>(`/likes/${encodeURIComponent(buildId)}/toggle`, {
+                method: "POST",
+                body: JSON.stringify({
+                    accountId,
+                    actorUsername: actor?.username,
+                    actorDisplayName: actor?.displayName,
+                }),
+            });
+        } catch (err) {
+            if (!allowLocalFallback()) throw err;
+            console.warn("[D1] Falling back to local DB for toggleBuildLike:", err);
+        }
+    }
+
     const existing = await db.buildLike.findFirst({
-        where: {
-            buildId,
-            OR: [
-                { fingerprint },
-                { clientId },
-                ...(ip && userAgent ? [{ ip, userAgent }] : []),
-            ],
-        },
+        where: { buildId, accountId },
     });
 
     if (existing) {
-        // User already liked, toggle to unlike
         await db.buildLike.delete({
-            where: {
-                id: existing.id,
-            },
+            where: { id: existing.id },
         });
-        const count = await db.buildLike.count({
-            where: { buildId },
-        });
+        const count = await db.buildLike.count({ where: { buildId } });
         await db.buildStat.upsert({
             where: { buildId },
             create: { buildId, likes: count },
@@ -58,53 +50,73 @@ export async function toggleBuildLike(
         });
         return { liked: false, count };
     } else {
-        // User liking
+        const syntheticKey = `account:${accountId}`;
         try {
             await db.buildLike.create({
                 data: {
                     buildId,
-                    clientId,
-                    fingerprint,
-                    ip: ip ?? null,
-                    userAgent: userAgent ?? null,
+                    accountId,
+                    clientId: syntheticKey,
+                    fingerprint: syntheticKey,
+                    ip: null,
+                    userAgent: null,
                 },
             });
         } catch {
-            // Already created or duplicate fingerprint blocked by @@unique([buildId, fingerprint])
+            // Already liked by this account
         }
 
-        const count = await db.buildLike.count({
-            where: { buildId },
-        });
+        const count = await db.buildLike.count({ where: { buildId } });
         await db.buildStat.upsert({
             where: { buildId },
             create: { buildId, likes: count },
             update: { likes: count },
         });
+
+        if (actor) {
+            const communityBuild = await db.communityBuild.findUnique({
+                where: { buildId },
+                select: { id: true, title: true, accountId: true },
+            });
+            if (communityBuild && communityBuild.accountId !== accountId) {
+                await createLocalNotification({
+                    accountId: communityBuild.accountId,
+                    actorId: accountId,
+                    actorUsername: actor.username,
+                    actorDisplayName: actor.displayName,
+                    type: "build_like",
+                    title: communityBuild.title,
+                    message: `liked your build "${communityBuild.title}"`,
+                    href: `/builds/${encodeURIComponent(communityBuild.id)}`,
+                    dedupeUnread: true,
+                });
+            }
+        }
+
         return { liked: true, count };
     }
 }
 
 export async function getBuildLikeStatus(
     buildId: string,
-    clientId?: string | null,
-    fingerprint?: string | null,
-    ip?: string | null,
-    userAgent?: string | null,
+    accountId?: string | null,
 ): Promise<LikeResult> {
-    const orConditions: { clientId?: string; fingerprint?: string; ip?: string; userAgent?: string }[] = [];
-    if (clientId) orConditions.push({ clientId });
-    if (fingerprint) orConditions.push({ fingerprint });
-    if (ip && userAgent) orConditions.push({ ip, userAgent });
+    if (isD1Mode()) {
+        try {
+            const qs = accountId ? `?accountId=${encodeURIComponent(accountId)}` : "";
+            return await d1Request<LikeResult>(`/likes/${encodeURIComponent(buildId)}${qs}`);
+        } catch (err) {
+            if (!allowLocalFallback()) throw err;
+            console.warn("[D1] Falling back to local DB for getBuildLikeStatus:", err);
+        }
+    }
 
     const [count, userLike] = await Promise.all([
         db.buildLike.count({ where: { buildId } }),
-        orConditions.length > 0
+        accountId
             ? db.buildLike.findFirst({
-                  where: {
-                      buildId,
-                      OR: orConditions,
-                  },
+                  where: { buildId, accountId },
+                  select: { id: true },
               })
             : null,
     ]);
@@ -115,12 +127,17 @@ export async function getBuildLikeStatus(
     };
 }
 
-export async function getAllBuildLikes(
-    clientId?: string | null,
-    fingerprint?: string | null,
-    ip?: string | null,
-    userAgent?: string | null,
-) {
+export async function getAllBuildLikes(accountId?: string | null): Promise<AllLikesResult> {
+    if (isD1Mode()) {
+        try {
+            const qs = accountId ? `?accountId=${encodeURIComponent(accountId)}` : "";
+            return await d1Request<AllLikesResult>(`/likes${qs}`);
+        } catch (err) {
+            if (!allowLocalFallback()) throw err;
+            console.warn("[D1] Falling back to local DB for getAllBuildLikes:", err);
+        }
+    }
+
     const stats = await db.buildStat.findMany({
         select: { buildId: true, likes: true },
     });
@@ -133,23 +150,33 @@ export async function getAllBuildLikes(
     }
 
     let userLikes: string[] = [];
-    const orConditions: { clientId?: string; fingerprint?: string; ip?: string; userAgent?: string }[] = [];
-    if (clientId) orConditions.push({ clientId });
-    if (fingerprint) orConditions.push({ fingerprint });
-    if (ip && userAgent) orConditions.push({ ip, userAgent });
-
-    if (orConditions.length > 0) {
+    if (accountId) {
         const userLikeRecords = await db.buildLike.findMany({
-            where: {
-                OR: orConditions,
-            },
+            where: { accountId },
             select: { buildId: true },
         });
-        userLikes = Array.from(new Set(userLikeRecords.map(r => r.buildId)));
+        userLikes = Array.from(new Set(userLikeRecords.map((r) => r.buildId)));
+    }
+
+    const metaCommentCounts = await db.communityComment
+        .groupBy({
+            by: ["communityBuildId"],
+            where: { communityBuildId: { startsWith: "meta:" } },
+            _count: { _all: true },
+        })
+        .catch(() => [] as Array<{ communityBuildId: string; _count: { _all: number } }>);
+
+    const commentCounts: Record<string, number> = {};
+    for (const row of metaCommentCounts) {
+        const bid = row.communityBuildId.slice(5);
+        if (bid && row._count._all > 0) {
+            commentCounts[bid] = row._count._all;
+        }
     }
 
     return {
         likes: likesMap,
         userLikes,
+        commentCounts,
     };
 }

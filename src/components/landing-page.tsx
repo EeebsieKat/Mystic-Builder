@@ -55,15 +55,15 @@ const MAIN_NAV_ITEMS = [
         icon: Database,
     },
     {
-        name: "Meta Builds",
+        name: "Builds & Community",
         key: "M",
-        href: "/?tab=suggestions",
+        href: "/builds",
         icon: Lightbulb,
     },
     {
         name: "Liked Builds",
         key: "L",
-        href: "/?tab=liked",
+        href: "/builds?tab=liked",
         icon: Heart,
     },
     {
@@ -226,8 +226,11 @@ export default function LandingPage() {
                 const currentIdx = getCurrentSectionIndex();
 
                 if (direction === "down") {
+                    const heroEl = document.getElementById(SECTION_IDS[0]);
                     if (currentIdx === 0) {
-                        scrollToSection(SECTION_IDS[1]);
+                        if (heroEl && heroEl.getBoundingClientRect().bottom <= window.innerHeight + 50) {
+                            scrollToSection(SECTION_IDS[1]);
+                        }
                     } else if (currentIdx < SECTION_IDS.length - 1) {
                         const currentEl = document.getElementById(SECTION_IDS[currentIdx]);
                         if (currentEl && currentEl.getBoundingClientRect().bottom <= window.innerHeight + 50) {
@@ -298,7 +301,7 @@ export default function LandingPage() {
             {/* HERO SECTION - Full First Viewport with Generous Side Margins */}
             <section
                 id="hero-section"
-                className="relative flex h-screen min-h-[640px] flex-col justify-center px-8 sm:px-16 md:px-24 lg:px-28 xl:px-36 py-8 lg:py-12 overflow-hidden"
+                className="relative flex min-h-[100dvh] lg:h-screen lg:min-h-[640px] flex-col justify-between lg:justify-center px-5 sm:px-14 md:px-20 lg:px-28 xl:px-36 pt-12 pb-8 sm:py-12 overflow-hidden"
             >
                 {/* God Rays streaming down from top center - gentle ethereal opacity */}
                 <div
@@ -317,53 +320,53 @@ export default function LandingPage() {
                 </div>
 
                 {/* Ambient Background Aura */}
-                <div className="pointer-events-none absolute -top-40 left-1/2 z-0 h-[700px] w-[1000px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.05)_45%,transparent_70%)] blur-3xl" />
+                <div className="pointer-events-none absolute -top-40 left-1/2 z-0 h-[700px] w-[1000px] max-w-[160vw] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.12)_0%,rgba(224,194,135,0.05)_45%,transparent_70%)] blur-3xl" />
 
-                <div className="relative z-10 mx-auto w-full max-w-5xl">
-                    <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
+                <div className="relative z-10 mx-auto my-auto w-full max-w-5xl">
+                    <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-8">
                         {/* Left Column: Headlines & Dauntless Menu */}
-                        <div className="flex flex-col items-start text-left lg:col-span-7">
+                        <div className="flex flex-col items-start text-left lg:col-span-7 min-w-0">
                             {/* Main Headline */}
                             <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-[50px] leading-tight">
                                 Forge Your Ultimate <span className="text-gold-gradient">Slayer Loadout</span>
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-3 max-w-lg text-xs leading-relaxed text-[var(--ink-2)] sm:text-sm">
+                            <p className="mt-2.5 sm:mt-3 max-w-lg text-xs leading-relaxed text-[var(--ink-2)] sm:text-sm">
                                 The premier build calculator and meta armory for Dauntless 1.14.7.
                             </p>
 
                             {/* Dauntless Sleek Transparent Navigation Menu */}
-                            <nav aria-label="Main Navigation" className="mt-8 flex w-full max-w-[420px] flex-col divide-y divide-white/[0.08] border-y border-white/[0.08]">
+                            <nav aria-label="Main Navigation" className="mt-5 sm:mt-8 flex w-full max-w-[420px] flex-col divide-y divide-white/[0.08] border-y border-white/[0.08]">
                                 {MAIN_NAV_ITEMS.map((item) => {
                                     const Icon = item.icon;
                                     return (
                                         <Link
                                             key={item.name}
                                             href={item.href}
-                                            className="group relative flex items-center justify-between py-3 px-2 rounded-sm transition-all duration-200 hover:bg-white/[0.035] hover:pl-3"
+                                            className="group relative flex items-center justify-between gap-2 py-2.5 sm:py-3 px-2 rounded-sm transition-all duration-200 hover:bg-white/[0.035] hover:pl-3"
                                         >
                                             {/* Left glowing accent line on hover */}
                                             <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-[2.5px] rounded-r bg-[var(--aether-hi)] transition-all duration-200 group-hover:h-3/5 shadow-[0_0_10px_rgba(91,163,255,0.9)]" />
 
-                                            <div className="flex items-center gap-3.5">
+                                            <div className="flex min-w-0 items-center gap-3 sm:gap-3.5">
                                                 {/* Circular Icon Medallion */}
-                                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] text-[var(--aether-hi)] shadow-sm transition-all duration-200 group-hover:border-[var(--aether-line)] group-hover:bg-[var(--aether-a10)] group-hover:text-white group-hover:shadow-[0_0_14px_rgba(91,163,255,0.5)]">
+                                                <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/[0.03] text-[var(--aether-hi)] shadow-sm transition-all duration-200 group-hover:border-[var(--aether-line)] group-hover:bg-[var(--aether-a10)] group-hover:text-white group-hover:shadow-[0_0_14px_rgba(91,163,255,0.5)]">
                                                     <Icon className="h-4 w-4" />
                                                 </div>
 
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-display text-[15px] sm:text-base font-bold tracking-wide text-white/90 transition-colors group-hover:text-white">
+                                                <div className="flex min-w-0 items-center gap-2">
+                                                    <span className="truncate font-display text-sm sm:text-base font-bold tracking-wide text-white/90 transition-colors group-hover:text-white">
                                                         {item.name}
                                                     </span>
-                                                    <span className="font-mono text-xs font-semibold text-[var(--gold)]/80 transition-colors group-hover:text-[var(--gold-bright)]">
+                                                    <span className="shrink-0 font-mono text-xs font-semibold text-[var(--gold)]/80 transition-colors group-hover:text-[var(--gold-bright)]">
                                                         [{item.key}]
                                                     </span>
                                                 </div>
                                             </div>
 
-                                            <div className="flex items-center gap-2 text-[var(--ink-3)] transition-all duration-200 group-hover:text-white group-hover:translate-x-1">
-                                                <span className="text-[10px] font-mono tracking-widest uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-80 text-[var(--aether-hi)]">
+                                            <div className="flex shrink-0 items-center gap-2 text-[var(--ink-3)] transition-all duration-200 group-hover:text-white group-hover:translate-x-1">
+                                                <span className="hidden sm:inline text-[10px] font-mono tracking-widest uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-80 text-[var(--aether-hi)]">
                                                     Select
                                                 </span>
                                                 <ArrowRight className="h-4 w-4" />
@@ -376,13 +379,13 @@ export default function LandingPage() {
 
                         {/* Right Column: ASCII Mystic Crest - Scaled to match left column hierarchy */}
                         <div className="relative flex items-center justify-center lg:col-span-5 select-none">
-                            <div className="relative flex items-center justify-center">
+                            <div className="relative flex items-center justify-center max-w-full lg:max-w-none">
                                 {/* Ambient Glow behind Crest */}
-                                <div className="absolute h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.18)_0%,rgba(224,194,135,0.09)_45%,transparent_70%)] blur-3xl" />
+                                <div className="absolute h-64 w-64 sm:h-[420px] sm:w-[420px] rounded-full bg-[radial-gradient(circle_at_center,rgba(91,163,255,0.18)_0%,rgba(224,194,135,0.09)_45%,transparent_70%)] blur-3xl" />
 
                                 <pre
                                     aria-label="Mystic Paradox Crest ASCII Art"
-                                    className="relative font-mono text-[9.5px] xs:text-[11.5px] sm:text-[13.5px] md:text-[15px] lg:text-[16px] xl:text-[18.5px] 2xl:text-[21px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--gold-bright)] via-[var(--gold)] to-[var(--aether)] drop-shadow-[0_0_35px_rgba(224,194,135,0.5)] transition-transform duration-500 hover:scale-105"
+                                    className="relative max-w-full overflow-hidden lg:max-w-none lg:overflow-visible font-mono text-[8px] xs:text-[9.5px] sm:text-[13.5px] md:text-[15px] lg:text-[16px] xl:text-[18.5px] 2xl:text-[21px] leading-[1.12] font-black text-transparent bg-clip-text bg-gradient-to-b from-[var(--gold-bright)] via-[var(--gold)] to-[var(--aether)] drop-shadow-[0_0_35px_rgba(224,194,135,0.5)] transition-transform duration-500 hover:scale-105"
                                 >
                                     {LOGO_ASCII}
                                 </pre>
@@ -395,7 +398,7 @@ export default function LandingPage() {
                 <button
                     type="button"
                     onClick={() => scrollToSection("core-capabilities")}
-                    className="group absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-center transition-all duration-300 hover:translate-y-0.5 cursor-pointer select-none"
+                    className="group relative z-10 mt-8 mx-auto lg:mt-0 lg:mx-0 lg:absolute lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 flex flex-col items-center gap-1.5 text-center transition-all duration-300 hover:translate-y-0.5 cursor-pointer select-none"
                     aria-label="Scroll to explore features"
                 >
                     <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-[var(--ink-3)] transition-colors group-hover:text-[var(--gold)]">
@@ -469,9 +472,9 @@ export default function LandingPage() {
 
                         {/* RIGHT: Stacked 2 Cards (Span 5) */}
                         <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-5 justify-between">
-                            {/* Right Top: 517 Meta Guides Index */}
+                            {/* Right Top: 517 Meta Guides & Community Builds */}
                             <Link
-                                href="/?tab=suggestions"
+                                href="/builds"
                                 className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-[var(--gold)]/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(224,194,135,0.18)] cursor-pointer"
                             >
                                 <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-black/60 border-b border-white/[0.08]">
@@ -577,12 +580,12 @@ export default function LandingPage() {
                                 <img
                                     src="/assets/awakening-ui/loadout/GildWingsGold.png"
                                     alt=""
-                                    className="absolute h-auto w-[420px] max-w-none opacity-25 object-contain select-none"
+                                    className="absolute h-auto w-[280px] sm:w-[420px] max-w-none opacity-25 object-contain select-none"
                                     aria-hidden="true"
                                 />
 
                                 {/* Social Community Preview Overlay Card */}
-                                <div className="relative z-10 mx-6 flex max-w-md w-full flex-col rounded-sm border border-white/15 bg-black/60 p-4 backdrop-blur-md shadow-2xl">
+                                <div className="relative z-10 mx-3 sm:mx-6 flex max-w-md w-full flex-col rounded-sm border border-white/15 bg-black/60 p-3.5 sm:p-4 backdrop-blur-md shadow-2xl">
                                     <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                                         <div className="flex items-center gap-2">
                                             <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -640,14 +643,14 @@ export default function LandingPage() {
                         <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-5 justify-between">
                             {/* Right Top: Custom Cells Addition */}
                             <div className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-purple-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(168,85,247,0.18)]">
-                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-purple-950/40 via-violet-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-6">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-purple-950/40 via-violet-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-3 sm:px-6">
                                     {/* Perk Icons Matrix Showcase */}
                                     {["Brutality.png", "Finesse.png", "Insight.png", "Alacrity.png", "Prismatic.png"].map((icon, idx) => (
-                                        <div key={idx} className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-purple-500/20 bg-black/50 p-2 shadow-inner group-hover:border-purple-400/50 transition-colors">
+                                        <div key={idx} className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-purple-500/20 bg-black/50 p-1.5 sm:p-2 shadow-inner group-hover:border-purple-400/50 transition-colors">
                                             <img
                                                 src={`/assets/icons/perks/${icon}`}
                                                 alt=""
-                                                className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-transform group-hover:scale-110"
+                                                className="h-7 w-7 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] transition-transform group-hover:scale-110"
                                             />
                                         </div>
                                     ))}
@@ -676,14 +679,14 @@ export default function LandingPage() {
 
                             {/* Right Bottom: Weapons Addition */}
                             <div className="group relative flex flex-1 flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-[#070e1a]/95 transition-all duration-300 hover:border-amber-500/50 hover:bg-[#0a1526] hover:shadow-[0_0_35px_rgba(245,158,11,0.18)]">
-                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-amber-950/40 via-yellow-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-6">
+                                <div className="relative h-[95px] sm:h-[115px] lg:h-[130px] xl:h-[142px] w-full overflow-hidden bg-gradient-to-r from-amber-950/40 via-yellow-900/20 to-black/60 border-b border-white/[0.08] flex items-center justify-around px-3 sm:px-6">
                                     {/* Weapon Icons Matrix Showcase */}
                                     {["Sword.png", "Axe.png", "Hammer.png", "ChainBlades.png", "AetherStrikers.png"].map((icon, idx) => (
-                                        <div key={idx} className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-amber-500/20 bg-black/50 p-2 shadow-inner group-hover:border-amber-400/50 transition-colors">
+                                        <div key={idx} className="flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-sm border border-amber-500/20 bg-black/50 p-1.5 sm:p-2 shadow-inner group-hover:border-amber-400/50 transition-colors">
                                             <img
                                                 src={`/assets/icons/generic/${icon}`}
                                                 alt=""
-                                                className="h-8 w-8 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110"
+                                                className="h-7 w-7 sm:h-10 sm:w-10 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-transform group-hover:scale-110"
                                             />
                                         </div>
                                     ))}

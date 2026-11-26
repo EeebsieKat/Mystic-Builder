@@ -8,7 +8,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Check, Copy, Dices, Eraser, Link2 } from "lucide-react";
+import { Check, CheckCircle2, ClipboardPaste, Dices, Eraser, ExternalLink, Globe, Link2, Lock, Pencil, Save, Share2, Users } from "lucide-react";
 
 import { useToast } from "@/hooks/use-toast";
 import { gameData } from "@/game/data";
@@ -39,6 +39,7 @@ import type {
 import { cellTypeColor, cellTypeLabel, DEFAULT_BUILD_ID, DEFAULT_BUILD_NAME, elementColor, extractBuildId, localBuildPath, SITE_NAME } from "@/lib/site";
 
 import { LoadoutStage } from "./loadout-stage";
+import { MobileLoadoutView } from "./mobile-loadout-view";
 import {
     ArmourCard,
     ConsumableRow,
@@ -50,6 +51,9 @@ import { PerkSummaryDialog } from "./perk-summary-dialog";
 import { DetailCard, type DetailCardData } from "./detail-card";
 import { ItemPickerOverlay, type PickerItem } from "./item-picker";
 import { DiamondPip, FlourishHeader, ItemIcon } from "./decor";
+import PublishBuildDialog from "@/components/community/publish-build-dialog";
+import EditBuildDialog from "@/components/community/edit-build-dialog";
+import type { CommunityBuildRecord } from "@/lib/community-types";
 import type {
     ArmourSlotId,
     CellSlotKey,
@@ -343,6 +347,28 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
     const [importValue, setImportValue] = useState("");
     const [copied, setCopied] = useState(false);
     const [perkSummaryOpen, setPerkSummaryOpen] = useState(false);
+    const [publishOpen, setPublishOpen] = useState(false);
+    const [liveBuild, setLiveBuild] = useState<CommunityBuildRecord | null>(null);
+    const [editLiveOpen, setEditLiveOpen] = useState(false);
+    const [updatingLive, setUpdatingLive] = useState(false);
+
+    const communityIdParam = searchParams.get("communityId");
+
+    useEffect(() => {
+        if (!communityIdParam) return;
+        let cancelled = false;
+        fetch(`/api/community/builds/${encodeURIComponent(communityIdParam)}`, { cache: "no-store" })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((data: { build?: CommunityBuildRecord; currentUserId?: string | null } | null) => {
+                if (!cancelled && data?.build && data.currentUserId && data.build.accountId === data.currentUserId) {
+                    setLiveBuild(data.build);
+                }
+            })
+            .catch(() => { });
+        return () => {
+            cancelled = true;
+        };
+    }, [communityIdParam]);
 
     const model = useMemo(() => draftToModel(draft), [draft]);
     const buildId = useMemo(() => {
@@ -611,6 +637,29 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
         setImportOpen(false);
         toast({ title: "Build loaded into the loadout" });
     }, [importValue, toast]);
+
+    const importPreview = useMemo(() => {
+        if (!importOpen) return null;
+        const id = extractBuildId(importValue);
+        if (!id) return null;
+        const parsed = tryDeserialize(id);
+        if (!parsed) return null;
+        const decodedView = buildBuildView(parsed, id);
+        const isReforgedSite = /dauntless-builder\.com/i.test(importValue);
+        return { id, view: decodedView, isReforgedSite };
+    }, [importOpen, importValue]);
+
+    const handlePasteImportClipboard = useCallback(async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text) setImportValue(text.trim());
+        } catch {
+            toast({
+                title: "Clipboard access blocked",
+                description: "Paste the link into the field with Ctrl+V.",
+            });
+        }
+    }, [toast]);
 
     const copyShareLink = useCallback(async () => {
         if (!buildId) {
@@ -1157,172 +1206,345 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
 
     /* --------------------------- render ---------------------------- */
 
+    const handlePartClick = useCallback(
+        (partKey: PartSlotKey) => {
+            const weaponType = weapon?.type;
+            if (!weaponType) {
+                return;
+            }
+            const bucket =
+                weaponType === "Repeater"
+                    ? partKey === "weaponPart1"
+                        ? "chambers"
+                        : partKey === "weaponPart2"
+                            ? "grips"
+                            : "mods"
+                    : partKey === "weaponPart1"
+                        ? "specials"
+                        : "mods";
+            setPickerTarget({ kind: "part", partKey, bucket });
+        },
+        [weapon?.type],
+    );
+
+    const handleReset = useCallback(() => {
+        setDraft({ ...EMPTY_DRAFT, buildName: "SLAYER" });
+        selectSlot("weapon");
+        setLiveBuild(null);
+        toast({ title: "Build reset to Slayer" });
+    }, [selectSlot, toast]);
+
+    const handleToggleLiveVisibility = useCallback(async () => {
+        if (!liveBuild) return;
+        const nextVisibility = liveBuild.visibility === "private" ? "public" : "private";
+        setUpdatingLive(true);
+        try {
+            const res = await fetch(`/api/community/builds/${encodeURIComponent(liveBuild.id)}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ visibility: nextVisibility }),
+            });
+            const data = (await res.json().catch(() => ({}))) as {
+                build?: CommunityBuildRecord;
+                error?: string;
+            };
+            if (res.ok && data.build) {
+                setLiveBuild(data.build);
+                toast({
+                    title: nextVisibility === "private" ? "Build is now Private" : "Build is now Public",
+                    description:
+                        nextVisibility === "private"
+                            ? `"${data.build.title}" is hidden from Community Builds.`
+                            : `"${data.build.title}" is visible in Community Builds.`,
+                });
+            } else {
+                toast({ title: "Update failed", description: data.error || "Unable to update visibility." });
+            }
+        } finally {
+            setUpdatingLive(false);
+        }
+    }, [liveBuild, toast]);
+
+    const handleSaveLiveLoadout = useCallback(async () => {
+        if (!liveBuild || !buildId) return;
+        setUpdatingLive(true);
+        try {
+            const res = await fetch(`/api/community/builds/${encodeURIComponent(liveBuild.id)}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    buildInput: buildId,
+                    title: draft.buildName && draft.buildName !== "SLAYER" ? draft.buildName : liveBuild.title,
+                }),
+            });
+            const data = (await res.json().catch(() => ({}))) as {
+                build?: CommunityBuildRecord;
+                error?: string;
+            };
+            if (res.ok && data.build) {
+                setLiveBuild(data.build);
+                toast({
+                    title: "Live build updated",
+                    description: `Saved updated loadout to "${data.build.title}".`,
+                });
+            } else {
+                toast({ title: "Update failed", description: data.error || "Unable to save updated loadout." });
+            }
+        } finally {
+            setUpdatingLive(false);
+        }
+    }, [liveBuild, buildId, draft.buildName, toast]);
+
+    const canShareOrPublish = Boolean(buildId && hasAnyItem(draft));
+    const canReset = hasAnyItem(draft) || draft.buildName !== "SLAYER";
+
     return (
-        <LoadoutStage>
-            {/* backdrop */}
-            <span className="lo-light-shaft" style={{ left: "calc(50% - 260px)" }} aria-hidden />
-            <span className="lo-light-shaft" style={{ left: "calc(50% + 90px)" }} aria-hidden />
-            <span className="lo-pedestal absolute left-1/2 -translate-x-1/2" style={{ top: 540, width: 540, height: 190 }} aria-hidden />
-            <span
-                className="pointer-events-none absolute inset-0"
-                style={{ background: "radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(4,5,7,0.55) 100%)" }}
-                aria-hidden
-            />
+        <>
+            <div className="hidden lg:block w-full">
+                <LoadoutStage>
+                    {/* backdrop */}
+                    <span className="lo-light-shaft" style={{ left: "calc(50% - 260px)" }} aria-hidden />
+                    <span className="lo-light-shaft" style={{ left: "calc(50% + 90px)" }} aria-hidden />
+                    <span className="lo-pedestal absolute left-1/2 -translate-x-1/2" style={{ top: 540, width: 540, height: 190 }} aria-hidden />
+                    <span
+                        className="pointer-events-none absolute inset-0"
+                        style={{ background: "radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(4,5,7,0.55) 100%)" }}
+                        aria-hidden
+                    />
 
-            {/* reserved slayer slot hook - intentionally empty for now */}
-            <span data-slayer-slot="" className="absolute left-1/2 -translate-x-1/2" aria-hidden />
+                    {/* reserved slayer slot hook - intentionally empty for now */}
+                    <span data-slayer-slot="" className="absolute left-1/2 -translate-x-1/2" aria-hidden />
 
-            {/* nameplate */}
-            <div className="absolute left-1/2 top-[46px] -translate-x-1/2 text-center">
-                <input
-                    type="text"
-                    value={draft.buildName}
-                    onChange={event => setDraft(previous => ({ ...previous, buildName: event.target.value.slice(0, 24) }))}
-                    aria-label="Build name"
-                    className="lo-serif w-[420px] bg-transparent text-center text-[40px] font-semibold tracking-[0.14em] text-[#e8e4da] outline-none transition-colors focus:text-white/95 hover:text-[#f5f1e8] focus-visible:text-[#e0a33e]"
-                    style={{ textShadow: "0 2px 14px rgba(0,0,0,0.8)" }}
-                    spellCheck={false}
-                />
-                <p className="mt-[6px] text-[13px] font-semibold normal-case tracking-[0.28em] text-[var(--lo-gold)]">
-                    MYSTIC PARADOX
-                </p>
+                    {/* nameplate */}
+                    <div className="absolute left-1/2 top-[46px] -translate-x-1/2 text-center">
+                        <input
+                            type="text"
+                            value={draft.buildName}
+                            onChange={event => setDraft(previous => ({ ...previous, buildName: event.target.value.slice(0, 24) }))}
+                            aria-label="Build name"
+                            className="lo-serif w-[420px] bg-transparent text-center text-[40px] font-semibold tracking-[0.14em] text-[#e8e4da] outline-none transition-colors focus:text-white/95 hover:text-[#f5f1e8] focus-visible:text-[#e0a33e]"
+                            style={{ textShadow: "0 2px 14px rgba(0,0,0,0.8)" }}
+                            spellCheck={false}
+                        />
+                        <p className="mt-[6px] text-[13px] font-semibold normal-case tracking-[0.28em] text-[var(--lo-gold)]">
+                            MYSTIC PARADOX
+                        </p>
+                    </div>
+
+                    {/* left column */}
+                    <div className="absolute left-[40px] top-[128px] grid grid-cols-2 gap-[14px]">
+                        <WeaponCard
+                            weapon={weapon}
+                            surged={draft.weaponSurged}
+                            selected={selectedSlot === "weapon"}
+                            onSelect={() => selectSlot("weapon")}
+                            onOpenPicker={() => setPickerTarget({ kind: "weapon" })}
+                        />
+                        <LanternOmnicellCard
+                            lantern={lantern}
+                            omnicell={omnicell}
+                            selectedSlot={selectedSlot}
+                            onSelect={slot => selectSlot(slot)}
+                            onOpenPicker={target => setPickerTarget({ kind: target })}
+                        />
+                        {ARMOUR_SLOTS.slice(0, 2).map(slot => (
+                            <ArmourCard
+                                key={slot.id}
+                                slot={slot.id}
+                                armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
+                                surged={draft[slot.surgedKey]}
+                                selected={selectedSlot === slot.id}
+                                onSelect={() => selectSlot(slot.id)}
+                                onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
+                            />
+                        ))}
+                        {ARMOUR_SLOTS.slice(2).map(slot => (
+                            <ArmourCard
+                                key={slot.id}
+                                slot={slot.id}
+                                armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
+                                surged={draft[slot.surgedKey]}
+                                selected={selectedSlot === slot.id}
+                                onSelect={() => selectSlot(slot.id)}
+                                onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="absolute left-[40px] top-[782px]">
+                        <ConsumableRow
+                            consumableNames={consumableNames}
+                            selectedSlot={selectedSlot}
+                            onSelect={slot => selectSlot(slot)}
+                            onOpenPicker={index => setPickerTarget({ kind: "consumable", index })}
+                            findConsumable={name => (name ? findConsumableByName(name) : null)}
+                        />
+                    </div>
+
+                    {/* center detail card */}
+                    <div className="absolute left-1/2 top-[610px] -translate-x-1/2 h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
+                        <DetailCard data={detailData} />
+                    </div>
+
+                    {/* right panel */}
+                    <div className="absolute right-[40px] top-[64px] w-[440px]">
+                        <CrestHeader power={totalPower} resistance={totalResistance} />
+                        <FlourishHeader
+                            title={rightPanel ? rightPanel.slotLabel : "Perk Summary"}
+                            className="mt-[18px]"
+                        />
+                        <div className="mt-[14px]">
+                            {rightPanel ? (
+                                <ItemDetailPanel
+                                    data={rightPanel}
+                                    cellSlots={rightPanel.cellSlots}
+                                    selectedCellKey={null}
+                                    onCellClick={key => setPickerTarget({ kind: "cell", cellKey: key })}
+                                    onPartClick={handlePartClick}
+                                    onBondClick={() => setPickerTarget({ kind: "bond" })}
+                                    onOpenPerkSummary={() => setPerkSummaryOpen(true)}
+                                />
+                            ) : (
+                                <PerkSummaryPanel perkTotals={view?.perkTotals ?? []} />
+                            )}
+                        </div>
+                    </div>
+
+                    {/* bottom bar */}
+                    <div className="absolute inset-x-0 bottom-0 flex h-[75px] items-center justify-between border-t border-[#3a3f47]/60 bg-gradient-to-t from-[rgba(6,7,8,0.9)] to-transparent px-[60px]">
+                        <div className="flex items-center gap-[56px]">
+                            <button
+                                type="button"
+                                onClick={copyShareLink}
+                                disabled={!canShareOrPublish}
+                                className="lo-button-text flex items-center gap-2"
+                            >
+                                {copied ? <Check className="h-4 w-4" aria-hidden /> : <Share2 className="h-4 w-4" aria-hidden />}
+                                {copied ? "COPIED" : "SHARE"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setPublishOpen(true)}
+                                disabled={!canShareOrPublish}
+                                className="lo-button-text flex items-center gap-2 !text-[#e0c287]"
+                            >
+                                <Users className="h-4 w-4" aria-hidden />
+                                PUBLISH
+                            </button>
+                            <button type="button" onClick={randomize} className="lo-button-text flex items-center gap-2">
+                                <Dices className="h-4 w-4" aria-hidden />
+                                RANDOMIZE
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleReset}
+                                disabled={!canReset}
+                                className="lo-button-text flex items-center gap-2"
+                            >
+                                <Eraser className="h-4 w-4" aria-hidden />
+                                RESET
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setImportOpen(true)}
+                                className="lo-button-text flex items-center gap-2"
+                            >
+                                <Link2 className="h-4 w-4" aria-hidden />
+                                IMPORT
+                            </button>
+                        </div>
+
+                        {liveBuild && (
+                            <div className="ml-auto flex items-center gap-[28px]">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditLiveOpen(true)}
+                                    className="lo-button-text flex items-center gap-2 !text-white"
+                                >
+                                    <Pencil className="h-4 w-4 text-[#5ba3ff]" aria-hidden />
+                                    EDIT BUILD
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={updatingLive}
+                                    onClick={handleToggleLiveVisibility}
+                                    className={`lo-button-text flex items-center gap-2 ${
+                                        liveBuild.visibility === "private" ? "!text-amber-300" : "!text-emerald-300"
+                                    }`}
+                                >
+                                    {liveBuild.visibility === "private" ? (
+                                        <>
+                                            <Lock className="h-4 w-4" aria-hidden />
+                                            PRIVATE
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Globe className="h-4 w-4" aria-hidden />
+                                            PUBLIC
+                                        </>
+                                    )}
+                                </button>
+                                {buildId && buildId !== liveBuild.buildId && (
+                                    <button
+                                        type="button"
+                                        disabled={updatingLive}
+                                        onClick={handleSaveLiveLoadout}
+                                        className="lo-button-text flex items-center gap-2 !text-[#e0a33e]"
+                                    >
+                                        <Save className="h-4 w-4" aria-hidden />
+                                        SAVE GEAR
+                                    </button>
+                                )}
+                                <a
+                                    href={`/builds/${encodeURIComponent(liveBuild.id)}`}
+                                    className="lo-button-text flex items-center gap-1.5 !text-[#5ba3ff]"
+                                >
+                                    <span>VIEW LIVE</span>
+                                    <ExternalLink className="h-4 w-4" aria-hidden />
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                </LoadoutStage>
             </div>
 
-            {/* left column */}
-            <div className="absolute left-[40px] top-[128px] grid grid-cols-2 gap-[14px]">
-                <WeaponCard
+            <div className="lg:hidden w-full">
+                <MobileLoadoutView
+                    draft={draft}
+                    onBuildNameChange={name => setDraft(previous => ({ ...previous, buildName: name }))}
+                    selectedSlot={selectedSlot}
+                    onSelectSlot={selectSlot}
+                    onOpenPicker={setPickerTarget}
                     weapon={weapon}
-                    surged={draft.weaponSurged}
-                    selected={selectedSlot === "weapon"}
-                    onSelect={() => selectSlot("weapon")}
-                    onOpenPicker={() => setPickerTarget({ kind: "weapon" })}
-                />
-                <LanternOmnicellCard
                     lantern={lantern}
                     omnicell={omnicell}
-                    selectedSlot={selectedSlot}
-                    onSelect={slot => selectSlot(slot)}
-                    onOpenPicker={target => setPickerTarget({ kind: target })}
-                />
-                {ARMOUR_SLOTS.slice(0, 2).map(slot => (
-                    <ArmourCard
-                        key={slot.id}
-                        slot={slot.id}
-                        armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
-                        surged={draft[slot.surgedKey]}
-                        selected={selectedSlot === slot.id}
-                        onSelect={() => selectSlot(slot.id)}
-                        onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
-                    />
-                ))}
-                {ARMOUR_SLOTS.slice(2).map(slot => (
-                    <ArmourCard
-                        key={slot.id}
-                        slot={slot.id}
-                        armour={draft[slot.nameKey] ? findArmourByName(draft[slot.nameKey]!) : null}
-                        surged={draft[slot.surgedKey]}
-                        selected={selectedSlot === slot.id}
-                        onSelect={() => selectSlot(slot.id)}
-                        onOpenPicker={() => setPickerTarget({ kind: "armour", slot: slot.id })}
-                    />
-                ))}
-            </div>
-
-            <div className="absolute left-[40px] top-[782px]">
-                <ConsumableRow
+                    bondWeaponName={model.bondWeaponData?.name ?? null}
+                    armourPieces={armourPieces}
                     consumableNames={consumableNames}
-                    selectedSlot={selectedSlot}
-                    onSelect={slot => selectSlot(slot)}
-                    onOpenPicker={index => setPickerTarget({ kind: "consumable", index })}
-                    findConsumable={name => (name ? findConsumableByName(name) : null)}
+                    totalPower={totalPower}
+                    totalResistance={totalResistance}
+                    detailData={detailData}
+                    rightPanel={rightPanel}
+                    perkTotals={view?.perkTotals ?? []}
+                    onCellClick={key => setPickerTarget({ kind: "cell", cellKey: key })}
+                    onPartClick={handlePartClick}
+                    onBondClick={() => setPickerTarget({ kind: "bond" })}
+                    onOpenPerkSummary={() => setPerkSummaryOpen(true)}
+                    onShare={copyShareLink}
+                    copied={copied}
+                    canShareOrPublish={canShareOrPublish}
+                    onPublish={() => setPublishOpen(true)}
+                    onRandomize={randomize}
+                    onReset={handleReset}
+                    canReset={canReset}
+                    onOpenImport={() => setImportOpen(true)}
+                    liveBuild={liveBuild}
+                    currentBuildId={buildId}
+                    updatingLive={updatingLive}
+                    onOpenEditLive={() => setEditLiveOpen(true)}
+                    onToggleLiveVisibility={handleToggleLiveVisibility}
+                    onSaveLiveLoadout={handleSaveLiveLoadout}
                 />
-            </div>
-
-            {/* center detail card */}
-            {(
-                <div className="absolute left-1/2 top-[610px] -translate-x-1/2 h-[395px] w-[710px] border border-[#3a3f47]/70 bg-[rgba(13,16,20,0.72)] p-[20px] backdrop-blur-[2px]">
-                    <DetailCard data={detailData} />
-                </div>
-            )}
-
-            {/* right panel */}
-            <div className="absolute right-[40px] top-[64px] w-[440px]">
-                <CrestHeader power={totalPower} resistance={totalResistance} />
-                <FlourishHeader
-                    title={rightPanel ? rightPanel.slotLabel : "Perk Summary"}
-                    className="mt-[18px]"
-                />
-                <div className="mt-[14px]">
-                    {rightPanel ? (
-                        <ItemDetailPanel
-                            data={rightPanel}
-                            cellSlots={rightPanel.cellSlots}
-                            selectedCellKey={null}
-                            onCellClick={key => setPickerTarget({ kind: "cell", cellKey: key })}
-                            onPartClick={partKey => {
-                                const weaponType = weapon?.type;
-                                if (!weaponType) {
-                                    return;
-                                }
-                                const bucket =
-                                    weaponType === "Repeater"
-                                        ? partKey === "weaponPart1"
-                                            ? "chambers"
-                                            : partKey === "weaponPart2"
-                                                ? "grips"
-                                                : "mods"
-                                        : partKey === "weaponPart1"
-                                            ? "specials"
-                                            : "mods";
-                                setPickerTarget({ kind: "part", partKey, bucket });
-                            }}
-                            onBondClick={() => setPickerTarget({ kind: "bond" })}
-                            onOpenPerkSummary={() => setPerkSummaryOpen(true)}
-                        />
-                    ) : (
-                        <PerkSummaryPanel perkTotals={view?.perkTotals ?? []} />
-                    )}
-                </div>
-            </div>
-
-            {/* bottom bar */}
-            <div className="absolute inset-x-0 bottom-0 flex h-[75px] items-center border-t border-[#3a3f47]/60 bg-gradient-to-t from-[rgba(6,7,8,0.9)] to-transparent px-[60px]">
-                <div className="flex items-center gap-[56px]">
-                    <button
-                        type="button"
-                        onClick={copyShareLink}
-                        disabled={!buildId || !hasAnyItem(draft)}
-                        className="lo-button-text flex items-center gap-2"
-                    >
-                        {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
-                        COPY
-                    </button>
-                    <button type="button" onClick={randomize} className="lo-button-text flex items-center gap-2">
-                        <Dices className="h-4 w-4" aria-hidden />
-                        RANDOMIZE
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setDraft({ ...EMPTY_DRAFT, buildName: "SLAYER" });
-                            selectSlot("weapon");
-                            toast({ title: "Build reset to Slayer" });
-                        }}
-                        disabled={!hasAnyItem(draft) && draft.buildName === "SLAYER"}
-                        className="lo-button-text flex items-center gap-2"
-                    >
-                        <Eraser className="h-4 w-4" aria-hidden />
-                        RESET
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setImportOpen(true)}
-                        className="lo-button-text flex items-center gap-2"
-                    >
-                        <Link2 className="h-4 w-4" aria-hidden />
-                        IMPORT
-                    </button>
-                </div>
             </div>
 
             {/* picker overlay */}
@@ -1348,34 +1570,58 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
             {/* import overlay */}
             {importOpen && (
                 <div
-                    className="lo-picker-backdrop lo-overlay-in absolute inset-0 z-50 flex items-center justify-center"
+                    className="lo-picker-backdrop lo-overlay-in fixed inset-0 z-50 flex items-center justify-center p-4"
                     role="dialog"
                     aria-modal="true"
                     aria-label="Import a build"
                 >
-                    <div className="lo-panel lo-fade-in w-[640px] p-[28px]">
+                    <div className="lo-panel lo-fade-in w-full max-w-[640px] p-5 sm:p-[28px]">
                         <FlourishHeader title="Import Build" />
-                        <p className="mt-4 text-[14px] leading-relaxed text-[#9a9a94]">
-                            Paste a Mystic Builder link ({"« /b/… »"}) or a raw build id. Links from the original
-                            Dauntless Builder are upgraded automatically.
+                        <p className="mt-4 text-xs sm:text-[14px] leading-relaxed text-[#9a9a94]">
+                            Paste a build link from{" "}
+                            <span className="text-[#e8e4da]">reforged.dauntless-builder.com</span>,{" "}
+                            <span className="text-[#e8e4da]">dauntless-builder.com</span>, Mystic Builder ({"« /b/… »"}),
+                            or a raw build ID.
                         </p>
-                        <input
-                            type="text"
-                            autoFocus
-                            value={importValue}
-                            onChange={event => setImportValue(event.target.value)}
-                            onKeyDown={event => {
-                                if (event.key === "Enter") {
-                                    importBuild();
-                                }
-                                if (event.key === "Escape") {
-                                    setImportOpen(false);
-                                }
-                            }}
-                            placeholder="https://builder.mysticparadox.com/b/…"
-                            className="lo-card mt-5 h-[46px] w-full px-4 text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
-                            aria-label="Build link or id"
-                        />
+                        <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                            <input
+                                type="text"
+                                autoFocus
+                                value={importValue}
+                                onChange={event => setImportValue(event.target.value)}
+                                onKeyDown={event => {
+                                    if (event.key === "Enter") {
+                                        importBuild();
+                                    }
+                                    if (event.key === "Escape") {
+                                        setImportOpen(false);
+                                    }
+                                }}
+                                placeholder="https://reforged.dauntless-builder.com/b/…"
+                                className="lo-card h-[44px] sm:h-[46px] flex-1 px-3.5 sm:px-4 text-sm sm:text-[15px] text-[#e8e4da] placeholder:text-[#7c828c] focus:outline-none focus-visible:shadow-[0_0_0_1px_#e0a33e]"
+                                aria-label="Build link or id"
+                            />
+                            <button
+                                type="button"
+                                onClick={handlePasteImportClipboard}
+                                className="lo-card flex h-[42px] sm:h-[46px] items-center justify-center gap-1.5 px-3.5 text-xs font-semibold tracking-wider text-[#d6dde8] transition-colors hover:text-[#e0c287] cursor-pointer"
+                                title="Paste link from clipboard"
+                            >
+                                <ClipboardPaste className="h-4 w-4" aria-hidden />
+                                PASTE
+                            </button>
+                        </div>
+                        {importPreview && (
+                            <div className="mt-3 flex items-center gap-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
+                                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" aria-hidden />
+                                <span className="truncate">
+                                    {importPreview.isReforgedSite ? "Reforged Dauntless Builder: " : "Ready to load: "}
+                                    {importPreview.view.weapon?.name || "Custom Loadout"}
+                                    {importPreview.view.weapon?.type ? ` (${importPreview.view.weapon.type})` : ""}
+                                    {importPreview.view.omnicell ? ` • ${importPreview.view.omnicell.name}` : ""}
+                                </span>
+                            </div>
+                        )}
                         <div className="mt-6 flex items-center justify-between">
                             <DiamondPip size={9} color="#6f7783" />
                             <div className="flex gap-4">
@@ -1405,7 +1651,43 @@ export const LoadoutScreen = ({ initialBuildId, initialName }: LoadoutScreenProp
                 onOpenChange={setPerkSummaryOpen}
                 perkTotals={view?.perkTotals ?? []}
             />
-        </LoadoutStage>
+
+            {/* Publish current build to Community */}
+            <PublishBuildDialog
+                open={publishOpen}
+                onOpenChange={setPublishOpen}
+                initialBuildInput={buildId ?? ""}
+                initialTitle={draft.buildName !== "SLAYER" ? draft.buildName : ""}
+                onPublished={(created) => {
+                    setLiveBuild(created);
+                    toast({
+                        title: created.visibility === "private" ? "Saved as Private Build!" : "Published to Community!",
+                        description:
+                            created.visibility === "private"
+                                ? `"${created.title}" is live privately — you can edit it or make it Public anytime.`
+                                : `"${created.title}" is now live on the Community page.`,
+                    });
+                }}
+            />
+
+            {/* Edit live published build */}
+            <EditBuildDialog
+                open={editLiveOpen}
+                onOpenChange={setEditLiveOpen}
+                build={liveBuild}
+                overrideBuildId={buildId}
+                onSaved={(updated) => {
+                    setLiveBuild(updated);
+                    if (updated.title) {
+                        setDraft(previous => ({ ...previous, buildName: updated.title.slice(0, 24) }));
+                    }
+                    toast({
+                        title: "Live build updated",
+                        description: `"${updated.title}" saved (${updated.visibility === "private" ? "Private" : "Public"}).`,
+                    });
+                }}
+            />
+        </>
     );
 };
 

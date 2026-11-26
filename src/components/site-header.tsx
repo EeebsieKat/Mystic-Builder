@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import NavLinks from "@/components/site-nav-links";
+import NavLinks, { MobileNavMenu } from "@/components/site-nav-links";
+import HeaderAuth from "@/components/auth/header-auth";
 
 function HeaderContent() {
     const pathname = usePathname();
@@ -76,22 +77,31 @@ function HeaderContent() {
             className={`${positionClass} z-40 border-b border-[var(--line)] bg-[var(--bg)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--bg)]/70 transition-all duration-300 ease-out ${visibilityClass}`}
         >
             <div className="gold-rule absolute inset-x-0 bottom-0" aria-hidden />
-            <div className="relative flex h-14 w-full items-center justify-between px-6 lg:px-10">
-                <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
-                    <img alt="Mystic Paradox Logo" width="50" src="/assets/awakening-ui/logo/icon.png" />
-                    <span className="whitespace-nowrap text-base sm:text-lg">
+            <div className="relative flex h-14 w-full items-center justify-between px-3 sm:px-6 lg:px-10">
+                <Link href="/" className="group flex items-center gap-2 sm:gap-2.5 font-semibold tracking-tight min-w-0">
+                    <img
+                        alt="Mystic Paradox Logo"
+                        width="50"
+                        className="h-9 w-9 sm:h-[50px] sm:w-[50px] shrink-0 object-contain"
+                        src="/assets/awakening-ui/logo/icon.png"
+                    />
+                    <span className="whitespace-nowrap text-sm sm:text-lg">
                         <span className="text-gold-gradient font-display font-bold">Mystic</span>{" "}
                         <span className="text-foreground font-display font-bold">Builder</span>
                     </span>
                 </Link>
                 <nav
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 text-sm"
+                    className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 text-sm"
                     aria-label="Main navigation"
                 >
                     <Suspense fallback={null}>
                         <NavLinks />
                     </Suspense>
                 </nav>
+                <div className="ml-auto flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    <HeaderAuth />
+                    <MobileNavMenu />
+                </div>
             </div>
         </header>
     );

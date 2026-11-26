@@ -68,12 +68,31 @@ export const tryDeserialize = (rawBuildId: string): BuildModel | null => {
         return null;
     }
 
+    const isGenerosityVariant = rawBuildId.startsWith("mp-generosity-");
+    const effectiveId = isGenerosityVariant ? rawBuildId.slice("mp-generosity-".length) : rawBuildId;
+
     try {
-        const upgraded = upgradeBuild(rawBuildId);
+        const upgraded = upgradeBuild(effectiveId);
         if (!BuildModel.isValid(upgraded)) {
             return null;
         }
         const build = BuildModel.deserialize(upgraded);
+        if (isGenerosityVariant) {
+            const cellKeys = [
+                "weaponCell1",
+                "weaponCell2",
+                "headCell",
+                "torsoCell",
+                "armsCell",
+                "legsCell",
+                "lanternCell",
+            ] as const;
+            for (const key of cellKeys) {
+                if (build[key] === "+3 Reuse Cell") {
+                    build[key] = "+3 Generosity Cell";
+                }
+            }
+        }
         return validateCells(build);
     } catch {
         return null;
